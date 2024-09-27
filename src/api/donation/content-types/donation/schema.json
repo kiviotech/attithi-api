@@ -1,15 +1,28 @@
-
 {
   "kind": "collectionType",
   "collectionName": "donations",
   "info": {
     "singularName": "donation",
     "pluralName": "donations",
-    "displayName": "donations"
+    "displayName": "donation",
+    "description": ""
   },
   "options": {
-    "draftAndPublish": false,
-    "comment": ""
+    "draftAndPublish": false
   },
-  "attributes": {}
+  "pluginOptions": {},
+  "attributes": {
+    "guest": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::guest-detail.guest-detail",
+      "inversedBy": "donations"
+    },
+    "donation_amount": {
+      "type": "decimal"
+    },
+    "donation_date": {
+      "type": "datetime"
+    }
+  }
 }
