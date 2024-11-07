@@ -27,11 +27,17 @@
       "target": "api::bed.bed",
       "mappedBy": "room_allocation"
     },
-    "guest": {
+    "guests": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "oneToMany",
       "target": "api::guest-detail.guest-detail",
       "mappedBy": "room_allocation"
+    },
+    "arrival_date": {
+      "type": "date"
+    },
+    "departure_date": {
+      "type": "date"
     }
   }
 }

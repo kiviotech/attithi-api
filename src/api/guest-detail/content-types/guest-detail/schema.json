@@ -27,12 +27,6 @@
     "address": {
       "type": "text"
     },
-    "room_allocation": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::room-allocation.room-allocation",
-      "inversedBy": "guest"
-    },
     "donations": {
       "type": "relation",
       "relation": "oneToMany",
@@ -73,6 +67,7 @@
         "wife",
         "aunt",
         "friend",
+        "booker",
         "other"
       ]
     },
@@ -85,6 +80,18 @@
         "The Gospel of Sri Ramakrishna",
         "none"
       ]
+    },
+    "room_allocation": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::room-allocation.room-allocation",
+      "inversedBy": "guests"
+    },
+    "receipt_details": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::receipt-detail.receipt-detail",
+      "mappedBy": "guest"
     }
   }
 }

@@ -922,6 +922,15 @@ export interface ApiDonationDonation extends Schema.CollectionType {
     >;
     donation_amount: Attribute.Decimal;
     donation_date: Attribute.DateTime;
+    transaction_type: Attribute.Enumeration<
+      ['Debit Card', 'Credit Card', 'Bank Transaction', 'Cheque ', 'UPI']
+    > &
+      Attribute.Required;
+    reason_for_donation: Attribute.Enumeration<
+      ['Charity', 'Event', 'Festival', 'Others...']
+    > &
+      Attribute.Required;
+    receipt_number: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -998,11 +1007,6 @@ export interface ApiGuestDetailGuestDetail extends Schema.CollectionType {
     aadhaar_number: Attribute.String;
     occupation: Attribute.String;
     address: Attribute.Text;
-    room_allocation: Attribute.Relation<
-      'api::guest-detail.guest-detail',
-      'oneToOne',
-      'api::room-allocation.room-allocation'
-    >;
     donations: Attribute.Relation<
       'api::guest-detail.guest-detail',
       'oneToMany',
@@ -1017,7 +1021,17 @@ export interface ApiGuestDetailGuestDetail extends Schema.CollectionType {
     gender: Attribute.Enumeration<['M', 'F', 'Other']>;
     status: Attribute.Enumeration<['approved', 'rejected']>;
     relationship: Attribute.Enumeration<
-      ['mother', 'father', 'son', 'daughter', 'wife', 'aunt', 'friend', 'other']
+      [
+        'mother',
+        'father',
+        'son',
+        'daughter',
+        'wife',
+        'aunt',
+        'friend',
+        'booker',
+        'other'
+      ]
     >;
     deeksha: Attribute.Enumeration<
       [
@@ -1027,6 +1041,16 @@ export interface ApiGuestDetailGuestDetail extends Schema.CollectionType {
         'The Gospel of Sri Ramakrishna',
         'none'
       ]
+    >;
+    room_allocation: Attribute.Relation<
+      'api::guest-detail.guest-detail',
+      'manyToOne',
+      'api::room-allocation.room-allocation'
+    >;
+    receipt_details: Attribute.Relation<
+      'api::guest-detail.guest-detail',
+      'oneToMany',
+      'api::receipt-detail.receipt-detail'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1127,6 +1151,42 @@ export interface ApiNotificationNotification extends Schema.CollectionType {
   };
 }
 
+export interface ApiReceiptDetailReceiptDetail extends Schema.CollectionType {
+  collectionName: 'receipt_details';
+  info: {
+    singularName: 'receipt-detail';
+    pluralName: 'receipt-details';
+    displayName: 'ReceiptDetails';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Receipt_number: Attribute.String & Attribute.Unique;
+    guest: Attribute.Relation<
+      'api::receipt-detail.receipt-detail',
+      'manyToOne',
+      'api::guest-detail.guest-detail'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::receipt-detail.receipt-detail',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::receipt-detail.receipt-detail',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiRoomRoom extends Schema.CollectionType {
   collectionName: 'rooms';
   info: {
@@ -1183,11 +1243,13 @@ export interface ApiRoomAllocationRoomAllocation extends Schema.CollectionType {
       'oneToMany',
       'api::bed.bed'
     >;
-    guest: Attribute.Relation<
+    guests: Attribute.Relation<
       'api::room-allocation.room-allocation',
-      'oneToOne',
+      'oneToMany',
       'api::guest-detail.guest-detail'
     >;
+    arrival_date: Attribute.Date;
+    departure_date: Attribute.Date;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1231,6 +1293,7 @@ declare module '@strapi/types' {
       'api::guest-detail.guest-detail': ApiGuestDetailGuestDetail;
       'api::guest-room.guest-room': ApiGuestRoomGuestRoom;
       'api::notification.notification': ApiNotificationNotification;
+      'api::receipt-detail.receipt-detail': ApiReceiptDetailReceiptDetail;
       'api::room.room': ApiRoomRoom;
       'api::room-allocation.room-allocation': ApiRoomAllocationRoomAllocation;
     }

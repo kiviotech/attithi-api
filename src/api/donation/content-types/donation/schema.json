@@ -23,6 +23,30 @@
     },
     "donation_date": {
       "type": "datetime"
+    },
+    "transaction_type": {
+      "type": "enumeration",
+      "enum": [
+        "Debit Card",
+        "Credit Card",
+        "Bank Transaction",
+        "Cheque ",
+        "UPI"
+      ],
+      "required": true
+    },
+    "reason_for_donation": {
+      "type": "enumeration",
+      "enum": [
+        "Charity",
+        "Event",
+        "Festival",
+        "Others..."
+      ],
+      "required": true
+    },
+    "receipt_number": {
+      "type": "string"
     }
   }
 }

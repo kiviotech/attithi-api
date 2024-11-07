@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "receipt_details",
+  "info": {
+    "singularName": "receipt-detail",
+    "pluralName": "receipt-details",
+    "displayName": "ReceiptDetails",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Receipt_number": {
+      "type": "string",
+      "unique": true
+    },
+    "guest": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::guest-detail.guest-detail",
+      "inversedBy": "receipt_details"
+    }
+  }
+}
