@@ -1,0 +1,180 @@
+{
+  "kind": "collectionType",
+  "collectionName": "deekshas",
+  "info": {
+    "singularName": "deeksha",
+    "pluralName": "deekshas",
+    "displayName": "Deeksha",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Name": {
+      "type": "string"
+    },
+    "Address": {
+      "type": "text"
+    },
+    "Pincode": {
+      "type": "biginteger"
+    },
+    "District": {
+      "type": "string"
+    },
+    "State": {
+      "type": "string"
+    },
+    "Country": {
+      "type": "string"
+    },
+    "Phone_no": {
+      "type": "biginteger"
+    },
+    "Email": {
+      "type": "email"
+    },
+    "Aadhar_no": {
+      "type": "biginteger"
+    },
+    "PAN_no": {
+      "type": "string"
+    },
+    "Education": {
+      "type": "enumeration",
+      "enum": [
+        "Early childhood education",
+        "Secondary education",
+        "Higher education",
+        "Undergraduate degree",
+        "Post-graduate degree"
+      ]
+    },
+    "Occupation": {
+      "type": "text"
+    },
+    "Languages_known": {
+      "type": "enumeration",
+      "enum": [
+        "English",
+        "Bengali",
+        "Gujarati",
+        "Hindi",
+        "Kannada",
+        "Malayalam",
+        "Punjabi",
+        "Tamil",
+        "Telugu",
+        "Urdu",
+        "null"
+      ]
+    },
+    "Spouse_consent": {
+      "type": "boolean"
+    },
+    "Initiated_by_anyone": {
+      "type": "boolean"
+    },
+    "Family_Deeksha": {
+      "type": "boolean"
+    },
+    "Name_family_deeksha": {
+      "type": "string"
+    },
+    "Relation": {
+      "type": "enumeration",
+      "enum": [
+        "Husband",
+        "Wife",
+        "Son",
+        "Daughter",
+        "Father",
+        "Mother",
+        "Mother-in-law",
+        "Father-in-law",
+        "Grandfather",
+        "Grandmother",
+        "null"
+      ]
+    },
+    "Family_Deeksha_Guru": {
+      "type": "enumeration",
+      "enum": [
+        "Guru1",
+        "Guru2",
+        "Guru3",
+        "Guru4"
+      ]
+    },
+    "Known_Guruji": {
+      "type": "boolean"
+    },
+    "Known_Guru_name": {
+      "type": "enumeration",
+      "enum": [
+        "Guru 1",
+        "Guru 2",
+        "Guru 3",
+        "Guru 4",
+        "null"
+      ]
+    },
+    "Known_Guru_centre": {
+      "type": "enumeration",
+      "enum": [
+        "Centre1",
+        "Centre2",
+        "Centre3",
+        "Centre4",
+        "null"
+      ]
+    },
+    "Waiting_for_Deeksha": {
+      "type": "integer"
+    },
+    "Books_read": {
+      "type": "string"
+    },
+    "Practice_Deeksha": {
+      "type": "boolean"
+    },
+    "Disabilities": {
+      "type": "boolean"
+    },
+    "Hearing_Problems": {
+      "type": "boolean"
+    },
+    "Booklet_language": {
+      "type": "enumeration",
+      "enum": [
+        "English",
+        "Hindi",
+        "Tamil",
+        "Telugu",
+        "Kannada",
+        "Malayalam",
+        "Bengali",
+        "Gujarati",
+        "Marathi",
+        "Punjabi"
+      ]
+    },
+    "Gender": {
+      "type": "string"
+    },
+    "Marital_status": {
+      "type": "enumeration",
+      "enum": [
+        "Unmarried",
+        "Married",
+        "Widow",
+        "Widower"
+      ]
+    },
+    "Care_Of": {
+      "type": "string"
+    }
+  }
+}

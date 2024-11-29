@@ -18,35 +18,56 @@
       "target": "api::guest-detail.guest-detail",
       "inversedBy": "donations"
     },
-    "donation_amount": {
-      "type": "decimal"
-    },
-    "donation_date": {
-      "type": "datetime"
-    },
-    "transaction_type": {
+    "InMemoryOf": {
       "type": "enumeration",
       "enum": [
-        "Debit Card",
-        "Credit Card",
-        "Bank Transaction",
-        "Cheque ",
-        "UPI"
-      ],
-      "required": true
+        "for Thakur Seva"
+      ]
     },
-    "reason_for_donation": {
+    "donationAmount": {
+      "type": "biginteger"
+    },
+    "transactionType": {
       "type": "enumeration",
       "enum": [
-        "Charity",
-        "Event",
-        "Festival",
-        "Others..."
-      ],
-      "required": true
+        "Cash",
+        "Cheque",
+        "Bank Transfer",
+        "DD",
+        "M.O",
+        "Kind",
+        "Electronic Modes"
+      ]
     },
-    "receipt_number": {
+    "donationFor": {
+      "type": "enumeration",
+      "enum": [
+        "Math",
+        "Mission"
+      ]
+    },
+    "ddch_number": {
       "type": "string"
+    },
+    "ddch_date": {
+      "type": "date"
+    },
+    "bankName": {
+      "type": "text"
+    },
+    "receipt_detail": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::receipt-detail.receipt-detail",
+      "inversedBy": "donations"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "completed",
+        "pending",
+        "cancelled"
+      ]
     }
   }
 }

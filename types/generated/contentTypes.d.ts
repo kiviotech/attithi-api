@@ -770,6 +770,13 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.role'
     >;
+    user_role: Attribute.Enumeration<['admin', 'deeksha']> &
+      Attribute.DefaultTo<'deeksha'>;
+    receipt_details: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::receipt-detail.receipt-detail'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -903,6 +910,124 @@ export interface ApiBookingRequestBookingRequest extends Schema.CollectionType {
   };
 }
 
+export interface ApiDeekshaDeeksha extends Schema.CollectionType {
+  collectionName: 'deekshas';
+  info: {
+    singularName: 'deeksha';
+    pluralName: 'deekshas';
+    displayName: 'Deeksha';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Name: Attribute.String;
+    Address: Attribute.Text;
+    Pincode: Attribute.BigInteger;
+    District: Attribute.String;
+    State: Attribute.String;
+    Country: Attribute.String;
+    Phone_no: Attribute.BigInteger;
+    Email: Attribute.Email;
+    Aadhar_no: Attribute.BigInteger;
+    PAN_no: Attribute.String;
+    Education: Attribute.Enumeration<
+      [
+        'Early childhood education',
+        'Secondary education',
+        'Higher education',
+        'Undergraduate degree',
+        'Post-graduate degree'
+      ]
+    >;
+    Occupation: Attribute.Text;
+    Languages_known: Attribute.Enumeration<
+      [
+        'English',
+        'Bengali',
+        'Gujarati',
+        'Hindi',
+        'Kannada',
+        'Malayalam',
+        'Punjabi',
+        'Tamil',
+        'Telugu',
+        'Urdu',
+        'null'
+      ]
+    >;
+    Spouse_consent: Attribute.Boolean;
+    Initiated_by_anyone: Attribute.Boolean;
+    Family_Deeksha: Attribute.Boolean;
+    Name_family_deeksha: Attribute.String;
+    Relation: Attribute.Enumeration<
+      [
+        'Husband',
+        'Wife',
+        'Son',
+        'Daughter',
+        'Father',
+        'Mother',
+        'Mother-in-law',
+        'Father-in-law',
+        'Grandfather',
+        'Grandmother',
+        'null'
+      ]
+    >;
+    Family_Deeksha_Guru: Attribute.Enumeration<
+      ['Guru1', 'Guru2', 'Guru3', 'Guru4']
+    >;
+    Known_Guruji: Attribute.Boolean;
+    Known_Guru_name: Attribute.Enumeration<
+      ['Guru 1', 'Guru 2', 'Guru 3', 'Guru 4', 'null']
+    >;
+    Known_Guru_centre: Attribute.Enumeration<
+      ['Centre1', 'Centre2', 'Centre3', 'Centre4', 'null']
+    >;
+    Waiting_for_Deeksha: Attribute.Integer;
+    Books_read: Attribute.String;
+    Practice_Deeksha: Attribute.Boolean;
+    Disabilities: Attribute.Boolean;
+    Hearing_Problems: Attribute.Boolean;
+    Booklet_language: Attribute.Enumeration<
+      [
+        'English',
+        'Hindi',
+        'Tamil',
+        'Telugu',
+        'Kannada',
+        'Malayalam',
+        'Bengali',
+        'Gujarati',
+        'Marathi',
+        'Punjabi'
+      ]
+    >;
+    Gender: Attribute.String;
+    Marital_status: Attribute.Enumeration<
+      ['Unmarried', 'Married', 'Widow', 'Widower']
+    >;
+    Care_Of: Attribute.String;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::deeksha.deeksha',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::deeksha.deeksha',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiDonationDonation extends Schema.CollectionType {
   collectionName: 'donations';
   info: {
@@ -920,17 +1045,29 @@ export interface ApiDonationDonation extends Schema.CollectionType {
       'manyToOne',
       'api::guest-detail.guest-detail'
     >;
-    donation_amount: Attribute.Decimal;
-    donation_date: Attribute.DateTime;
-    transaction_type: Attribute.Enumeration<
-      ['Debit Card', 'Credit Card', 'Bank Transaction', 'Cheque ', 'UPI']
-    > &
-      Attribute.Required;
-    reason_for_donation: Attribute.Enumeration<
-      ['Charity', 'Event', 'Festival', 'Others...']
-    > &
-      Attribute.Required;
-    receipt_number: Attribute.String;
+    InMemoryOf: Attribute.Enumeration<['for Thakur Seva']>;
+    donationAmount: Attribute.BigInteger;
+    transactionType: Attribute.Enumeration<
+      [
+        'Cash',
+        'Cheque',
+        'Bank Transfer',
+        'DD',
+        'M.O',
+        'Kind',
+        'Electronic Modes'
+      ]
+    >;
+    donationFor: Attribute.Enumeration<['Math', 'Mission']>;
+    ddch_number: Attribute.String;
+    ddch_date: Attribute.Date;
+    bankName: Attribute.Text;
+    receipt_detail: Attribute.Relation<
+      'api::donation.donation',
+      'manyToOne',
+      'api::receipt-detail.receipt-detail'
+    >;
+    status: Attribute.Enumeration<['completed', 'pending', 'cancelled']>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -1019,7 +1156,7 @@ export interface ApiGuestDetailGuestDetail extends Schema.CollectionType {
     >;
     age: Attribute.Integer;
     gender: Attribute.Enumeration<['M', 'F', 'Other']>;
-    status: Attribute.Enumeration<['approved', 'rejected']>;
+    status: Attribute.Enumeration<['approved', 'pending', 'rejected']>;
     relationship: Attribute.Enumeration<
       [
         'mother',
@@ -1047,11 +1184,7 @@ export interface ApiGuestDetailGuestDetail extends Schema.CollectionType {
       'manyToOne',
       'api::room-allocation.room-allocation'
     >;
-    receipt_details: Attribute.Relation<
-      'api::guest-detail.guest-detail',
-      'oneToMany',
-      'api::receipt-detail.receipt-detail'
-    >;
+    email: Attribute.Email;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1163,11 +1296,17 @@ export interface ApiReceiptDetailReceiptDetail extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
-    Receipt_number: Attribute.String & Attribute.Unique;
-    guest: Attribute.Relation<
+    Receipt_number: Attribute.String;
+    donation_date: Attribute.Date;
+    createdby: Attribute.Relation<
       'api::receipt-detail.receipt-detail',
       'manyToOne',
-      'api::guest-detail.guest-detail'
+      'plugin::users-permissions.user'
+    >;
+    donations: Attribute.Relation<
+      'api::receipt-detail.receipt-detail',
+      'oneToMany',
+      'api::donation.donation'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1248,8 +1387,6 @@ export interface ApiRoomAllocationRoomAllocation extends Schema.CollectionType {
       'oneToMany',
       'api::guest-detail.guest-detail'
     >;
-    arrival_date: Attribute.Date;
-    departure_date: Attribute.Date;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1288,6 +1425,7 @@ declare module '@strapi/types' {
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'api::bed.bed': ApiBedBed;
       'api::booking-request.booking-request': ApiBookingRequestBookingRequest;
+      'api::deeksha.deeksha': ApiDeekshaDeeksha;
       'api::donation.donation': ApiDonationDonation;
       'api::floor.floor': ApiFloorFloor;
       'api::guest-detail.guest-detail': ApiGuestDetailGuestDetail;

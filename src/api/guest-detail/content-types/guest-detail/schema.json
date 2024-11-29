@@ -54,6 +54,7 @@
       "type": "enumeration",
       "enum": [
         "approved",
+        "pending",
         "rejected"
       ]
     },
@@ -87,11 +88,8 @@
       "target": "api::room-allocation.room-allocation",
       "inversedBy": "guests"
     },
-    "receipt_details": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::receipt-detail.receipt-detail",
-      "mappedBy": "guest"
+    "email": {
+      "type": "email"
     }
   }
 }

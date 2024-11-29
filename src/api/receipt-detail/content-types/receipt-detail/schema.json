@@ -14,13 +14,23 @@
   "attributes": {
     "Receipt_number": {
       "type": "string",
-      "unique": true
+      "required": false,
+      "unique": false
     },
-    "guest": {
+    "donation_date": {
+      "type": "date"
+    },
+    "createdby": {
       "type": "relation",
       "relation": "manyToOne",
-      "target": "api::guest-detail.guest-detail",
+      "target": "plugin::users-permissions.user",
       "inversedBy": "receipt_details"
+    },
+    "donations": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::donation.donation",
+      "mappedBy": "receipt_detail"
     }
   }
 }
