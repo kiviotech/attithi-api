@@ -175,6 +175,14 @@
     },
     "Care_Of": {
       "type": "string"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "approve",
+        "pending",
+        "reject"
+      ]
     }
   }
 }

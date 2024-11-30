@@ -54,7 +54,7 @@
       "type": "string"
     },
     "number_of_guest_members": {
-      "type": "integer"
+      "type": "biginteger"
     },
     "recommendation_letter": {
       "type": "media",
@@ -112,6 +112,25 @@
         "The Gospel of Sri Ramakrishna",
         "none"
       ]
+    },
+    "number_of_male_devotees": {
+      "type": "biginteger"
+    },
+    "number_of_female_devotees": {
+      "type": "biginteger"
+    },
+    "additional_information": {
+      "type": "text"
+    },
+    "accommodation_requirements": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": true
     }
   }
 }

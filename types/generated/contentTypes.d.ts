@@ -854,7 +854,7 @@ export interface ApiBookingRequestBookingRequest extends Schema.CollectionType {
     phone_number: Attribute.String;
     occupation: Attribute.String;
     aadhaar_number: Attribute.String;
-    number_of_guest_members: Attribute.Integer;
+    number_of_guest_members: Attribute.BigInteger;
     recommendation_letter: Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
       true
@@ -891,6 +891,13 @@ export interface ApiBookingRequestBookingRequest extends Schema.CollectionType {
         'The Gospel of Sri Ramakrishna',
         'none'
       ]
+    >;
+    number_of_male_devotees: Attribute.BigInteger;
+    number_of_female_devotees: Attribute.BigInteger;
+    additional_information: Attribute.Text;
+    accommodation_requirements: Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1010,6 +1017,7 @@ export interface ApiDeekshaDeeksha extends Schema.CollectionType {
       ['Unmarried', 'Married', 'Widow', 'Widower']
     >;
     Care_Of: Attribute.String;
+    status: Attribute.Enumeration<['approve', 'pending', 'reject']>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
