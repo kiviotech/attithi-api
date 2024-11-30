@@ -79,10 +79,10 @@
       "target": "api::notification.notification",
       "mappedBy": "booking_request"
     },
-    "room_allocations": {
+    "rooms": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::room-allocation.room-allocation",
+      "target": "api::room.room",
       "mappedBy": "booking_request"
     },
     "guest_house": {
@@ -123,14 +123,15 @@
       "type": "text"
     },
     "accommodation_requirements": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
       "allowedTypes": [
         "images",
         "files",
         "videos",
         "audios"
-      ],
-      "type": "media",
-      "multiple": true
+      ]
     }
   }
 }

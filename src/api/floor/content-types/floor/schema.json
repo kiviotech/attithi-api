@@ -23,12 +23,6 @@
       "relation": "manyToOne",
       "target": "api::guest-room.guest-room",
       "inversedBy": "floors"
-    },
-    "rooms": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::room.room",
-      "mappedBy": "floor"
     }
   }
 }

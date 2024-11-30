@@ -21,12 +21,6 @@
         "Occupied"
       ]
     },
-    "room": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::room.room",
-      "inversedBy": "beds"
-    },
     "room_allocation": {
       "type": "relation",
       "relation": "manyToOne",

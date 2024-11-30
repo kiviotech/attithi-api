@@ -807,7 +807,6 @@ export interface ApiBedBed extends Schema.CollectionType {
   attributes: {
     bed_number: Attribute.String;
     status: Attribute.Enumeration<['Available', 'Occupied']>;
-    room: Attribute.Relation<'api::bed.bed', 'manyToOne', 'api::room.room'>;
     room_allocation: Attribute.Relation<
       'api::bed.bed',
       'manyToOne',
@@ -866,10 +865,10 @@ export interface ApiBookingRequestBookingRequest extends Schema.CollectionType {
       'oneToMany',
       'api::notification.notification'
     >;
-    room_allocations: Attribute.Relation<
+    rooms: Attribute.Relation<
       'api::booking-request.booking-request',
       'oneToMany',
-      'api::room-allocation.room-allocation'
+      'api::room.room'
     >;
     guest_house: Attribute.Relation<
       'api::booking-request.booking-request',
@@ -1112,11 +1111,6 @@ export interface ApiFloorFloor extends Schema.CollectionType {
       'manyToOne',
       'api::guest-room.guest-room'
     >;
-    rooms: Attribute.Relation<
-      'api::floor.floor',
-      'oneToMany',
-      'api::room.room'
-    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1347,15 +1341,16 @@ export interface ApiRoomRoom extends Schema.CollectionType {
   };
   attributes: {
     room_number: Attribute.String;
-    room_type: Attribute.Enumeration<['Single', 'Double', 'Deluxe']>;
+    room_type: Attribute.Enumeration<['AC Rooms', 'Non-AC Rooms']>;
     status: Attribute.Enumeration<
       ['available', 'occupied', 'cleaning', 'blocked']
     >;
-    beds: Attribute.Relation<'api::room.room', 'oneToMany', 'api::bed.bed'>;
-    floor: Attribute.Relation<
+    beds: Attribute.Integer;
+    room_category: Attribute.Enumeration<['Guest house', 'F', 'Yatri Niwas']>;
+    booking_request: Attribute.Relation<
       'api::room.room',
       'manyToOne',
-      'api::floor.floor'
+      'api::booking-request.booking-request'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1380,11 +1375,6 @@ export interface ApiRoomAllocationRoomAllocation extends Schema.CollectionType {
   };
   attributes: {
     allocation_date: Attribute.Date;
-    booking_request: Attribute.Relation<
-      'api::room-allocation.room-allocation',
-      'manyToOne',
-      'api::booking-request.booking-request'
-    >;
     beds: Attribute.Relation<
       'api::room-allocation.room-allocation',
       'oneToMany',

@@ -15,12 +15,6 @@
     "allocation_date": {
       "type": "date"
     },
-    "booking_request": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::booking-request.booking-request",
-      "inversedBy": "room_allocations"
-    },
     "beds": {
       "type": "relation",
       "relation": "oneToMany",
