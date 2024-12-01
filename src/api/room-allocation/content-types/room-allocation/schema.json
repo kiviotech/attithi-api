@@ -20,12 +20,6 @@
       "relation": "oneToMany",
       "target": "api::bed.bed",
       "mappedBy": "room_allocation"
-    },
-    "guests": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::guest-detail.guest-detail",
-      "mappedBy": "room_allocation"
     }
   }
 }

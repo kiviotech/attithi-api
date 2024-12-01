@@ -82,14 +82,14 @@
         "none"
       ]
     },
-    "room_allocation": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::room-allocation.room-allocation",
-      "inversedBy": "guests"
-    },
     "email": {
       "type": "email"
+    },
+    "room": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::room.room",
+      "inversedBy": "guests"
     }
   }
 }

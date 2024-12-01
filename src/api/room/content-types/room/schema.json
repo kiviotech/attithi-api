@@ -42,11 +42,20 @@
         "Yatri Niwas"
       ]
     },
-    "booking_request": {
+    "available_beds": {
+      "type": "integer"
+    },
+    "guests": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "oneToMany",
+      "target": "api::guest-detail.guest-detail",
+      "mappedBy": "room"
+    },
+    "booking_requests": {
+      "type": "relation",
+      "relation": "oneToMany",
       "target": "api::booking-request.booking-request",
-      "inversedBy": "rooms"
+      "mappedBy": "room"
     }
   }
 }

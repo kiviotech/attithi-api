@@ -79,12 +79,6 @@
       "target": "api::notification.notification",
       "mappedBy": "booking_request"
     },
-    "rooms": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::room.room",
-      "mappedBy": "booking_request"
-    },
     "guest_house": {
       "type": "relation",
       "relation": "oneToOne",
@@ -132,6 +126,12 @@
         "videos",
         "audios"
       ]
+    },
+    "room": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::room.room",
+      "inversedBy": "booking_requests"
     }
   }
 }

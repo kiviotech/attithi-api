@@ -865,11 +865,6 @@ export interface ApiBookingRequestBookingRequest extends Schema.CollectionType {
       'oneToMany',
       'api::notification.notification'
     >;
-    rooms: Attribute.Relation<
-      'api::booking-request.booking-request',
-      'oneToMany',
-      'api::room.room'
-    >;
     guest_house: Attribute.Relation<
       'api::booking-request.booking-request',
       'oneToOne',
@@ -897,6 +892,11 @@ export interface ApiBookingRequestBookingRequest extends Schema.CollectionType {
     accommodation_requirements: Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
       true
+    >;
+    room: Attribute.Relation<
+      'api::booking-request.booking-request',
+      'manyToOne',
+      'api::room.room'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1181,12 +1181,12 @@ export interface ApiGuestDetailGuestDetail extends Schema.CollectionType {
         'none'
       ]
     >;
-    room_allocation: Attribute.Relation<
+    email: Attribute.Email;
+    room: Attribute.Relation<
       'api::guest-detail.guest-detail',
       'manyToOne',
-      'api::room-allocation.room-allocation'
+      'api::room.room'
     >;
-    email: Attribute.Email;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1347,9 +1347,15 @@ export interface ApiRoomRoom extends Schema.CollectionType {
     >;
     beds: Attribute.Integer;
     room_category: Attribute.Enumeration<['Guest house', 'F', 'Yatri Niwas']>;
-    booking_request: Attribute.Relation<
+    available_beds: Attribute.Integer;
+    guests: Attribute.Relation<
       'api::room.room',
-      'manyToOne',
+      'oneToMany',
+      'api::guest-detail.guest-detail'
+    >;
+    booking_requests: Attribute.Relation<
+      'api::room.room',
+      'oneToMany',
       'api::booking-request.booking-request'
     >;
     createdAt: Attribute.DateTime;
@@ -1379,11 +1385,6 @@ export interface ApiRoomAllocationRoomAllocation extends Schema.CollectionType {
       'api::room-allocation.room-allocation',
       'oneToMany',
       'api::bed.bed'
-    >;
-    guests: Attribute.Relation<
-      'api::room-allocation.room-allocation',
-      'oneToMany',
-      'api::guest-detail.guest-detail'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
