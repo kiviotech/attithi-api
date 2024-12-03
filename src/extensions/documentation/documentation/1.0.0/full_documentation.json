@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2024-12-02T08:42:25.990Z"
+    "x-generation-date": "2024-12-03T06:14:48.814Z"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -2728,6 +2728,14 @@
                                                         }
                                                       }
                                                     }
+                                                  },
+                                                  "arrival_date": {
+                                                    "type": "string",
+                                                    "format": "date"
+                                                  },
+                                                  "departure_date": {
+                                                    "type": "string",
+                                                    "format": "date"
                                                   },
                                                   "createdAt": {
                                                     "type": "string",
@@ -6195,6 +6203,14 @@
                           }
                         }
                       },
+                      "arrival_date": {
+                        "type": "string",
+                        "format": "date"
+                      },
+                      "departure_date": {
+                        "type": "string",
+                        "format": "date"
+                      },
                       "createdAt": {
                         "type": "string",
                         "format": "date-time"
@@ -8115,6 +8131,14 @@
                                                     }
                                                   }
                                                 },
+                                                "arrival_date": {
+                                                  "type": "string",
+                                                  "format": "date"
+                                                },
+                                                "departure_date": {
+                                                  "type": "string",
+                                                  "format": "date"
+                                                },
                                                 "createdAt": {
                                                   "type": "string",
                                                   "format": "date-time"
@@ -8638,6 +8662,14 @@
                   }
                 ],
                 "example": "string or id"
+              },
+              "arrival_date": {
+                "type": "string",
+                "format": "date"
+              },
+              "departure_date": {
+                "type": "string",
+                "format": "date"
               }
             }
           }
@@ -10188,6 +10220,14 @@
                                         }
                                       }
                                     },
+                                    "arrival_date": {
+                                      "type": "string",
+                                      "format": "date"
+                                    },
+                                    "departure_date": {
+                                      "type": "string",
+                                      "format": "date"
+                                    },
                                     "createdAt": {
                                       "type": "string",
                                       "format": "date-time"
@@ -10789,6 +10829,14 @@
                 }
               }
             }
+          },
+          "arrival_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "departure_date": {
+            "type": "string",
+            "format": "date"
           },
           "createdAt": {
             "type": "string",
@@ -12578,6 +12626,14 @@
                                                                     }
                                                                   }
                                                                 }
+                                                              },
+                                                              "arrival_date": {
+                                                                "type": "string",
+                                                                "format": "date"
+                                                              },
+                                                              "departure_date": {
+                                                                "type": "string",
+                                                                "format": "date"
                                                               },
                                                               "createdAt": {
                                                                 "type": "string",
@@ -14871,6 +14927,14 @@
                                         }
                                       }
                                     },
+                                    "arrival_date": {
+                                      "type": "string",
+                                      "format": "date"
+                                    },
+                                    "departure_date": {
+                                      "type": "string",
+                                      "format": "date"
+                                    },
                                     "createdAt": {
                                       "type": "string",
                                       "format": "date-time"
@@ -17068,6 +17132,14 @@
                                                                     }
                                                                   }
                                                                 }
+                                                              },
+                                                              "arrival_date": {
+                                                                "type": "string",
+                                                                "format": "date"
+                                                              },
+                                                              "departure_date": {
+                                                                "type": "string",
+                                                                "format": "date"
                                                               },
                                                               "createdAt": {
                                                                 "type": "string",
@@ -19530,6 +19602,14 @@
                               }
                             }
                           }
+                        },
+                        "arrival_date": {
+                          "type": "string",
+                          "format": "date"
+                        },
+                        "departure_date": {
+                          "type": "string",
+                          "format": "date"
                         },
                         "createdAt": {
                           "type": "string",

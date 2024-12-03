@@ -1187,6 +1187,8 @@ export interface ApiGuestDetailGuestDetail extends Schema.CollectionType {
       'manyToOne',
       'api::room.room'
     >;
+    arrival_date: Attribute.Date;
+    departure_date: Attribute.Date;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

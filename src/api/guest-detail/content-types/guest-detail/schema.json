@@ -90,6 +90,12 @@
       "relation": "manyToOne",
       "target": "api::room.room",
       "inversedBy": "guests"
+    },
+    "arrival_date": {
+      "type": "date"
+    },
+    "departure_date": {
+      "type": "date"
     }
   }
 }
