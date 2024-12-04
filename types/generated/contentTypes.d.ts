@@ -898,6 +898,27 @@ export interface ApiBookingRequestBookingRequest extends Schema.CollectionType {
       'manyToOne',
       'api::room.room'
     >;
+    rejection_reason: Attribute.Text;
+    rejection_type: Attribute.Enumeration<
+      [
+        'noAvailability',
+        'sixMonthRule',
+        'specialCelebrationBelow10k',
+        'specialCelebrationAbove10k',
+        'custom'
+      ]
+    >;
+    last_stay_date: Attribute.Date;
+    celebration_type: Attribute.String;
+    accommodation_type: Attribute.Enumeration<
+      [
+        'guestHouse',
+        'dormitory',
+        'yatriNivasRoom',
+        'chinuShankhari',
+        'peerlessFlat'
+      ]
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1252,6 +1273,51 @@ export interface ApiGuestRoomGuestRoom extends Schema.CollectionType {
   };
 }
 
+export interface ApiMessageTemplateMessageTemplate
+  extends Schema.CollectionType {
+  collectionName: 'message_templates';
+  info: {
+    singularName: 'message-template';
+    pluralName: 'message-templates';
+    displayName: 'MessageTemplate';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Name: Attribute.String &
+      Attribute.Required &
+      Attribute.Unique &
+      Attribute.SetMinMaxLength<{
+        minLength: 5;
+        maxLength: 20;
+      }>;
+    content: Attribute.Blocks;
+    body: Attribute.String;
+    channel: Attribute.Enumeration<['sms', 'email', 'whatsapp']>;
+    notifications: Attribute.Relation<
+      'api::message-template.message-template',
+      'oneToMany',
+      'api::notification.notification'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::message-template.message-template',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::message-template.message-template',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiNotificationNotification extends Schema.CollectionType {
   collectionName: 'notifications';
   info: {
@@ -1269,6 +1335,11 @@ export interface ApiNotificationNotification extends Schema.CollectionType {
       'api::notification.notification',
       'manyToOne',
       'api::booking-request.booking-request'
+    >;
+    message_template: Attribute.Relation<
+      'api::notification.notification',
+      'manyToOne',
+      'api::message-template.message-template'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1431,6 +1502,7 @@ declare module '@strapi/types' {
       'api::floor.floor': ApiFloorFloor;
       'api::guest-detail.guest-detail': ApiGuestDetailGuestDetail;
       'api::guest-room.guest-room': ApiGuestRoomGuestRoom;
+      'api::message-template.message-template': ApiMessageTemplateMessageTemplate;
       'api::notification.notification': ApiNotificationNotification;
       'api::receipt-detail.receipt-detail': ApiReceiptDetailReceiptDetail;
       'api::room.room': ApiRoomRoom;

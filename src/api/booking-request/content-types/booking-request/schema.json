@@ -132,6 +132,35 @@
       "relation": "manyToOne",
       "target": "api::room.room",
       "inversedBy": "booking_requests"
+    },
+    "rejection_reason": {
+      "type": "text"
+    },
+    "rejection_type": {
+      "type": "enumeration",
+      "enum": [
+        "noAvailability",
+        "sixMonthRule",
+        "specialCelebrationBelow10k",
+        "specialCelebrationAbove10k",
+        "custom"
+      ]
+    },
+    "last_stay_date": {
+      "type": "date"
+    },
+    "celebration_type": {
+      "type": "string"
+    },
+    "accommodation_type": {
+      "type": "enumeration",
+      "enum": [
+        "guestHouse",
+        "dormitory",
+        "yatriNivasRoom",
+        "chinuShankhari",
+        "peerlessFlat"
+      ]
     }
   }
 }

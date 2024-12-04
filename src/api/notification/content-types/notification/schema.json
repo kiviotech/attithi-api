@@ -30,6 +30,12 @@
       "relation": "manyToOne",
       "target": "api::booking-request.booking-request",
       "inversedBy": "notifications"
+    },
+    "message_template": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::message-template.message-template",
+      "inversedBy": "notifications"
     }
   }
 }
