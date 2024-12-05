@@ -1073,7 +1073,6 @@ export interface ApiDonationDonation extends Schema.CollectionType {
       'manyToOne',
       'api::guest-detail.guest-detail'
     >;
-    InMemoryOf: Attribute.Enumeration<['for Thakur Seva']>;
     donationAmount: Attribute.BigInteger;
     transactionType: Attribute.Enumeration<
       [
@@ -1096,6 +1095,7 @@ export interface ApiDonationDonation extends Schema.CollectionType {
       'api::receipt-detail.receipt-detail'
     >;
     status: Attribute.Enumeration<['completed', 'pending', 'cancelled']>;
+    InMemoryOf: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
