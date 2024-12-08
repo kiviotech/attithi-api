@@ -78,6 +78,15 @@
       "relation": "oneToMany",
       "target": "api::receipt-detail.receipt-detail",
       "mappedBy": "createdby"
+    },
+    "counter": {
+      "type": "enumeration",
+      "enum": [
+        "Counter 1",
+        "Counter 2",
+        "Counter 3",
+        "Counter 4"
+      ]
     }
   }
 }

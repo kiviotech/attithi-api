@@ -777,6 +777,9 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'oneToMany',
       'api::receipt-detail.receipt-detail'
     >;
+    counter: Attribute.Enumeration<
+      ['Counter 1', 'Counter 2', 'Counter 3', 'Counter 4']
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -965,25 +968,11 @@ export interface ApiDeekshaDeeksha extends Schema.CollectionType {
         'Secondary education',
         'Higher education',
         'Undergraduate degree',
-        'Post-graduate degree'
-      ]
-    >;
-    Occupation: Attribute.Text;
-    Languages_known: Attribute.Enumeration<
-      [
-        'English',
-        'Bengali',
-        'Gujarati',
-        'Hindi',
-        'Kannada',
-        'Malayalam',
-        'Punjabi',
-        'Tamil',
-        'Telugu',
-        'Urdu',
+        'Post-graduate degree',
         'null'
       ]
     >;
+    Occupation: Attribute.Text;
     Spouse_consent: Attribute.Boolean;
     Initiated_by_anyone: Attribute.Boolean;
     Family_Deeksha: Attribute.Boolean;
@@ -1018,26 +1007,14 @@ export interface ApiDeekshaDeeksha extends Schema.CollectionType {
     Practice_Deeksha: Attribute.Boolean;
     Disabilities: Attribute.Boolean;
     Hearing_Problems: Attribute.Boolean;
-    Booklet_language: Attribute.Enumeration<
-      [
-        'English',
-        'Hindi',
-        'Tamil',
-        'Telugu',
-        'Kannada',
-        'Malayalam',
-        'Bengali',
-        'Gujarati',
-        'Marathi',
-        'Punjabi'
-      ]
-    >;
     Gender: Attribute.String;
     Marital_status: Attribute.Enumeration<
       ['Unmarried', 'Married', 'Widow', 'Widower']
     >;
     Care_Of: Attribute.String;
     status: Attribute.Enumeration<['approve', 'pending', 'reject']>;
+    Booklet_language: Attribute.String;
+    Languages_known: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1189,7 +1166,7 @@ export interface ApiGuestDetailGuestDetail extends Schema.CollectionType {
         'wife',
         'aunt',
         'friend',
-        'booker',
+        'applicant',
         'other'
       ]
     >;

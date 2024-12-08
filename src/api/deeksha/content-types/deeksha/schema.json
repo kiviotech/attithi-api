@@ -49,27 +49,12 @@
         "Secondary education",
         "Higher education",
         "Undergraduate degree",
-        "Post-graduate degree"
+        "Post-graduate degree",
+        "null"
       ]
     },
     "Occupation": {
       "type": "text"
-    },
-    "Languages_known": {
-      "type": "enumeration",
-      "enum": [
-        "English",
-        "Bengali",
-        "Gujarati",
-        "Hindi",
-        "Kannada",
-        "Malayalam",
-        "Punjabi",
-        "Tamil",
-        "Telugu",
-        "Urdu",
-        "null"
-      ]
     },
     "Spouse_consent": {
       "type": "boolean"
@@ -146,21 +131,6 @@
     "Hearing_Problems": {
       "type": "boolean"
     },
-    "Booklet_language": {
-      "type": "enumeration",
-      "enum": [
-        "English",
-        "Hindi",
-        "Tamil",
-        "Telugu",
-        "Kannada",
-        "Malayalam",
-        "Bengali",
-        "Gujarati",
-        "Marathi",
-        "Punjabi"
-      ]
-    },
     "Gender": {
       "type": "string"
     },
@@ -183,6 +153,12 @@
         "pending",
         "reject"
       ]
+    },
+    "Booklet_language": {
+      "type": "string"
+    },
+    "Languages_known": {
+      "type": "string"
     }
   }
 }
