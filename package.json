@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@strapi/plugin-cloud": "4.25.11",
-    "@strapi/plugin-documentation": "^4.10.6",
+    "@strapi/plugin-documentation": "^4.25.17",
     "@strapi/plugin-i18n": "4.25.11",
     "@strapi/plugin-users-permissions": "4.25.11",
     "@strapi/provider-email-nodemailer": "^5.4.2",

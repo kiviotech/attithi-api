@@ -31,6 +31,9 @@
       "relation": "oneToMany",
       "target": "api::donation.donation",
       "mappedBy": "receipt_detail"
+    },
+    "unique_no": {
+      "type": "string"
     }
   }
 }
