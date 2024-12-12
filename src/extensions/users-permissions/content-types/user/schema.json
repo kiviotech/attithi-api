@@ -68,7 +68,8 @@
     "user_role": {
       "type": "enumeration",
       "enum": [
-        "admin",
+        "superadmin",
+        "subadmin",
         "deeksha"
       ],
       "default": "deeksha"

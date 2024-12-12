@@ -770,7 +770,7 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.role'
     >;
-    user_role: Attribute.Enumeration<['admin', 'deeksha']> &
+    user_role: Attribute.Enumeration<['superadmin', 'subadmin', 'deeksha']> &
       Attribute.DefaultTo<'deeksha'>;
     receipt_details: Attribute.Relation<
       'plugin::users-permissions.user',
