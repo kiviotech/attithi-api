@@ -1361,6 +1361,7 @@ export interface ApiReceiptDetailReceiptDetail extends Schema.CollectionType {
       'api::donation.donation'
     >;
     unique_no: Attribute.String;
+    counter: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
