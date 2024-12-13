@@ -44,11 +44,20 @@
     },
     "gender": {
       "type": "enumeration",
-      "enum": ["M", "F", "Other"]
+      "enum": [
+        "M",
+        "F",
+        "Other"
+      ]
     },
     "status": {
       "type": "enumeration",
-      "enum": ["approved", "pending", "rejected"]
+      "enum": [
+        "approved",
+        "pending",
+        "rejected",
+        "none"
+      ]
     },
     "relationship": {
       "type": "enumeration",

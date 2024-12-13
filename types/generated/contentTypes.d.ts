@@ -940,6 +940,39 @@ export interface ApiBookingRequestBookingRequest extends Schema.CollectionType {
   };
 }
 
+export interface ApiCelebrationCelebration extends Schema.CollectionType {
+  collectionName: 'celebrations';
+  info: {
+    singularName: 'celebration';
+    pluralName: 'celebrations';
+    displayName: 'Celebration';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    event_name: Attribute.Text;
+    event_type: Attribute.Enumeration<['Birthday', 'Puja']>;
+    hindu_date: Attribute.Text;
+    gregorian_date: Attribute.Date;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::celebration.celebration',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::celebration.celebration',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiDeekshaDeeksha extends Schema.CollectionType {
   collectionName: 'deekshas';
   info: {
@@ -1156,7 +1189,7 @@ export interface ApiGuestDetailGuestDetail extends Schema.CollectionType {
     >;
     age: Attribute.Integer;
     gender: Attribute.Enumeration<['M', 'F', 'Other']>;
-    status: Attribute.Enumeration<['approved', 'pending', 'rejected']>;
+    status: Attribute.Enumeration<['approved', 'pending', 'rejected', 'none']>;
     relationship: Attribute.Enumeration<
       [
         'mother',
@@ -1476,6 +1509,7 @@ declare module '@strapi/types' {
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'api::bed.bed': ApiBedBed;
       'api::booking-request.booking-request': ApiBookingRequestBookingRequest;
+      'api::celebration.celebration': ApiCelebrationCelebration;
       'api::deeksha.deeksha': ApiDeekshaDeeksha;
       'api::donation.donation': ApiDonationDonation;
       'api::floor.floor': ApiFloorFloor;
