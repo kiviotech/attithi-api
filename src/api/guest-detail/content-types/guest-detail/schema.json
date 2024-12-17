@@ -73,16 +73,6 @@
         "other"
       ]
     },
-    "deeksha": {
-      "type": "enumeration",
-      "enum": [
-        "Sri Ramakrishna – Life and Teachings",
-        "Sri Sarada Devi – Life and Teachings",
-        "Swami Vivekananda – His Life and Legacy",
-        "The Gospel of Sri Ramakrishna",
-        "none"
-      ]
-    },
     "email": {
       "type": "email"
     },
@@ -97,6 +87,9 @@
     },
     "departure_date": {
       "type": "date"
+    },
+    "deeksha": {
+      "type": "string"
     }
   }
 }

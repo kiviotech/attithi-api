@@ -880,15 +880,6 @@ export interface ApiBookingRequestBookingRequest extends Schema.CollectionType {
     >;
     arrival_date: Attribute.Date;
     departure_date: Attribute.Date;
-    deeksha: Attribute.Enumeration<
-      [
-        'Sri Ramakrishna \u2013 Life and Teachings',
-        'Sri Sarada Devi \u2013 Life and Teachings',
-        'Swami Vivekananda \u2013 His Life and Legacy',
-        'The Gospel of Sri Ramakrishna',
-        'none'
-      ]
-    >;
     number_of_male_devotees: Attribute.BigInteger;
     number_of_female_devotees: Attribute.BigInteger;
     additional_information: Attribute.Text;
@@ -922,6 +913,7 @@ export interface ApiBookingRequestBookingRequest extends Schema.CollectionType {
         'peerlessFlat'
       ]
     >;
+    deeksha: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1106,6 +1098,8 @@ export interface ApiDonationDonation extends Schema.CollectionType {
     >;
     status: Attribute.Enumeration<['completed', 'pending', 'cancelled']>;
     InMemoryOf: Attribute.String;
+    purpose: Attribute.String;
+    type: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -1203,15 +1197,6 @@ export interface ApiGuestDetailGuestDetail extends Schema.CollectionType {
         'other'
       ]
     >;
-    deeksha: Attribute.Enumeration<
-      [
-        'Sri Ramakrishna \u2013 Life and Teachings',
-        'Sri Sarada Devi \u2013 Life and Teachings',
-        'Swami Vivekananda \u2013 His Life and Legacy',
-        'The Gospel of Sri Ramakrishna',
-        'none'
-      ]
-    >;
     email: Attribute.Email;
     room: Attribute.Relation<
       'api::guest-detail.guest-detail',
@@ -1220,6 +1205,7 @@ export interface ApiGuestDetailGuestDetail extends Schema.CollectionType {
     >;
     arrival_date: Attribute.Date;
     departure_date: Attribute.Date;
+    deeksha: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

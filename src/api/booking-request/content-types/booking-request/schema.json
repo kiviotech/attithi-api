@@ -97,16 +97,6 @@
     "departure_date": {
       "type": "date"
     },
-    "deeksha": {
-      "type": "enumeration",
-      "enum": [
-        "Sri Ramakrishna – Life and Teachings",
-        "Sri Sarada Devi – Life and Teachings",
-        "Swami Vivekananda – His Life and Legacy",
-        "The Gospel of Sri Ramakrishna",
-        "none"
-      ]
-    },
     "number_of_male_devotees": {
       "type": "biginteger"
     },
@@ -161,6 +151,9 @@
         "chinuShankhari",
         "peerlessFlat"
       ]
+    },
+    "deeksha": {
+      "type": "string"
     }
   }
 }

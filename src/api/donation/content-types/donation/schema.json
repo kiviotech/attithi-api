@@ -65,6 +65,12 @@
     },
     "InMemoryOf": {
       "type": "string"
+    },
+    "purpose": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
     }
   }
 }
