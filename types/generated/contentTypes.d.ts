@@ -1077,15 +1077,7 @@ export interface ApiDonationDonation extends Schema.CollectionType {
     >;
     donationAmount: Attribute.BigInteger;
     transactionType: Attribute.Enumeration<
-      [
-        'Cash',
-        'Cheque',
-        'Bank Transfer',
-        'DD',
-        'M.O',
-        'Kind',
-        'Electronic Modes'
-      ]
+      ['Cash', 'Cheque', 'Bank Transfer', 'DD', 'M.O']
     >;
     donationFor: Attribute.Enumeration<['Math', 'Mission']>;
     ddch_number: Attribute.String;

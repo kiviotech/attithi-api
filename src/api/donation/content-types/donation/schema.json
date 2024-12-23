@@ -28,9 +28,7 @@
         "Cheque",
         "Bank Transfer",
         "DD",
-        "M.O",
-        "Kind",
-        "Electronic Modes"
+        "M.O"
       ]
     },
     "donationFor": {
