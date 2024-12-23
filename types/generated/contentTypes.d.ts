@@ -1160,7 +1160,6 @@ export interface ApiGuestDetailGuestDetail extends Schema.CollectionType {
   attributes: {
     name: Attribute.String;
     phone_number: Attribute.String;
-    aadhaar_number: Attribute.String;
     occupation: Attribute.String;
     address: Attribute.Text;
     donations: Attribute.Relation<
@@ -1198,6 +1197,8 @@ export interface ApiGuestDetailGuestDetail extends Schema.CollectionType {
     arrival_date: Attribute.Date;
     departure_date: Attribute.Date;
     deeksha: Attribute.String;
+    identity_proof: Attribute.String;
+    identity_number: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
