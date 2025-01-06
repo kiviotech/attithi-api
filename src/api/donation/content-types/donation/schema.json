@@ -45,7 +45,7 @@
       "type": "date"
     },
     "bankName": {
-      "type": "text"
+      "type": "string"
     },
     "receipt_detail": {
       "type": "relation",
@@ -68,6 +68,9 @@
       "type": "string"
     },
     "type": {
+      "type": "string"
+    },
+    "branchName": {
       "type": "string"
     }
   }

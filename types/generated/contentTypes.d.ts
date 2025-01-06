@@ -1082,7 +1082,7 @@ export interface ApiDonationDonation extends Schema.CollectionType {
     donationFor: Attribute.Enumeration<['Math', 'Mission']>;
     ddch_number: Attribute.String;
     ddch_date: Attribute.Date;
-    bankName: Attribute.Text;
+    bankName: Attribute.String;
     receipt_detail: Attribute.Relation<
       'api::donation.donation',
       'manyToOne',
@@ -1092,6 +1092,7 @@ export interface ApiDonationDonation extends Schema.CollectionType {
     InMemoryOf: Attribute.String;
     purpose: Attribute.String;
     type: Attribute.String;
+    branchName: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -1188,7 +1189,6 @@ export interface ApiGuestDetailGuestDetail extends Schema.CollectionType {
         'other'
       ]
     >;
-    email: Attribute.Email;
     room: Attribute.Relation<
       'api::guest-detail.guest-detail',
       'manyToOne',
@@ -1199,6 +1199,8 @@ export interface ApiGuestDetailGuestDetail extends Schema.CollectionType {
     deeksha: Attribute.String;
     identity_proof: Attribute.String;
     identity_number: Attribute.String;
+    email: Attribute.String;
+    unique_no: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1372,7 +1374,6 @@ export interface ApiReceiptDetailReceiptDetail extends Schema.CollectionType {
       'oneToMany',
       'api::donation.donation'
     >;
-    unique_no: Attribute.String;
     counter: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;

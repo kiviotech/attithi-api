@@ -70,9 +70,6 @@
         "other"
       ]
     },
-    "email": {
-      "type": "email"
-    },
     "room": {
       "type": "relation",
       "relation": "manyToOne",
@@ -92,6 +89,12 @@
       "type": "string"
     },
     "identity_number": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "unique_no": {
       "type": "string"
     }
   }
