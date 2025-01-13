@@ -1147,6 +1147,30 @@ export interface ApiFloorFloor extends Schema.CollectionType {
   };
 }
 
+export interface ApiFoodFood extends Schema.CollectionType {
+  collectionName: 'foods';
+  info: {
+    singularName: 'food';
+    pluralName: 'foods';
+    displayName: 'Food';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    date: Attribute.Date;
+    category: Attribute.Text;
+    count: Attribute.Integer;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::food.food', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::food.food', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
 export interface ApiGuestDetailGuestDetail extends Schema.CollectionType {
   collectionName: 'guest_details';
   info: {
@@ -1201,6 +1225,7 @@ export interface ApiGuestDetailGuestDetail extends Schema.CollectionType {
     identity_number: Attribute.String;
     email: Attribute.String;
     unique_no: Attribute.String;
+    pan_number: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1493,6 +1518,7 @@ declare module '@strapi/types' {
       'api::deeksha.deeksha': ApiDeekshaDeeksha;
       'api::donation.donation': ApiDonationDonation;
       'api::floor.floor': ApiFloorFloor;
+      'api::food.food': ApiFoodFood;
       'api::guest-detail.guest-detail': ApiGuestDetailGuestDetail;
       'api::guest-room.guest-room': ApiGuestRoomGuestRoom;
       'api::message-template.message-template': ApiMessageTemplateMessageTemplate;
