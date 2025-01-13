@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "coupons",
+  "info": {
+    "singularName": "coupon",
+    "pluralName": "coupons",
+    "displayName": "coupon",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "running": {
+      "type": "integer",
+      "default": 0
+    },
+    "total": {
+      "type": "integer",
+      "default": 0
+    },
+    "special_coupon": {
+      "type": "integer",
+      "default": 0
+    },
+    "date": {
+      "type": "date"
+    }
+  }
+}

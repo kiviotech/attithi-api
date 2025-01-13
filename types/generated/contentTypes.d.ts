@@ -965,6 +965,40 @@ export interface ApiCelebrationCelebration extends Schema.CollectionType {
   };
 }
 
+export interface ApiCouponCoupon extends Schema.CollectionType {
+  collectionName: 'coupons';
+  info: {
+    singularName: 'coupon';
+    pluralName: 'coupons';
+    displayName: 'coupon';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    running: Attribute.Integer & Attribute.DefaultTo<0>;
+    total: Attribute.Integer & Attribute.DefaultTo<0>;
+    special_coupon: Attribute.Integer & Attribute.DefaultTo<0>;
+    date: Attribute.Date;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::coupon.coupon',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::coupon.coupon',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiDeekshaDeeksha extends Schema.CollectionType {
   collectionName: 'deekshas';
   info: {
@@ -1153,6 +1187,7 @@ export interface ApiFoodFood extends Schema.CollectionType {
     singularName: 'food';
     pluralName: 'foods';
     displayName: 'Food';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -1515,6 +1550,7 @@ declare module '@strapi/types' {
       'api::bed.bed': ApiBedBed;
       'api::booking-request.booking-request': ApiBookingRequestBookingRequest;
       'api::celebration.celebration': ApiCelebrationCelebration;
+      'api::coupon.coupon': ApiCouponCoupon;
       'api::deeksha.deeksha': ApiDeekshaDeeksha;
       'api::donation.donation': ApiDonationDonation;
       'api::floor.floor': ApiFloorFloor;

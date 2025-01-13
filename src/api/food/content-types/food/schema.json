@@ -4,7 +4,8 @@
   "info": {
     "singularName": "food",
     "pluralName": "foods",
-    "displayName": "Food"
+    "displayName": "Food",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
