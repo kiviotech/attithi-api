@@ -15,47 +15,32 @@
     "room_number": {
       "type": "string"
     },
-    "room_type": {
-      "type": "enumeration",
-      "enum": [
-        "AC Rooms",
-        "Non-AC Rooms"
-      ]
-    },
-    "status": {
-      "type": "enumeration",
-      "enum": [
-        "available",
-        "occupied",
-        "cleaning",
-        "blocked"
-      ]
-    },
-    "beds": {
+    "no_of_beds": {
       "type": "integer"
     },
-    "room_category": {
-      "type": "enumeration",
-      "enum": [
-        "Guest house",
-        "F",
-        "Yatri Niwas"
-      ]
+    "block": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::block.block",
+      "inversedBy": "rooms"
     },
-    "available_beds": {
-      "type": "integer"
-    },
-    "guests": {
+    "room_blockings": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::guest-detail.guest-detail",
+      "target": "api::room-blocking.room-blocking",
       "mappedBy": "room"
     },
-    "booking_requests": {
+    "dormitory": {
       "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::booking-request.booking-request",
-      "mappedBy": "room"
+      "relation": "manyToOne",
+      "target": "api::dormitory.dormitory",
+      "inversedBy": "rooms"
+    },
+    "room_allocation": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::room-allocation.room-allocation",
+      "inversedBy": "rooms"
     }
   }
 }

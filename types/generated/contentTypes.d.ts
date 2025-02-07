@@ -797,30 +797,36 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
 }
 
-export interface ApiBedBed extends Schema.CollectionType {
-  collectionName: 'beds';
+export interface ApiBlockBlock extends Schema.CollectionType {
+  collectionName: 'blocks';
   info: {
-    singularName: 'bed';
-    pluralName: 'beds';
-    displayName: 'Bed';
+    singularName: 'block';
+    pluralName: 'blocks';
+    displayName: 'Block';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
-    bed_number: Attribute.String;
-    status: Attribute.Enumeration<['Available', 'Occupied']>;
-    room_allocation: Attribute.Relation<
-      'api::bed.bed',
-      'manyToOne',
-      'api::room-allocation.room-allocation'
+    block_name: Attribute.String;
+    rooms: Attribute.Relation<
+      'api::block.block',
+      'oneToMany',
+      'api::room.room'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'api::bed.bed', 'oneToOne', 'admin::user'> &
+    createdBy: Attribute.Relation<
+      'api::block.block',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
-    updatedBy: Attribute.Relation<'api::bed.bed', 'oneToOne', 'admin::user'> &
+    updatedBy: Attribute.Relation<
+      'api::block.block',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
   };
 }
@@ -887,11 +893,6 @@ export interface ApiBookingRequestBookingRequest extends Schema.CollectionType {
       'images' | 'files' | 'videos' | 'audios',
       true
     >;
-    room: Attribute.Relation<
-      'api::booking-request.booking-request',
-      'manyToOne',
-      'api::room.room'
-    >;
     rejection_reason: Attribute.Text;
     rejection_type: Attribute.Enumeration<
       [
@@ -914,6 +915,16 @@ export interface ApiBookingRequestBookingRequest extends Schema.CollectionType {
       ]
     >;
     deeksha: Attribute.String;
+    room_allocations: Attribute.Relation<
+      'api::booking-request.booking-request',
+      'oneToMany',
+      'api::room-allocation.room-allocation'
+    >;
+    dormitory: Attribute.Relation<
+      'api::booking-request.booking-request',
+      'manyToOne',
+      'api::dormitory.dormitory'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1144,36 +1155,42 @@ export interface ApiDonationDonation extends Schema.CollectionType {
   };
 }
 
-export interface ApiFloorFloor extends Schema.CollectionType {
-  collectionName: 'floors';
+export interface ApiDormitoryDormitory extends Schema.CollectionType {
+  collectionName: 'dormitories';
   info: {
-    singularName: 'floor';
-    pluralName: 'floors';
-    displayName: 'Floor';
+    singularName: 'dormitory';
+    pluralName: 'dormitories';
+    displayName: 'Dormitory';
     description: '';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
-    floor_number: Attribute.Integer;
-    total_rooms: Attribute.Integer;
-    guest_house: Attribute.Relation<
-      'api::floor.floor',
-      'manyToOne',
-      'api::guest-room.guest-room'
+    occupancy: Attribute.Integer;
+    rooms: Attribute.Relation<
+      'api::dormitory.dormitory',
+      'oneToMany',
+      'api::room.room'
     >;
+    female_occupancy: Attribute.Integer;
+    male_occupacny: Attribute.Integer;
+    booking_requests: Attribute.Relation<
+      'api::dormitory.dormitory',
+      'oneToMany',
+      'api::booking-request.booking-request'
+    >;
+    status: Attribute.Enumeration<['available', 'occupied']>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'api::floor.floor',
+      'api::dormitory.dormitory',
       'oneToOne',
       'admin::user'
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'api::floor.floor',
+      'api::dormitory.dormitory',
       'oneToOne',
       'admin::user'
     > &
@@ -1248,11 +1265,6 @@ export interface ApiGuestDetailGuestDetail extends Schema.CollectionType {
         'other'
       ]
     >;
-    room: Attribute.Relation<
-      'api::guest-detail.guest-detail',
-      'manyToOne',
-      'api::room.room'
-    >;
     arrival_date: Attribute.Date;
     departure_date: Attribute.Date;
     deeksha: Attribute.String;
@@ -1261,6 +1273,11 @@ export interface ApiGuestDetailGuestDetail extends Schema.CollectionType {
     email: Attribute.String;
     unique_no: Attribute.String;
     pan_number: Attribute.String;
+    room_allocations: Attribute.Relation<
+      'api::guest-detail.guest-detail',
+      'manyToMany',
+      'api::room-allocation.room-allocation'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1296,11 +1313,6 @@ export interface ApiGuestRoomGuestRoom extends Schema.CollectionType {
     total_floors: Attribute.Integer;
     total_rooms: Attribute.Integer;
     description: Attribute.Text;
-    floors: Attribute.Relation<
-      'api::guest-room.guest-room',
-      'oneToMany',
-      'api::floor.floor'
-    >;
     booking_request: Attribute.Relation<
       'api::guest-room.guest-room',
       'oneToOne',
@@ -1466,22 +1478,26 @@ export interface ApiRoomRoom extends Schema.CollectionType {
   };
   attributes: {
     room_number: Attribute.String;
-    room_type: Attribute.Enumeration<['AC Rooms', 'Non-AC Rooms']>;
-    status: Attribute.Enumeration<
-      ['available', 'occupied', 'cleaning', 'blocked']
+    no_of_beds: Attribute.Integer;
+    block: Attribute.Relation<
+      'api::room.room',
+      'manyToOne',
+      'api::block.block'
     >;
-    beds: Attribute.Integer;
-    room_category: Attribute.Enumeration<['Guest house', 'F', 'Yatri Niwas']>;
-    available_beds: Attribute.Integer;
-    guests: Attribute.Relation<
+    room_blockings: Attribute.Relation<
       'api::room.room',
       'oneToMany',
-      'api::guest-detail.guest-detail'
+      'api::room-blocking.room-blocking'
     >;
-    booking_requests: Attribute.Relation<
+    dormitory: Attribute.Relation<
       'api::room.room',
-      'oneToMany',
-      'api::booking-request.booking-request'
+      'manyToOne',
+      'api::dormitory.dormitory'
+    >;
+    room_allocation: Attribute.Relation<
+      'api::room.room',
+      'manyToOne',
+      'api::room-allocation.room-allocation'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1505,11 +1521,22 @@ export interface ApiRoomAllocationRoomAllocation extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
-    allocation_date: Attribute.Date;
-    beds: Attribute.Relation<
+    room_status: Attribute.Enumeration<['available', 'occupied']>;
+    rooms: Attribute.Relation<
       'api::room-allocation.room-allocation',
       'oneToMany',
-      'api::bed.bed'
+      'api::room.room'
+    >;
+    guests: Attribute.Relation<
+      'api::room-allocation.room-allocation',
+      'manyToMany',
+      'api::guest-detail.guest-detail'
+    >;
+    occupancy: Attribute.Integer;
+    booking_request: Attribute.Relation<
+      'api::room-allocation.room-allocation',
+      'manyToOne',
+      'api::booking-request.booking-request'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1522,6 +1549,45 @@ export interface ApiRoomAllocationRoomAllocation extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::room-allocation.room-allocation',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiRoomBlockingRoomBlocking extends Schema.CollectionType {
+  collectionName: 'room_blockings';
+  info: {
+    singularName: 'room-blocking';
+    pluralName: 'room-blockings';
+    displayName: 'RoomBlocking';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    reason_for_blocking: Attribute.Text;
+    room: Attribute.Relation<
+      'api::room-blocking.room-blocking',
+      'manyToOne',
+      'api::room.room'
+    >;
+    room_block_status: Attribute.Enumeration<
+      ['blocked', 'unblocked', 'cleaning underway', 'maintenance']
+    >;
+    from_date: Attribute.Date;
+    to_date: Attribute.Date;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::room-blocking.room-blocking',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::room-blocking.room-blocking',
       'oneToOne',
       'admin::user'
     > &
@@ -1547,13 +1613,13 @@ declare module '@strapi/types' {
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
-      'api::bed.bed': ApiBedBed;
+      'api::block.block': ApiBlockBlock;
       'api::booking-request.booking-request': ApiBookingRequestBookingRequest;
       'api::celebration.celebration': ApiCelebrationCelebration;
       'api::coupon.coupon': ApiCouponCoupon;
       'api::deeksha.deeksha': ApiDeekshaDeeksha;
       'api::donation.donation': ApiDonationDonation;
-      'api::floor.floor': ApiFloorFloor;
+      'api::dormitory.dormitory': ApiDormitoryDormitory;
       'api::food.food': ApiFoodFood;
       'api::guest-detail.guest-detail': ApiGuestDetailGuestDetail;
       'api::guest-room.guest-room': ApiGuestRoomGuestRoom;
@@ -1562,6 +1628,7 @@ declare module '@strapi/types' {
       'api::receipt-detail.receipt-detail': ApiReceiptDetailReceiptDetail;
       'api::room.room': ApiRoomRoom;
       'api::room-allocation.room-allocation': ApiRoomAllocationRoomAllocation;
+      'api::room-blocking.room-blocking': ApiRoomBlockingRoomBlocking;
     }
   }
 }

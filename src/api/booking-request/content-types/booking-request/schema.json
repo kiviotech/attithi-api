@@ -117,12 +117,6 @@
         "audios"
       ]
     },
-    "room": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::room.room",
-      "inversedBy": "booking_requests"
-    },
     "rejection_reason": {
       "type": "text"
     },
@@ -154,6 +148,18 @@
     },
     "deeksha": {
       "type": "string"
+    },
+    "room_allocations": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::room-allocation.room-allocation",
+      "mappedBy": "booking_request"
+    },
+    "dormitory": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::dormitory.dormitory",
+      "inversedBy": "booking_requests"
     }
   }
 }

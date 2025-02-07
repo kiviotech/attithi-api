@@ -70,12 +70,6 @@
         "other"
       ]
     },
-    "room": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::room.room",
-      "inversedBy": "guests"
-    },
     "arrival_date": {
       "type": "date"
     },
@@ -99,6 +93,12 @@
     },
     "pan_number": {
       "type": "string"
+    },
+    "room_allocations": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::room-allocation.room-allocation",
+      "mappedBy": "guests"
     }
   }
 }

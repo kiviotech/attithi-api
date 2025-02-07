@@ -12,14 +12,33 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "allocation_date": {
-      "type": "date"
+    "room_status": {
+      "type": "enumeration",
+      "enum": [
+        "available",
+        "occupied"
+      ]
     },
-    "beds": {
+    "rooms": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::bed.bed",
+      "target": "api::room.room",
       "mappedBy": "room_allocation"
+    },
+    "guests": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::guest-detail.guest-detail",
+      "inversedBy": "room_allocations"
+    },
+    "occupancy": {
+      "type": "integer"
+    },
+    "booking_request": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::booking-request.booking-request",
+      "inversedBy": "room_allocations"
     }
   }
 }

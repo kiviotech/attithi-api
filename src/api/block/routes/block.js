@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * bed router
+ * block router
  */
 
 const { createCoreRouter } = require('@strapi/strapi').factories;
 
-module.exports = createCoreRouter('api::bed.bed');
+module.exports = createCoreRouter('api::block.block');

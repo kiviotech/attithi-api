@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * floor router
+ * dormitory router
  */
 
 const { createCoreRouter } = require('@strapi/strapi').factories;
 
-module.exports = createCoreRouter('api::floor.floor');
+module.exports = createCoreRouter('api::dormitory.dormitory');

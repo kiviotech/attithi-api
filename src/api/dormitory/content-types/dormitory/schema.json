@@ -1,0 +1,44 @@
+{
+  "kind": "collectionType",
+  "collectionName": "dormitories",
+  "info": {
+    "singularName": "dormitory",
+    "pluralName": "dormitories",
+    "displayName": "Dormitory",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "occupancy": {
+      "type": "integer"
+    },
+    "rooms": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::room.room",
+      "mappedBy": "dormitory"
+    },
+    "female_occupancy": {
+      "type": "integer"
+    },
+    "male_occupacny": {
+      "type": "integer"
+    },
+    "booking_requests": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::booking-request.booking-request",
+      "mappedBy": "dormitory"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "available",
+        "occupied"
+      ]
+    }
+  }
+}

@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * bed service
+ * block service
  */
 
 const { createCoreService } = require('@strapi/strapi').factories;
 
-module.exports = createCoreService('api::bed.bed');
+module.exports = createCoreService('api::block.block');

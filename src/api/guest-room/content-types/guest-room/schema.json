@@ -27,12 +27,6 @@
     "description": {
       "type": "text"
     },
-    "floors": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::floor.floor",
-      "mappedBy": "guest_house"
-    },
     "booking_request": {
       "type": "relation",
       "relation": "oneToOne",

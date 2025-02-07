@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "room_blockings",
+  "info": {
+    "singularName": "room-blocking",
+    "pluralName": "room-blockings",
+    "displayName": "RoomBlocking"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "reason_for_blocking": {
+      "type": "text"
+    },
+    "room": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::room.room",
+      "inversedBy": "room_blockings"
+    },
+    "room_block_status": {
+      "type": "enumeration",
+      "enum": [
+        "blocked",
+        "unblocked",
+        "cleaning underway",
+        "maintenance"
+      ]
+    },
+    "from_date": {
+      "type": "date"
+    },
+    "to_date": {
+      "type": "date"
+    }
+  }
+}
