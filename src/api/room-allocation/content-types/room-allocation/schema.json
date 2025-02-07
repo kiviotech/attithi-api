@@ -16,14 +16,15 @@
       "type": "enumeration",
       "enum": [
         "available",
+        "allocated",
         "occupied"
       ]
     },
-    "rooms": {
+    "room": {
       "type": "relation",
-      "relation": "oneToMany",
+      "relation": "manyToOne",
       "target": "api::room.room",
-      "mappedBy": "room_allocation"
+      "inversedBy": "room_allocations"
     },
     "guests": {
       "type": "relation",

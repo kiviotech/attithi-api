@@ -1494,9 +1494,9 @@ export interface ApiRoomRoom extends Schema.CollectionType {
       'manyToOne',
       'api::dormitory.dormitory'
     >;
-    room_allocation: Attribute.Relation<
+    room_allocations: Attribute.Relation<
       'api::room.room',
-      'manyToOne',
+      'oneToMany',
       'api::room-allocation.room-allocation'
     >;
     createdAt: Attribute.DateTime;
@@ -1521,10 +1521,10 @@ export interface ApiRoomAllocationRoomAllocation extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
-    room_status: Attribute.Enumeration<['available', 'occupied']>;
-    rooms: Attribute.Relation<
+    room_status: Attribute.Enumeration<['available', 'allocated', 'occupied']>;
+    room: Attribute.Relation<
       'api::room-allocation.room-allocation',
-      'oneToMany',
+      'manyToOne',
       'api::room.room'
     >;
     guests: Attribute.Relation<

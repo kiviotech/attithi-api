@@ -36,11 +36,11 @@
       "target": "api::dormitory.dormitory",
       "inversedBy": "rooms"
     },
-    "room_allocation": {
+    "room_allocations": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "oneToMany",
       "target": "api::room-allocation.room-allocation",
-      "inversedBy": "rooms"
+      "mappedBy": "room"
     }
   }
 }
