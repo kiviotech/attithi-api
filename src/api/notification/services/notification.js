@@ -1,53 +1,53 @@
-'use strict';
+"use strict";
 
-const QRCode = require('qrcode');
-const templates = require('../templates');
+const QRCode = require("qrcode");
+const templates = require("../templates");
 
 module.exports = {
   async sendNotifications(bookingData) {
     const errors = [];
-    
+
     // Send Email
     try {
       await this.sendEmail(bookingData);
     } catch (error) {
-      console.error('Email sending failed:', error);
-      errors.push({ type: 'email', error });
+      console.error("Email sending failed:", error);
+      errors.push({ type: "email", error });
     }
-    
+
     // Send SMS
     try {
       await this.sendSMS(bookingData);
     } catch (error) {
-      console.error('SMS sending failed:', error);
-      errors.push({ type: 'sms', error });
+      console.error("SMS sending failed:", error);
+      errors.push({ type: "sms", error });
     }
-    
+
     // Send WhatsApp
     try {
       await this.sendWhatsApp(bookingData);
     } catch (error) {
-      console.error('WhatsApp sending failed:', error);
-      errors.push({ type: 'whatsapp', error });
+      console.error("WhatsApp sending failed:", error);
+      errors.push({ type: "whatsapp", error });
     }
-    
+
     // If all notifications failed, throw an error
     if (errors.length === 3) {
-      throw new Error('All notification methods failed');
+      throw new Error("All notification methods failed");
     }
-    
+
     // Return result with any errors
     return {
       success: errors.length < 3,
-      errors: errors.length > 0 ? errors : undefined
+      errors: errors.length > 0 ? errors : undefined,
     };
   },
 
   async sendEmail(bookingData) {
     try {
-      await strapi.plugins['email'].services.email.send({
+      await strapi.plugins["email"].services.email.send({
         to: bookingData.email,
-        subject: 'Booking Request Confirmation',
+        subject: "Booking Request Confirmation",
         html: `
           <h1>Booking Request Received</h1>
           <p>Dear ${bookingData.name},</p>
@@ -65,7 +65,7 @@ module.exports = {
 
   async sendSMS(bookingData) {
     try {
-      const twilioClient = require('twilio')(
+      const twilioClient = require("twilio")(
         process.env.TWILIO_ACCOUNT_SID,
         process.env.TWILIO_AUTH_TOKEN
       );
@@ -73,7 +73,7 @@ module.exports = {
       await twilioClient.messages.create({
         body: `Your booking request (ID: ${bookingData.id}) has been received. Download our app to track status: [APP_LINK]`,
         from: process.env.TWILIO_PHONE_NUMBER,
-        to: bookingData.phoneNumber
+        to: bookingData.phoneNumber,
       });
     } catch (error) {
       throw error;
@@ -83,12 +83,12 @@ module.exports = {
   async sendWhatsApp(bookingData) {
     try {
       // Only attempt WhatsApp if TWILIO_WHATSAPP_ENABLED is true
-      if (process.env.TWILIO_WHATSAPP_ENABLED !== 'true') {
-        console.log('WhatsApp notifications are disabled');
+      if (process.env.TWILIO_WHATSAPP_ENABLED !== "true") {
+        console.log("WhatsApp notifications are disabled");
         return;
       }
 
-      const twilioClient = require('twilio')(
+      const twilioClient = require("twilio")(
         process.env.TWILIO_ACCOUNT_SID,
         process.env.TWILIO_AUTH_TOKEN
       );
@@ -96,7 +96,7 @@ module.exports = {
       await twilioClient.messages.create({
         body: `Your booking request (ID: ${bookingData.id}) has been received. Download our app to track status: [APP_LINK]`,
         from: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
-        to: `whatsapp:${bookingData.phoneNumber}`
+        to: `whatsapp:${bookingData.phoneNumber}`,
       });
     } catch (error) {
       throw error;
@@ -105,71 +105,73 @@ module.exports = {
 
   async sendAllocationNotifications(allocationData) {
     const errors = [];
-    
+
     // Send Email
     try {
       await this.sendAllocationEmail(allocationData);
     } catch (error) {
-      console.error('Allocation email sending failed:', error);
-      errors.push({ type: 'email', error });
+      console.error("Allocation email sending failed:", error);
+      errors.push({ type: "email", error });
     }
-    
+
     // Send SMS
     try {
       await this.sendAllocationSMS(allocationData);
     } catch (error) {
-      console.error('Allocation SMS sending failed:', error);
-      errors.push({ type: 'sms', error });
+      console.error("Allocation SMS sending failed:", error);
+      errors.push({ type: "sms", error });
     }
-    
+
     // Send WhatsApp
     try {
       await this.sendAllocationWhatsApp(allocationData);
     } catch (error) {
-      console.error('Allocation WhatsApp sending failed:', error);
-      errors.push({ type: 'whatsapp', error });
+      console.error("Allocation WhatsApp sending failed:", error);
+      errors.push({ type: "whatsapp", error });
     }
-    
+
     if (errors.length === 3) {
-      throw new Error('All allocation notifications failed');
+      throw new Error("All allocation notifications failed");
     }
-    
+
     return {
       success: errors.length < 3,
-      errors: errors.length > 0 ? errors : undefined
+      errors: errors.length > 0 ? errors : undefined,
     };
   },
 
   async sendAllocationEmail(allocationData) {
     try {
-      const qrCodeDataUrl = await this.generateQRCode(allocationData.bookingRequestId);
-      
+      const qrCodeDataUrl = await this.generateQRCode(
+        allocationData.bookingRequestId
+      );
+
       // Get the appropriate template based on accommodation type
       let template;
-      switch(allocationData.accommodationType) {
-        case 'guestHouse':
+      switch (allocationData.accommodationType) {
+        case "guestHouse":
           template = templates.confirmations.guestHouse;
           break;
-        case 'dormitory':
+        case "dormitory":
           template = templates.confirmations.dormitory;
           break;
-        case 'yatriNivasRoom':
+        case "yatriNivasRoom":
           template = templates.confirmations.yatriNivasRoom;
           break;
-        case 'chinuShankhari':
+        case "chinuShankhari":
           template = templates.confirmations.chinuShankhari;
           break;
-        case 'peerlessFlat':
+        case "peerlessFlat":
           template = templates.confirmations.peerlessFlat;
           break;
         default:
           template = templates.confirmations.guestHouse;
       }
 
-      await strapi.plugins['email'].services.email.send({
+      await strapi.plugins["email"].services.email.send({
         to: allocationData.email,
-        subject: 'Room Allocation Confirmation',
-        html: template(allocationData, qrCodeDataUrl)
+        subject: "Room Allocation Confirmation",
+        html: template(allocationData, qrCodeDataUrl),
       });
     } catch (error) {
       throw error;
@@ -178,17 +180,21 @@ module.exports = {
 
   async sendAllocationSMS(allocationData) {
     try {
-      const twilioClient = require('twilio')(
+      const twilioClient = require("twilio")(
         process.env.TWILIO_ACCOUNT_SID,
         process.env.TWILIO_AUTH_TOKEN
       );
 
-      const message = `Room allocated! Room: ${allocationData.roomNumber}, Building: ${allocationData.building}. Check-in: ${new Date(allocationData.checkInDate).toLocaleDateString()}. Please show this SMS at reception.`;
+      const message = `Room allocated! Room: ${
+        allocationData.roomNumber
+      }, Building: ${allocationData.building}. Check-in: ${new Date(
+        allocationData.checkInDate
+      ).toLocaleDateString()}. Please show this SMS at reception.`;
 
       await twilioClient.messages.create({
         body: message,
         from: process.env.TWILIO_PHONE_NUMBER,
-        to: allocationData.phoneNumber
+        to: allocationData.phoneNumber,
       });
     } catch (error) {
       throw error;
@@ -197,22 +203,26 @@ module.exports = {
 
   async sendAllocationWhatsApp(allocationData) {
     try {
-      if (process.env.TWILIO_WHATSAPP_ENABLED !== 'true') {
-        console.log('WhatsApp notifications are disabled');
+      if (process.env.TWILIO_WHATSAPP_ENABLED !== "true") {
+        console.log("WhatsApp notifications are disabled");
         return;
       }
 
-      const twilioClient = require('twilio')(
+      const twilioClient = require("twilio")(
         process.env.TWILIO_ACCOUNT_SID,
         process.env.TWILIO_AUTH_TOKEN
       );
 
-      const message = `Room allocated! Room: ${allocationData.roomNumber}, Building: ${allocationData.building}. Check-in: ${new Date(allocationData.checkInDate).toLocaleDateString()}. Please show this message at reception.`;
+      const message = `Room allocated! Room: ${
+        allocationData.roomNumber
+      }, Building: ${allocationData.building}. Check-in: ${new Date(
+        allocationData.checkInDate
+      ).toLocaleDateString()}. Please show this message at reception.`;
 
       await twilioClient.messages.create({
         body: message,
         from: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
-        to: `whatsapp:${allocationData.phoneNumber}`
+        to: `whatsapp:${allocationData.phoneNumber}`,
       });
     } catch (error) {
       throw error;
@@ -227,45 +237,45 @@ module.exports = {
       const qrCodeDataUrl = await QRCode.toDataURL(bookingUrl);
       return qrCodeDataUrl;
     } catch (error) {
-      console.error('QR code generation failed:', error);
+      console.error("QR code generation failed:", error);
       throw error;
     }
   },
 
   async sendConfirmationNotifications(bookingData) {
     const errors = [];
-    
+
     // Send Email
     try {
       await this.sendConfirmationEmail(bookingData);
     } catch (error) {
-      console.error('Confirmation email sending failed:', error);
-      errors.push({ type: 'email', error });
+      console.error("Confirmation email sending failed:", error);
+      errors.push({ type: "email", error });
     }
-    
+
     // Send SMS
     try {
       await this.sendConfirmationSMS(bookingData);
     } catch (error) {
-      console.error('Confirmation SMS sending failed:', error);
-      errors.push({ type: 'sms', error });
+      console.error("Confirmation SMS sending failed:", error);
+      errors.push({ type: "sms", error });
     }
-    
+
     // Send WhatsApp
     try {
       await this.sendConfirmationWhatsApp(bookingData);
     } catch (error) {
-      console.error('Confirmation WhatsApp sending failed:', error);
-      errors.push({ type: 'whatsapp', error });
+      console.error("Confirmation WhatsApp sending failed:", error);
+      errors.push({ type: "whatsapp", error });
     }
-    
+
     if (errors.length === 3) {
-      throw new Error('All confirmation notifications failed');
+      throw new Error("All confirmation notifications failed");
     }
-    
+
     return {
       success: errors.length < 3,
-      errors: errors.length > 0 ? errors : undefined
+      errors: errors.length > 0 ? errors : undefined,
     };
   },
 
@@ -274,9 +284,9 @@ module.exports = {
       // Generate QR code for the booking
       const qrCodeDataUrl = await this.generateQRCode(bookingData.id);
 
-      await strapi.plugins['email'].services.email.send({
+      await strapi.plugins["email"].services.email.send({
         to: bookingData.email,
-        subject: 'Booking Request Confirmed',
+        subject: "Booking Request Confirmed",
         html: `
           <h1>Booking Request Confirmed</h1>
           <p>Dear ${bookingData.name},</p>
@@ -284,8 +294,12 @@ module.exports = {
           <p>Details:</p>
           <ul>
             <li>Booking Request ID: ${bookingData.id}</li>
-            <li>Check-in Date: ${new Date(bookingData.checkInDate).toLocaleDateString()}</li>
-            <li>Check-out Date: ${new Date(bookingData.checkOutDate).toLocaleDateString()}</li>
+            <li>Check-in Date: ${new Date(
+              bookingData.checkInDate
+            ).toLocaleDateString()}</li>
+            <li>Check-out Date: ${new Date(
+              bookingData.checkOutDate
+            ).toLocaleDateString()}</li>
             <li>Number of Guests: ${bookingData.numberOfGuests}</li>
             <li>Purpose of Visit: ${bookingData.purpose}</li>
           </ul>
@@ -308,17 +322,21 @@ module.exports = {
 
   async sendConfirmationSMS(bookingData) {
     try {
-      const twilioClient = require('twilio')(
+      const twilioClient = require("twilio")(
         process.env.TWILIO_ACCOUNT_SID,
         process.env.TWILIO_AUTH_TOKEN
       );
 
-      const message = `Booking confirmed! ID: ${bookingData.id}. Check-in: ${new Date(bookingData.checkInDate).toLocaleDateString()}. You'll receive room details soon. Download our app to view details: [APP_LINK]`;
+      const message = `Booking confirmed! ID: ${
+        bookingData.id
+      }. Check-in: ${new Date(
+        bookingData.checkInDate
+      ).toLocaleDateString()}. You'll receive room details soon. Download our app to view details: [APP_LINK]`;
 
       await twilioClient.messages.create({
         body: message,
         from: process.env.TWILIO_PHONE_NUMBER,
-        to: bookingData.phoneNumber
+        to: bookingData.phoneNumber,
       });
     } catch (error) {
       throw error;
@@ -327,22 +345,26 @@ module.exports = {
 
   async sendConfirmationWhatsApp(bookingData) {
     try {
-      if (process.env.TWILIO_WHATSAPP_ENABLED !== 'true') {
-        console.log('WhatsApp notifications are disabled');
+      if (process.env.TWILIO_WHATSAPP_ENABLED !== "true") {
+        console.log("WhatsApp notifications are disabled");
         return;
       }
 
-      const twilioClient = require('twilio')(
+      const twilioClient = require("twilio")(
         process.env.TWILIO_ACCOUNT_SID,
         process.env.TWILIO_AUTH_TOKEN
       );
 
-      const message = `Booking confirmed! ID: ${bookingData.id}. Check-in: ${new Date(bookingData.checkInDate).toLocaleDateString()}. You'll receive room details soon. Download our app to view details: [APP_LINK]`;
+      const message = `Booking confirmed! ID: ${
+        bookingData.id
+      }. Check-in: ${new Date(
+        bookingData.checkInDate
+      ).toLocaleDateString()}. You'll receive room details soon. Download our app to view details: [APP_LINK]`;
 
       await twilioClient.messages.create({
         body: message,
         from: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
-        to: `whatsapp:${bookingData.phoneNumber}`
+        to: `whatsapp:${bookingData.phoneNumber}`,
       });
     } catch (error) {
       throw error;
@@ -351,35 +373,35 @@ module.exports = {
 
   async sendRejectionNotifications(bookingData) {
     const errors = [];
-    
+
     try {
       await this.sendRejectionEmail(bookingData);
     } catch (error) {
-      console.error('Rejection email sending failed:', error);
-      errors.push({ type: 'email', error });
+      console.error("Rejection email sending failed:", error);
+      errors.push({ type: "email", error });
     }
-    
+
     try {
       await this.sendRejectionSMS(bookingData);
     } catch (error) {
-      console.error('Rejection SMS sending failed:', error);
-      errors.push({ type: 'sms', error });
+      console.error("Rejection SMS sending failed:", error);
+      errors.push({ type: "sms", error });
     }
-    
+
     try {
       await this.sendRejectionWhatsApp(bookingData);
     } catch (error) {
-      console.error('Rejection WhatsApp sending failed:', error);
-      errors.push({ type: 'whatsapp', error });
+      console.error("Rejection WhatsApp sending failed:", error);
+      errors.push({ type: "whatsapp", error });
     }
-    
+
     if (errors.length === 3) {
-      throw new Error('All rejection notifications failed');
+      throw new Error("All rejection notifications failed");
     }
-    
+
     return {
       success: errors.length < 3,
-      errors: errors.length > 0 ? errors : undefined
+      errors: errors.length > 0 ? errors : undefined,
     };
   },
 
@@ -389,17 +411,19 @@ module.exports = {
       const { rejectionReason, rejectionType } = bookingData;
 
       switch (rejectionType) {
-        case 'noAvailability':
+        case "noAvailability":
           template = templates.rejections.noAvailability(bookingData);
           break;
-        case 'sixMonthRule':
+        case "sixMonthRule":
           template = templates.rejections.sixMonthRule(bookingData);
           break;
-        case 'specialCelebrationBelow10k':
-          template = templates.rejections.specialCelebrationBelow10k(bookingData);
+        case "specialCelebrationBelow10k":
+          template =
+            templates.rejections.specialCelebrationBelow10k(bookingData);
           break;
-        case 'specialCelebrationAbove10k':
-          template = templates.rejections.specialCelebrationAbove10k(bookingData);
+        case "specialCelebrationAbove10k":
+          template =
+            templates.rejections.specialCelebrationAbove10k(bookingData);
           break;
         default:
           // Custom rejection reason
@@ -418,10 +442,10 @@ module.exports = {
           `;
       }
 
-      await strapi.plugins['email'].services.email.send({
+      await strapi.plugins["email"].services.email.send({
         to: bookingData.email,
-        subject: 'Booking Request Update',
-        html: template
+        subject: "Booking Request Update",
+        html: template,
       });
     } catch (error) {
       throw error;
@@ -430,7 +454,7 @@ module.exports = {
 
   async sendRejectionSMS(bookingData) {
     try {
-      const twilioClient = require('twilio')(
+      const twilioClient = require("twilio")(
         process.env.TWILIO_ACCOUNT_SID,
         process.env.TWILIO_AUTH_TOKEN
       );
@@ -440,7 +464,7 @@ module.exports = {
       await twilioClient.messages.create({
         body: message,
         from: process.env.TWILIO_PHONE_NUMBER,
-        to: bookingData.phoneNumber
+        to: bookingData.phoneNumber,
       });
     } catch (error) {
       throw error;
@@ -449,12 +473,12 @@ module.exports = {
 
   async sendRejectionWhatsApp(bookingData) {
     try {
-      if (process.env.TWILIO_WHATSAPP_ENABLED !== 'true') {
-        console.log('WhatsApp notifications are disabled');
+      if (process.env.TWILIO_WHATSAPP_ENABLED !== "true") {
+        console.log("WhatsApp notifications are disabled");
         return;
       }
 
-      const twilioClient = require('twilio')(
+      const twilioClient = require("twilio")(
         process.env.TWILIO_ACCOUNT_SID,
         process.env.TWILIO_AUTH_TOKEN
       );
@@ -464,10 +488,10 @@ module.exports = {
       await twilioClient.messages.create({
         body: message,
         from: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
-        to: `whatsapp:${bookingData.phoneNumber}`
+        to: `whatsapp:${bookingData.phoneNumber}`,
       });
     } catch (error) {
       throw error;
     }
-  }
+  },
 };
