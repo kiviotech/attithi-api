@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+        }
+        .content {
+            padding: 20px;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Booking Confirmation</h2>
+            <p>Booking ID: <%= bookingId %></p>
+        </div>
+        
+        <div class="content">
+            <p>Dear <%= guestName %>,</p>
+            
+            <p>Your booking has been confirmed. Here are the details:</p>
+            
+            <ul>
+                <li>Check-in Date: <%= checkInDate %></li>
+                <li>Check-out Date: <%= checkOutDate %></li>
+                <li>Number of Guests: <%= numberOfGuests %></li>
+                <li>Purpose: <%= purpose %></li>
+                <li>Accommodation Type: <%= accommodationType %></li>
+            </ul>
+            
+            <p>If you have any questions or need to make changes to your booking, please contact us.</p>
+            
+            <p>Thank you for choosing our services.</p>
+        </div>
+        
+        <div class="footer">
+            <p>This is an automated email. Please do not reply to this message.</p>
+        </div>
+    </div>
+</body>
+</html> 

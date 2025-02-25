@@ -30,6 +30,19 @@ module.exports = {
       try {
         switch (result.status) {
           case 'confirmed':
+            // Send confirmation email
+            await strapi.service('api::email-template.email-template')
+              .sendBookingConfirmation({
+                bookingId: result.id,
+                name: result.name,
+                email: result.email,
+                checkInDate: result.arrival_date,
+                checkOutDate: result.departure_date,
+                numberOfGuests: result.number_of_guest_members,
+                purpose: result.additional_information,
+                accommodationType: result.accommodation_type
+              });
+            
             await strapi.service('api::notification.notification').sendConfirmationNotifications({
               id: result.id,
               name: result.name,

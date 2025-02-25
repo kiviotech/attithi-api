@@ -1422,6 +1422,48 @@ export interface ApiNotificationNotification extends Schema.CollectionType {
   };
 }
 
+export interface ApiOtpStorageOtpStorage extends Schema.CollectionType {
+  collectionName: 'otp_storages';
+  info: {
+    singularName: 'otp-storage';
+    pluralName: 'otp-storages';
+    displayName: 'OTP Storage';
+    description: 'Store temporary OTPs for login verification';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    phone_number: Attribute.String &
+      Attribute.Required &
+      Attribute.Unique &
+      Attribute.SetMinMaxLength<{
+        maxLength: 15;
+      }>;
+    otp: Attribute.String &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        minLength: 6;
+        maxLength: 6;
+      }>;
+    expires_at: Attribute.DateTime & Attribute.Required;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::otp-storage.otp-storage',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::otp-storage.otp-storage',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiReceiptDetailReceiptDetail extends Schema.CollectionType {
   collectionName: 'receipt_details';
   info: {
@@ -1625,6 +1667,7 @@ declare module '@strapi/types' {
       'api::guest-room.guest-room': ApiGuestRoomGuestRoom;
       'api::message-template.message-template': ApiMessageTemplateMessageTemplate;
       'api::notification.notification': ApiNotificationNotification;
+      'api::otp-storage.otp-storage': ApiOtpStorageOtpStorage;
       'api::receipt-detail.receipt-detail': ApiReceiptDetailReceiptDetail;
       'api::room.room': ApiRoomRoom;
       'api::room-allocation.room-allocation': ApiRoomAllocationRoomAllocation;

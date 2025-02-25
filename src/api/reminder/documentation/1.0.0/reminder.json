@@ -1,0 +1,335 @@
+{
+  "/reminders/all": {
+    "post": {
+      "tags": [
+        "Reminders"
+      ],
+      "operationId": "post/reminders/all",
+      "description": "Send checkout reminders through all channels (Email, SMS, and WhatsApp)",
+      "parameters": [],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "required": ["email", "phoneNumber", "name", "bookingId", "checkoutDate", "roomNumber"],
+                  "properties": {
+                    "bookingId": {
+                      "type": "string",
+                      "description": "Unique booking identifier"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Guest name"
+                    },
+                    "email": {
+                      "type": "string",
+                      "format": "email",
+                      "description": "Guest email address"
+                    },
+                    "phoneNumber": {
+                      "type": "string",
+                      "description": "Guest phone number with country code (e.g., +1234567890)"
+                    },
+                    "checkoutDate": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Checkout date (YYYY-MM-DD)"
+                    },
+                    "roomNumber": {
+                      "type": "string",
+                      "description": "Room number or identifier"
+                    }
+                  }
+                }
+              }
+            },
+            "example": {
+              "data": {
+                "bookingId": "123",
+                "name": "John Doe",
+                "email": "john.doe@example.com",
+                "phoneNumber": "+1234567890",
+                "checkoutDate": "2024-03-21",
+                "roomNumber": "A101"
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Reminders sent successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "All reminders sent successfully"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Bad request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "error": {
+                    "type": "string",
+                    "example": "Missing required fields"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/reminders/email": {
+    "post": {
+      "tags": [
+        "Reminders"
+      ],
+      "operationId": "post/reminders/email",
+      "description": "Send checkout reminder via email only",
+      "parameters": [],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "required": ["email", "name", "bookingId", "checkoutDate", "roomNumber"],
+                  "properties": {
+                    "bookingId": {
+                      "type": "string",
+                      "description": "Unique booking identifier"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Guest name"
+                    },
+                    "email": {
+                      "type": "string",
+                      "format": "email",
+                      "description": "Guest email address"
+                    },
+                    "checkoutDate": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Checkout date (YYYY-MM-DD)"
+                    },
+                    "roomNumber": {
+                      "type": "string",
+                      "description": "Room number or identifier"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Email reminder sent successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "channel": {
+                    "type": "string",
+                    "example": "email"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Bad request"
+        }
+      }
+    }
+  },
+  "/reminders/sms": {
+    "post": {
+      "tags": [
+        "Reminders"
+      ],
+      "operationId": "post/reminders/sms",
+      "description": "Send checkout reminder via SMS only",
+      "parameters": [],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "required": ["phoneNumber", "name", "bookingId", "checkoutDate", "roomNumber"],
+                  "properties": {
+                    "bookingId": {
+                      "type": "string",
+                      "description": "Unique booking identifier"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Guest name"
+                    },
+                    "phoneNumber": {
+                      "type": "string",
+                      "description": "Guest phone number with country code"
+                    },
+                    "checkoutDate": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Checkout date (YYYY-MM-DD)"
+                    },
+                    "roomNumber": {
+                      "type": "string",
+                      "description": "Room number or identifier"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "SMS reminder sent successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "channel": {
+                    "type": "string",
+                    "example": "sms"
+                  },
+                  "messageId": {
+                    "type": "string",
+                    "example": "SM123456789"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Bad request"
+        }
+      }
+    }
+  },
+  "/reminders/whatsapp": {
+    "post": {
+      "tags": [
+        "Reminders"
+      ],
+      "operationId": "post/reminders/whatsapp",
+      "description": "Send checkout reminder via WhatsApp only",
+      "parameters": [],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "required": ["phoneNumber", "name", "bookingId", "checkoutDate", "roomNumber"],
+                  "properties": {
+                    "bookingId": {
+                      "type": "string",
+                      "description": "Unique booking identifier"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Guest name"
+                    },
+                    "phoneNumber": {
+                      "type": "string",
+                      "description": "Guest phone number with country code"
+                    },
+                    "checkoutDate": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Checkout date (YYYY-MM-DD)"
+                    },
+                    "roomNumber": {
+                      "type": "string",
+                      "description": "Room number or identifier"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "WhatsApp reminder sent successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "channel": {
+                    "type": "string",
+                    "example": "whatsapp"
+                  },
+                  "messageId": {
+                    "type": "string",
+                    "example": "WA123456789"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Bad request"
+        }
+      }
+    }
+  }
+} 

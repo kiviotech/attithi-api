@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "otp_storages",
+  "info": {
+    "singularName": "otp-storage",
+    "pluralName": "otp-storages",
+    "displayName": "OTP Storage",
+    "description": "Store temporary OTPs for login verification"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "phone_number": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "maxLength": 15
+    },
+    "otp": {
+      "type": "string",
+      "required": true,
+      "maxLength": 6,
+      "minLength": 6
+    },
+    "expires_at": {
+      "type": "datetime",
+      "required": true
+    }
+  }
+} 
