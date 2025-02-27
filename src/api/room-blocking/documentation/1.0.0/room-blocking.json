@@ -1,5 +1,5 @@
 {
-  "/receipt-details": {
+  "/room-blockings": {
     "get": {
       "responses": {
         "200": {
@@ -7,7 +7,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReceiptDetailListResponse"
+                "$ref": "#/components/schemas/RoomBlockingListResponse"
               }
             }
           }
@@ -64,7 +64,7 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Room-blocking"
       ],
       "parameters": [
         {
@@ -170,7 +170,7 @@
           }
         }
       ],
-      "operationId": "get/receipt-details"
+      "operationId": "get/room-blockings"
     },
     "post": {
       "responses": {
@@ -179,7 +179,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReceiptDetailResponse"
+                "$ref": "#/components/schemas/RoomBlockingResponse"
               }
             }
           }
@@ -236,23 +236,23 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Room-blocking"
       ],
       "parameters": [],
-      "operationId": "post/receipt-details",
+      "operationId": "post/room-blockings",
       "requestBody": {
         "required": true,
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/ReceiptDetailRequest"
+              "$ref": "#/components/schemas/RoomBlockingRequest"
             }
           }
         }
       }
     }
   },
-  "/receipt-details/{id}": {
+  "/room-blockings/{id}": {
     "get": {
       "responses": {
         "200": {
@@ -260,7 +260,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReceiptDetailResponse"
+                "$ref": "#/components/schemas/RoomBlockingResponse"
               }
             }
           }
@@ -317,7 +317,7 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Room-blocking"
       ],
       "parameters": [
         {
@@ -331,7 +331,7 @@
           }
         }
       ],
-      "operationId": "get/receipt-details/{id}"
+      "operationId": "get/room-blockings/{id}"
     },
     "put": {
       "responses": {
@@ -340,7 +340,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReceiptDetailResponse"
+                "$ref": "#/components/schemas/RoomBlockingResponse"
               }
             }
           }
@@ -397,7 +397,7 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Room-blocking"
       ],
       "parameters": [
         {
@@ -411,13 +411,13 @@
           }
         }
       ],
-      "operationId": "put/receipt-details/{id}",
+      "operationId": "put/room-blockings/{id}",
       "requestBody": {
         "required": true,
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/ReceiptDetailRequest"
+              "$ref": "#/components/schemas/RoomBlockingRequest"
             }
           }
         }
@@ -488,7 +488,7 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Room-blocking"
       ],
       "parameters": [
         {
@@ -502,7 +502,7 @@
           }
         }
       ],
-      "operationId": "delete/receipt-details/{id}"
+      "operationId": "delete/room-blockings/{id}"
     }
   }
 }

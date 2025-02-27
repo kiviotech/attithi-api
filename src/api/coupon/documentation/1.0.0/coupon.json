@@ -1,5 +1,5 @@
 {
-  "/receipt-details": {
+  "/coupons": {
     "get": {
       "responses": {
         "200": {
@@ -7,7 +7,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReceiptDetailListResponse"
+                "$ref": "#/components/schemas/CouponListResponse"
               }
             }
           }
@@ -64,7 +64,7 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Coupon"
       ],
       "parameters": [
         {
@@ -170,7 +170,7 @@
           }
         }
       ],
-      "operationId": "get/receipt-details"
+      "operationId": "get/coupons"
     },
     "post": {
       "responses": {
@@ -179,7 +179,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReceiptDetailResponse"
+                "$ref": "#/components/schemas/CouponResponse"
               }
             }
           }
@@ -236,23 +236,23 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Coupon"
       ],
       "parameters": [],
-      "operationId": "post/receipt-details",
+      "operationId": "post/coupons",
       "requestBody": {
         "required": true,
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/ReceiptDetailRequest"
+              "$ref": "#/components/schemas/CouponRequest"
             }
           }
         }
       }
     }
   },
-  "/receipt-details/{id}": {
+  "/coupons/{id}": {
     "get": {
       "responses": {
         "200": {
@@ -260,7 +260,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReceiptDetailResponse"
+                "$ref": "#/components/schemas/CouponResponse"
               }
             }
           }
@@ -317,7 +317,7 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Coupon"
       ],
       "parameters": [
         {
@@ -331,7 +331,7 @@
           }
         }
       ],
-      "operationId": "get/receipt-details/{id}"
+      "operationId": "get/coupons/{id}"
     },
     "put": {
       "responses": {
@@ -340,7 +340,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReceiptDetailResponse"
+                "$ref": "#/components/schemas/CouponResponse"
               }
             }
           }
@@ -397,7 +397,7 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Coupon"
       ],
       "parameters": [
         {
@@ -411,13 +411,13 @@
           }
         }
       ],
-      "operationId": "put/receipt-details/{id}",
+      "operationId": "put/coupons/{id}",
       "requestBody": {
         "required": true,
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/ReceiptDetailRequest"
+              "$ref": "#/components/schemas/CouponRequest"
             }
           }
         }
@@ -488,7 +488,7 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Coupon"
       ],
       "parameters": [
         {
@@ -502,7 +502,7 @@
           }
         }
       ],
-      "operationId": "delete/receipt-details/{id}"
+      "operationId": "delete/coupons/{id}"
     }
   }
 }

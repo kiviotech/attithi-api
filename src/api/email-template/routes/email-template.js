@@ -41,6 +41,26 @@ module.exports = {
           }
         }
       }
+    },
+    {
+      method: 'POST',
+      path: '/email-template/revisit-regret',
+      handler: 'email-template.sendRevisitRegret',
+      config: {
+        policies: [],
+        description: 'Send regret email for revisit within 6 months',
+        tags: ['Email Template']
+      }
+    },
+    {
+      method: 'POST',
+      path: '/email-template/special-celebration-regret',
+      handler: 'email-template.sendSpecialCelebrationRegret',
+      config: {
+        policies: [],
+        description: 'Send regret email for special celebration period',
+        tags: ['Email Template']
+      }
     }
   ]
 }; 

@@ -18,11 +18,11 @@
             margin-bottom: 20px;
         }
         .header h2 {
-            color: #28a745;
+            color: #dc3545;  /* Red color for regret mail */
             margin: 0;
         }
         .header h3 {
-            color: #28a745;
+            color: #dc3545;
             margin: 5px 0;
         }
         .content {
@@ -38,11 +38,13 @@
         .main-text {
             margin-bottom: 20px;
         }
-        .registration-info {
-            margin: 20px 0;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 5px;
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 5px;
+        }
+        .warning-text {
+            color: #dc3545;
+            font-weight: bold;
         }
         .blessing {
             margin: 20px 0;
@@ -54,21 +56,13 @@
         .signature-block {
             margin-top: 10px;
         }
-        .important {
-            color: #000;
-            font-weight: bold;
-        }
-        .highlight {
-            background-color: #fff3cd;
-            padding: 2px 5px;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h2>Confirmation reply</h2>
-            <h3>Guest House</h3>
+            <h2>Regret mail</h2>
+            <h3>For revisit in 6 months</h3>
         </div>
         
         <div class="content">
@@ -77,19 +71,10 @@
             <div class="namaskar">Namaskar.</div>
             
             <div class="main-text">
-                We have received your accommodation request and noted the contents. You are welcome to stay at our 
-                <span class="important">Guest House</span> during the mentioned period i.e 
-                <span class="highlight">arrival <%= arrivalDate %> and departure <%= departureDate %> after breakfast at 07.30 a.m.</span> 
-                The accommodation will be kept reserved for <span class="highlight"><%= numberOfDevotees %> devotees</span>.
-            </div>
-            
-            <div class="registration-info">
-                <strong>On the day of your arrival, please try to reach the Math Office to do the registration formalities during office hours i.e,</strong>
-                <ul>
-                    <li>Morning 9:00 a.m to 11:00 a.m or</li>
-                    <li>Evening 3:30 p.m to 5:00 p.m.</li>
-                </ul>
-                <strong>Please show the below QR code along with your Aadhaar card.</strong>
+                We have received your accommodation request and appreciate your interest in staying at Holy Kamarpukur. 
+                <span class="warning-text">Please don't get disheartened as it will not be possible for us to accommodate you, due to your recent stay in our Math Accommodation 
+                (<span class="highlight"><%= previousStayDate %></span>) and you can't apply for accommodation less than six months from your last stay.</span>
+                Our inability to accede to your request may kindly be excused.
             </div>
             
             <div class="blessing">
@@ -102,7 +87,6 @@
             
             <div class="signature-block">
                 Yours sincerely,<br>
-                <strong>Swami Lokottarananda</strong><br>
                 <strong>Adhyaksha</strong><br>
                 <strong>RAMAKRISHNA MATH & RAMAKRISHNA MISSION, KAMARPUKUR</strong>
             </div>

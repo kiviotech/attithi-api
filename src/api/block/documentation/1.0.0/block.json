@@ -1,5 +1,5 @@
 {
-  "/receipt-details": {
+  "/blocks": {
     "get": {
       "responses": {
         "200": {
@@ -7,7 +7,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReceiptDetailListResponse"
+                "$ref": "#/components/schemas/BlockListResponse"
               }
             }
           }
@@ -64,7 +64,7 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Block"
       ],
       "parameters": [
         {
@@ -170,7 +170,7 @@
           }
         }
       ],
-      "operationId": "get/receipt-details"
+      "operationId": "get/blocks"
     },
     "post": {
       "responses": {
@@ -179,7 +179,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReceiptDetailResponse"
+                "$ref": "#/components/schemas/BlockResponse"
               }
             }
           }
@@ -236,23 +236,23 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Block"
       ],
       "parameters": [],
-      "operationId": "post/receipt-details",
+      "operationId": "post/blocks",
       "requestBody": {
         "required": true,
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/ReceiptDetailRequest"
+              "$ref": "#/components/schemas/BlockRequest"
             }
           }
         }
       }
     }
   },
-  "/receipt-details/{id}": {
+  "/blocks/{id}": {
     "get": {
       "responses": {
         "200": {
@@ -260,7 +260,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReceiptDetailResponse"
+                "$ref": "#/components/schemas/BlockResponse"
               }
             }
           }
@@ -317,7 +317,7 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Block"
       ],
       "parameters": [
         {
@@ -331,7 +331,7 @@
           }
         }
       ],
-      "operationId": "get/receipt-details/{id}"
+      "operationId": "get/blocks/{id}"
     },
     "put": {
       "responses": {
@@ -340,7 +340,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReceiptDetailResponse"
+                "$ref": "#/components/schemas/BlockResponse"
               }
             }
           }
@@ -397,7 +397,7 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Block"
       ],
       "parameters": [
         {
@@ -411,13 +411,13 @@
           }
         }
       ],
-      "operationId": "put/receipt-details/{id}",
+      "operationId": "put/blocks/{id}",
       "requestBody": {
         "required": true,
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/ReceiptDetailRequest"
+              "$ref": "#/components/schemas/BlockRequest"
             }
           }
         }
@@ -488,7 +488,7 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Block"
       ],
       "parameters": [
         {
@@ -502,7 +502,7 @@
           }
         }
       ],
-      "operationId": "delete/receipt-details/{id}"
+      "operationId": "delete/blocks/{id}"
     }
   }
 }

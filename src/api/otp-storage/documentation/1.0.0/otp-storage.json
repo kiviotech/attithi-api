@@ -1,5 +1,5 @@
 {
-  "/receipt-details": {
+  "/otp-storages": {
     "get": {
       "responses": {
         "200": {
@@ -7,7 +7,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReceiptDetailListResponse"
+                "$ref": "#/components/schemas/OtpStorageListResponse"
               }
             }
           }
@@ -64,7 +64,7 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Otp-storage"
       ],
       "parameters": [
         {
@@ -170,7 +170,7 @@
           }
         }
       ],
-      "operationId": "get/receipt-details"
+      "operationId": "get/otp-storages"
     },
     "post": {
       "responses": {
@@ -179,7 +179,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReceiptDetailResponse"
+                "$ref": "#/components/schemas/OtpStorageResponse"
               }
             }
           }
@@ -236,23 +236,23 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Otp-storage"
       ],
       "parameters": [],
-      "operationId": "post/receipt-details",
+      "operationId": "post/otp-storages",
       "requestBody": {
         "required": true,
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/ReceiptDetailRequest"
+              "$ref": "#/components/schemas/OtpStorageRequest"
             }
           }
         }
       }
     }
   },
-  "/receipt-details/{id}": {
+  "/otp-storages/{id}": {
     "get": {
       "responses": {
         "200": {
@@ -260,7 +260,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReceiptDetailResponse"
+                "$ref": "#/components/schemas/OtpStorageResponse"
               }
             }
           }
@@ -317,7 +317,7 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Otp-storage"
       ],
       "parameters": [
         {
@@ -331,7 +331,7 @@
           }
         }
       ],
-      "operationId": "get/receipt-details/{id}"
+      "operationId": "get/otp-storages/{id}"
     },
     "put": {
       "responses": {
@@ -340,7 +340,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReceiptDetailResponse"
+                "$ref": "#/components/schemas/OtpStorageResponse"
               }
             }
           }
@@ -397,7 +397,7 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Otp-storage"
       ],
       "parameters": [
         {
@@ -411,13 +411,13 @@
           }
         }
       ],
-      "operationId": "put/receipt-details/{id}",
+      "operationId": "put/otp-storages/{id}",
       "requestBody": {
         "required": true,
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/ReceiptDetailRequest"
+              "$ref": "#/components/schemas/OtpStorageRequest"
             }
           }
         }
@@ -488,7 +488,7 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Otp-storage"
       ],
       "parameters": [
         {
@@ -502,7 +502,7 @@
           }
         }
       ],
-      "operationId": "delete/receipt-details/{id}"
+      "operationId": "delete/otp-storages/{id}"
     }
   }
 }

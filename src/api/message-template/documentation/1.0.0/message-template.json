@@ -1,5 +1,5 @@
 {
-  "/receipt-details": {
+  "/message-templates": {
     "get": {
       "responses": {
         "200": {
@@ -7,7 +7,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReceiptDetailListResponse"
+                "$ref": "#/components/schemas/MessageTemplateListResponse"
               }
             }
           }
@@ -64,7 +64,7 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Message-template"
       ],
       "parameters": [
         {
@@ -170,7 +170,7 @@
           }
         }
       ],
-      "operationId": "get/receipt-details"
+      "operationId": "get/message-templates"
     },
     "post": {
       "responses": {
@@ -179,7 +179,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReceiptDetailResponse"
+                "$ref": "#/components/schemas/MessageTemplateResponse"
               }
             }
           }
@@ -236,23 +236,23 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Message-template"
       ],
       "parameters": [],
-      "operationId": "post/receipt-details",
+      "operationId": "post/message-templates",
       "requestBody": {
         "required": true,
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/ReceiptDetailRequest"
+              "$ref": "#/components/schemas/MessageTemplateRequest"
             }
           }
         }
       }
     }
   },
-  "/receipt-details/{id}": {
+  "/message-templates/{id}": {
     "get": {
       "responses": {
         "200": {
@@ -260,7 +260,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReceiptDetailResponse"
+                "$ref": "#/components/schemas/MessageTemplateResponse"
               }
             }
           }
@@ -317,7 +317,7 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Message-template"
       ],
       "parameters": [
         {
@@ -331,7 +331,7 @@
           }
         }
       ],
-      "operationId": "get/receipt-details/{id}"
+      "operationId": "get/message-templates/{id}"
     },
     "put": {
       "responses": {
@@ -340,7 +340,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReceiptDetailResponse"
+                "$ref": "#/components/schemas/MessageTemplateResponse"
               }
             }
           }
@@ -397,7 +397,7 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Message-template"
       ],
       "parameters": [
         {
@@ -411,13 +411,13 @@
           }
         }
       ],
-      "operationId": "put/receipt-details/{id}",
+      "operationId": "put/message-templates/{id}",
       "requestBody": {
         "required": true,
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/ReceiptDetailRequest"
+              "$ref": "#/components/schemas/MessageTemplateRequest"
             }
           }
         }
@@ -488,7 +488,7 @@
         }
       },
       "tags": [
-        "Receipt-detail"
+        "Message-template"
       ],
       "parameters": [
         {
@@ -502,7 +502,7 @@
           }
         }
       ],
-      "operationId": "delete/receipt-details/{id}"
+      "operationId": "delete/message-templates/{id}"
     }
   }
 }
