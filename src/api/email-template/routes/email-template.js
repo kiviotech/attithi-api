@@ -49,7 +49,31 @@ module.exports = {
       config: {
         policies: [],
         description: 'Send regret email for revisit within 6 months',
-        tags: ['Email Template']
+        tags: ['Email Template'],
+        auth: false,
+        documentation: {
+          summary: 'Send a regret email for revisit within 6 months',
+          description: 'Sends a regret email to guests who try to book within 6 months of their last stay',
+          requestBody: {
+            content: {
+              'application/json': {
+                schema: {
+                  properties: {
+                    data: {
+                      type: 'object',
+                      properties: {
+                        email: { type: 'string' },
+                        name: { type: 'string' },
+                        previousStayDate: { type: 'string', format: 'date' }
+                      },
+                      required: ['email', 'name', 'previousStayDate']
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     {

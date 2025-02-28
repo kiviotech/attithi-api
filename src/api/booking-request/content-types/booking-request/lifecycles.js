@@ -1,17 +1,7 @@
 module.exports = {
   async afterCreate(event) {
-    const { result } = event;
-    
-    try {
-      await strapi.service('api::notification.notification').sendNotifications({
-        id: result.id,
-        name: result.name,
-        email: result.email,
-        phoneNumber: result.phone_number,
-      });
-    } catch (error) {
-      console.error('Failed to send notifications:', error);
-    }
+    // Remove the notification service call from here
+    // We'll handle it through a dedicated API endpoint
   },
 
   async beforeUpdate(event) {
