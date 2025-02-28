@@ -127,13 +127,13 @@ module.exports = {
 
       const emailHtml = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #FF4444; text-align: center;">Regret mail</h2>
-          <h3 style="color: #FF4444; text-align: center;">For revisit in 6 months</h3>
+          <h2 style="color: #FF0000; text-align: center;">Regret mail</h2>
+          <h3 style="color: #FF0000; text-align: center;">For revisit in 6 months</h3>
           
           <p><strong>Dear Devotee,</strong></p>
           <p>Namaskar.</p>
           
-          <p>We have received your accommodation request and appreciate your interest in staying at Holy Kamarpukur. Please don't get disheartened as it will not be possible for us to accommodate you, due to your recent stay in our Math Accommodation (<strong>${previousStayDate}</strong>) and you can't apply for accommodation less than six months from your last stay. Our inability to accede to your request may kindly be excused.</p>
+          <p>We have received your accommodation request and appreciate your interest in staying at Holy Kamarpukur. <strong style="color: #FF0000;">Please don't get disheartened as it will not be possible for us to accommodate you, due to your recent stay in our Math Accommodation (${previousStayDate}) and you can't apply for accommodation less than six months from your last stay.</strong> Our inability to accede to your request may kindly be excused.</p>
           
           <p>May Sri Ramakrishna, Holy Mother Sri Sarada Devi and Swami Vivekananda bless you all !</p>
           
@@ -145,20 +145,19 @@ module.exports = {
         </div>
       `;
 
-      // Send email using strapi's email plugin with attachDataUrls option
+      // Send email using strapi's email plugin
       await strapi.plugins['email'].services.email.send({
         to: data.email,
         from: process.env.SMTP_FROM,
-        subject: 'Booking Request - Ramakrishna Math & Mission, Kamarpukur',
-        html: emailHtml,
-        attachDataUrls: true
+        subject: 'Regret mail - For revisit in 6 months - Ramakrishna Math & Mission, Kamarpukur',
+        html: emailHtml
       });
 
-      console.log('Regret email sent successfully to:', data.email);
+      console.log('Revisit regret email sent successfully to:', data.email);
       return { success: true };
     } catch (error) {
       console.error('Email sending failed:', error);
-      throw new Error(`Failed to send regret email: ${error.message}`);
+      throw new Error(`Failed to send revisit regret email: ${error.message}`);
     }
   },
 
@@ -168,16 +167,14 @@ module.exports = {
       
       const emailHtml = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #FF4444; text-align: center;">Regret mail - Special Celebrations (Above 10k)</h2>
+          <h2 style="color: #FF0000; text-align: center;">Regret mail - Special Celebrations (No and Below 10k)</h2>
           
           <p><strong>Dear Devotee,</strong></p>
           <p>Namaskar.</p>
           
           <p>We have received your accommodation request and appreciate your interest in staying at Holy Kamarpukur during <strong>Sri Sri Thakur's Tithi Puja 2025 / Durga Puja 2025</strong>.</p>
           
-          <p style="background-color: #FFF9C4; padding: 10px;">Please note that we have limited accommodations and most of them are used for <strong>the artists, performers and volunteers during Sri Sri Durga Utsav and Sri Sri Thakur's Tithi Puja</strong>. Thus, don't get disheartened as it will not be possible for us to accommodate you during this period as requested by you due to paucity of space. As you are closely associated with Ramakrishna Math, Kamarpukur, it equally hurts us to regret your accommodation request. Hope you will understand our constraints.</p>
-          
-          <p>In addition to the aforementioned reason, we also wish to inform you that during <strong>special celebrations like Sri Sri Durga Puja and Sri Sri Thakur's Tithi Puja</strong>, we are extremely busy with preparation for this celebration and managing the inflow of pilgrims and making Prasad Arrangements for thousands and thousands of devotees and volunteers. As a result we don't get time and opportunity to pay even little attention to our in-house guests like you. Thus, we request you to come and stay some other time and go back with fond memories of your pilgrimage.</p>
+          <p style="background-color: #FFF9C4; padding: 10px;"><strong>Please note that we have limited accommodations and most of them are used for the artists, performers and volunteers during Sri Sri Durga Utsav and Sri Sri Thakur's Tithi Puja.</strong> Thus, don't get disheartened as it will not be possible for us to accommodate you during the period as requested by you due to paucity of space. Hope you will understand our constraints.</p>
           
           <p>May Sri Ramakrishna, Holy Mother Sri Sarada Devi and Swami Vivekananda bless you and members of your family!</p>
           
@@ -190,13 +187,12 @@ module.exports = {
         </div>
       `;
 
-      // Send email using strapi's email plugin with attachDataUrls option
+      // Send email using strapi's email plugin
       await strapi.plugins['email'].services.email.send({
         to: data.email,
         from: process.env.SMTP_FROM,
-        subject: 'Booking Request - Special Celebration - Ramakrishna Math & Mission, Kamarpukur',
-        html: emailHtml,
-        attachDataUrls: true
+        subject: 'Regret mail - Special Celebrations - Ramakrishna Math & Mission, Kamarpukur',
+        html: emailHtml
       });
 
       console.log('Special celebration regret email sent successfully to:', data.email);
@@ -204,6 +200,185 @@ module.exports = {
     } catch (error) {
       console.error('Email sending failed:', error);
       throw new Error(`Failed to send special celebration regret email: ${error.message}`);
+    }
+  },
+
+  async sendDormitoryConfirmation(data) {
+    try {
+      console.log('Attempting to send dormitory confirmation email to:', data.email);
+      
+      // Format dates
+      const arrivalDate = new Date(data.checkInDate).toLocaleDateString('en-IN', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+      
+      const departureDate = new Date(data.checkOutDate).toLocaleDateString('en-IN', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+
+      // Generate QR code and get URL
+      const qrCodeUrl = await this.generateAndUploadQRCode(data.bookingId);
+      console.log('QR Code URL:', qrCodeUrl);
+
+      // Use fully qualified URL with server address
+      const fullQrCodeUrl = `${process.env.SERVER_URL || 'http://localhost:1338'}${qrCodeUrl}`;
+
+      const emailHtml = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #4CAF50; text-align: center;">Confirmation reply</h2>
+          <h3 style="color: #4CAF50; text-align: center;">Dormitory</h3>
+          
+          <p><strong>Dear Devotee,</strong></p>
+          <p>Namaskar.</p>
+          
+          <p>We have received your accommodation request and noted the contents. As all the rooms have already been booked for the dates requested by you, we shall provide your accommodation at <strong>Yatri Niwas (Dormitory)</strong> for the mentioned period i.e arrival <strong>${arrivalDate}</strong> and departure <strong>${departureDate}</strong> after breakfast at 07.30 a.m. The accommodation will be kept reserved for <strong>${data.numberOfGuests} devotees</strong>.</p>
+          
+          <p><strong>Yatri Niwas</strong> (Dormitory), where male devotees and female devotees are accommodated separately, is situated 5 minutes walking distance from our Ashrama premises.</p>
+          
+          <p>On the day of your arrival, please try to reach the Math Office to do the registration formalities during office hours i.e, morning 9:00 a.m to 11:00 a.m or evening 3:30 p.m to 5:00 p.m. Please show the below QR code along with your Aadhaar card.</p>
+          
+          <div style="text-align: center; margin: 20px 0;">
+            <img src="${fullQrCodeUrl}" alt="Booking QR Code" style="width: 200px; height: 200px;"/>
+          </div>
+          
+          <p>May Sri Ramakrishna, Holy Mother Sri Sarada Devi and Swami Vivekananda bless you all !</p>
+          
+          <p>With best regards and namaskar again.</p>
+          
+          <p>Yours sincerely,</p>
+          <p><strong>Swami Lokottarananda</strong><br>
+          <strong>Adhyaksha</strong><br>
+          <strong>RAMAKRISHNA MATH & RAMAKRISHNA MISSION, KAMARPUKUR</strong></p>
+        </div>
+      `;
+
+      // Send email using strapi's email plugin
+      await strapi.plugins['email'].services.email.send({
+        to: data.email,
+        from: process.env.SMTP_FROM,
+        subject: 'Booking Confirmation - Dormitory - Ramakrishna Math & Mission, Kamarpukur',
+        html: emailHtml
+      });
+
+      console.log('Dormitory confirmation email sent successfully to:', data.email);
+      return { success: true };
+    } catch (error) {
+      console.error('Email sending failed:', error);
+      throw new Error(`Failed to send dormitory confirmation email: ${error.message}`);
+    }
+  },
+
+  async sendPeerlessConfirmation(data) {
+    try {
+      console.log('Attempting to send Peerless Flat confirmation email to:', data.email);
+      
+      // Format dates
+      const arrivalDate = new Date(data.checkInDate).toLocaleDateString('en-IN', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+      
+      const departureDate = new Date(data.checkOutDate).toLocaleDateString('en-IN', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+
+      // Generate QR code and get URL
+      const qrCodeUrl = await this.generateAndUploadQRCode(data.bookingId);
+      console.log('QR Code URL:', qrCodeUrl);
+
+      // Use fully qualified URL with server address
+      const fullQrCodeUrl = `${process.env.SERVER_URL || 'http://localhost:1338'}${qrCodeUrl}`;
+
+      const emailHtml = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #4CAF50; text-align: center;">Confirmation reply</h2>
+          <h3 style="color: #4CAF50; text-align: center;">Peerless Flat</h3>
+          
+          <p><strong>Dear Devotee,</strong></p>
+          <p>Namaskar.</p>
+          
+          <p>We have received your accommodation request and noted the contents. You are welcome to stay at <strong>our Peerless Flat</strong>, which is situated 5 minutes walking distance from our Ashrama premises, during the mentioned period i.e arrival <strong>${arrivalDate}</strong> and departure <strong>${departureDate}</strong> at 07.30 a.m. The accommodation will be kept reserved for <strong>${data.numberOfGuests} devotees</strong>.</p>
+          
+          <p>On the day of your arrival, please try to reach the Math Office to do the registration formalities during office hours i.e, morning 9:00 a.m to 11:00 a.m or evening 3:30 p.m to 5:00 p.m. Please show the below QR code along with your Aadhaar card.</p>
+          
+          <div style="text-align: center; margin: 20px 0;">
+            <img src="${fullQrCodeUrl}" alt="Booking QR Code" style="width: 200px; height: 200px;"/>
+          </div>
+          
+          <p>May Sri Ramakrishna, Holy Mother Sri Sarada Devi and Swami Vivekananda bless you all !</p>
+          
+          <p>With best regards and namaskar again.</p>
+          
+          <p>Yours sincerely,</p>
+          <p><strong>Swami Lokottarananda</strong><br>
+          <strong>Adhyaksha</strong><br>
+          <strong>RAMAKRISHNA MATH & RAMAKRISHNA MISSION, KAMARPUKUR</strong></p>
+        </div>
+      `;
+
+      // Send email using strapi's email plugin
+      await strapi.plugins['email'].services.email.send({
+        to: data.email,
+        from: process.env.SMTP_FROM,
+        subject: 'Booking Confirmation - Peerless Flat - Ramakrishna Math & Mission, Kamarpukur',
+        html: emailHtml,
+        attachDataUrls: true
+      });
+
+      console.log('Peerless Flat confirmation email sent successfully to:', data.email);
+      return { success: true };
+    } catch (error) {
+      console.error('Email sending failed:', error);
+      throw new Error(`Failed to send Peerless Flat confirmation email: ${error.message}`);
+    }
+  },
+
+  async sendNoRoomsRegret(data) {
+    try {
+      console.log('Attempting to send no rooms availability regret email to:', data.email);
+      
+      const emailHtml = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #FF0000; text-align: center;">Regret mail</h2>
+          <h3 style="color: #FF0000; text-align: center;">For no rooms availability</h3>
+          
+          <p><strong>Dear Devotee,</strong></p>
+          <p>Namaskar.</p>
+          
+          <p>We have received your accommodation request and appreciate your interest in staying at Holy Kamarpukur. <strong style="color: #FF0000;">Please don't get disheartened as it will not be possible for us to accommodate you during the period requested by you due to paucity of space.</strong> Our inability to accede to your request may kindly be excused.</p>
+          
+          <p>However, if you are flexible with your dates of pilgrimage to Holy Kamarpukur, please send a fresh request using the following link,</p>
+          
+          <p>May Sri Ramakrishna, Holy Mother Sri Sarada Devi and Swami Vivekananda bless you all !</p>
+          
+          <p>With best regards and namaskar again.</p>
+          
+          <p>Yours sincerely,</p>
+          <p><strong>Adhyaksha</strong><br>
+          <strong>RAMAKRISHNA MATH & RAMAKRISHNA MISSION, KAMARPUKUR</strong></p>
+        </div>
+      `;
+
+      // Send email using strapi's email plugin
+      await strapi.plugins['email'].services.email.send({
+        to: data.email,
+        from: process.env.SMTP_FROM,
+        subject: 'Regret mail - No rooms availability - Ramakrishna Math & Mission, Kamarpukur',
+        html: emailHtml
+      });
+
+      console.log('No rooms availability regret email sent successfully to:', data.email);
+      return { success: true };
+    } catch (error) {
+      console.error('Email sending failed:', error);
+      throw new Error(`Failed to send no rooms availability regret email: ${error.message}`);
     }
   }
 }; 
