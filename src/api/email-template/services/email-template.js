@@ -1,6 +1,52 @@
 'use strict';
 
+const QRCode = require('qrcode');
+const fs = require('fs');
+const path = require('path');
+const { v4: uuidv4 } = require('uuid');
+
 module.exports = {
+  // Generate and upload QR code to server
+  async generateAndUploadQRCode(bookingId) {
+    try {
+      // Create a temporary file path for the QR code
+      const tempDir = path.join(process.cwd(), 'public/uploads/temp');
+      if (!fs.existsSync(tempDir)) {
+        fs.mkdirSync(tempDir, { recursive: true });
+      }
+      
+      const fileName = `qrcode-${bookingId}-${uuidv4()}.png`;
+      const filePath = path.join(tempDir, fileName);
+      
+      // Generate QR code as a file
+      await QRCode.toFile(filePath, bookingId);
+      
+      // Read the file as a buffer
+      const buffer = fs.readFileSync(filePath);
+      
+      // Upload to Strapi's media library
+      const uploadedFile = await strapi.plugins.upload.services.upload.upload({
+        data: {}, // data like caption, alternativeText, etc.
+        files: {
+          path: filePath,
+          name: fileName,
+          type: 'image/png',
+          size: buffer.length,
+        },
+      });
+      
+      // Clean up the temporary file
+      fs.unlinkSync(filePath);
+      
+      // Return the URL of the uploaded file
+      console.log('QR code uploaded successfully. URL:', uploadedFile[0].url);
+      return uploadedFile[0].url;
+    } catch (error) {
+      console.error('Error generating and uploading QR code:', error);
+      throw new Error('Failed to generate and upload QR code');
+    }
+  },
+
   async sendBookingConfirmation(data) {
     try {
       console.log('Attempting to send booking confirmation email to:', data.email);
@@ -18,12 +64,13 @@ module.exports = {
         year: 'numeric'
       });
 
-      // Ensure QR code is a valid data URL
-      const qrCodeDataUrl = await this.generateQRCode(data.bookingId);
+      // Generate QR code and get URL
+      const qrCodeUrl = await this.generateAndUploadQRCode(data.bookingId);
+      console.log('QR Code URL:', qrCodeUrl);
 
-      console.log('QR Code Data URL:', qrCodeDataUrl);
+      // Use fully qualified URL with server address
+      const fullQrCodeUrl = `${process.env.SERVER_URL || 'http://localhost:1338'}${qrCodeUrl}`;
 
-      // Use the QR code in the email template
       const emailHtml = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #4CAF50; text-align: center;">Confirmation reply</h2>
@@ -36,7 +83,9 @@ module.exports = {
           
           <p>On the day of your arrival, please try to reach the Math Office to do the registration formalities during office hours i.e, morning 9:00 a.m to 11:00 a.m or evening 3:30 p.m to 5:00 p.m. Please show the below QR code along with your Aadhaar card.</p>
           
-          <img src="${qrCodeDataUrl}" alt="Booking QR Code" style="width: 200px; height: 200px; display: block; margin: 20px auto;"/>
+          <div style="text-align: center; margin: 20px 0;">
+            <img src="${fullQrCodeUrl}" alt="Booking QR Code" style="width: 200px; height: 200px;"/>
+          </div>
           
           <p>May Sri Ramakrishna, Holy Mother Sri Sarada Devi and Swami Vivekananda bless you all !</p>
           
@@ -96,12 +145,13 @@ module.exports = {
         </div>
       `;
 
-      // Send email using strapi's email plugin
+      // Send email using strapi's email plugin with attachDataUrls option
       await strapi.plugins['email'].services.email.send({
         to: data.email,
         from: process.env.SMTP_FROM,
         subject: 'Booking Request - Ramakrishna Math & Mission, Kamarpukur',
-        html: emailHtml
+        html: emailHtml,
+        attachDataUrls: true
       });
 
       console.log('Regret email sent successfully to:', data.email);
@@ -114,32 +164,46 @@ module.exports = {
 
   async sendSpecialCelebrationRegret(data) {
     try {
-      // Send email using strapi's email plugin
+      console.log('Attempting to send special celebration regret email to:', data.email);
+      
+      const emailHtml = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #FF4444; text-align: center;">Regret mail - Special Celebrations (Above 10k)</h2>
+          
+          <p><strong>Dear Devotee,</strong></p>
+          <p>Namaskar.</p>
+          
+          <p>We have received your accommodation request and appreciate your interest in staying at Holy Kamarpukur during <strong>Sri Sri Thakur's Tithi Puja 2025 / Durga Puja 2025</strong>.</p>
+          
+          <p style="background-color: #FFF9C4; padding: 10px;">Please note that we have limited accommodations and most of them are used for <strong>the artists, performers and volunteers during Sri Sri Durga Utsav and Sri Sri Thakur's Tithi Puja</strong>. Thus, don't get disheartened as it will not be possible for us to accommodate you during this period as requested by you due to paucity of space. As you are closely associated with Ramakrishna Math, Kamarpukur, it equally hurts us to regret your accommodation request. Hope you will understand our constraints.</p>
+          
+          <p>In addition to the aforementioned reason, we also wish to inform you that during <strong>special celebrations like Sri Sri Durga Puja and Sri Sri Thakur's Tithi Puja</strong>, we are extremely busy with preparation for this celebration and managing the inflow of pilgrims and making Prasad Arrangements for thousands and thousands of devotees and volunteers. As a result we don't get time and opportunity to pay even little attention to our in-house guests like you. Thus, we request you to come and stay some other time and go back with fond memories of your pilgrimage.</p>
+          
+          <p>May Sri Ramakrishna, Holy Mother Sri Sarada Devi and Swami Vivekananda bless you and members of your family!</p>
+          
+          <p>With best regards and namaskar again.</p>
+          
+          <p>Yours sincerely,</p>
+          <p><strong>Swami Lokottarananda</strong><br>
+          <strong>Adhyaksha</strong><br>
+          <strong>RAMAKRISHNA MATH & RAMAKRISHNA MISSION, KAMARPUKUR</strong></p>
+        </div>
+      `;
+
+      // Send email using strapi's email plugin with attachDataUrls option
       await strapi.plugins['email'].services.email.send({
         to: data.email,
         from: process.env.SMTP_FROM,
-        subject: 'Booking Request - Special Celebration Period',
-        template: 'special-celebration-regret',
-        templateVars: {
-          guestName: data.name,
-          celebrationName: data.celebrationName || 'Sri Sri Thakur\'s Tithi Puja 2025 / Durga Puja 2025'
-        }
+        subject: 'Booking Request - Special Celebration - Ramakrishna Math & Mission, Kamarpukur',
+        html: emailHtml,
+        attachDataUrls: true
       });
 
+      console.log('Special celebration regret email sent successfully to:', data.email);
       return { success: true };
     } catch (error) {
       console.error('Email sending failed:', error);
-      throw new Error('Failed to send special celebration regret email');
-    }
-  },
-
-  async generateQRCode(bookingId) {
-    const QRCode = require('qrcode');
-    try {
-      return await QRCode.toDataURL(bookingId);
-    } catch (error) {
-      console.error('QR Code generation failed:', error);
-      throw new Error('Failed to generate QR Code');
+      throw new Error(`Failed to send special celebration regret email: ${error.message}`);
     }
   }
 }; 
