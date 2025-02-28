@@ -124,7 +124,7 @@ module.exports = {
         auth: false,
         documentation: {
           summary: 'Send a dormitory booking confirmation email',
-          description: 'Sends a confirmation email for dormitory accommodation bookings',
+          description: 'Sends a confirmation email for dormitory bookings',
           requestBody: {
             content: {
               'application/json': {
@@ -133,14 +133,14 @@ module.exports = {
                     data: {
                       type: 'object',
                       properties: {
-                        bookingId: { type: 'string' },
-                        email: { type: 'string' },
+                        email: { type: 'string', format: 'email' },
                         name: { type: 'string' },
                         checkInDate: { type: 'string', format: 'date' },
                         checkOutDate: { type: 'string', format: 'date' },
-                        numberOfGuests: { type: 'number' }
+                        numberOfGuests: { type: 'number' },
+                        bookingId: { type: 'string' }
                       },
-                      required: ['bookingId', 'email', 'checkInDate', 'checkOutDate', 'numberOfGuests']
+                      required: ['email', 'checkInDate', 'checkOutDate', 'numberOfGuests', 'bookingId']
                     }
                   }
                 }
@@ -156,12 +156,12 @@ module.exports = {
       handler: 'email-template.sendPeerlessConfirmation',
       config: {
         policies: [],
-        description: 'Send Peerless Flat confirmation email',
+        description: 'Send peerless flat confirmation email',
         tags: ['Email Template'],
         auth: false,
         documentation: {
-          summary: 'Send a Peerless Flat booking confirmation email',
-          description: 'Sends a confirmation email for Peerless Flat accommodation bookings',
+          summary: 'Send a peerless flat booking confirmation email',
+          description: 'Sends a confirmation email for peerless flat bookings',
           requestBody: {
             content: {
               'application/json': {
@@ -170,14 +170,14 @@ module.exports = {
                     data: {
                       type: 'object',
                       properties: {
-                        bookingId: { type: 'string' },
-                        email: { type: 'string' },
+                        email: { type: 'string', format: 'email' },
                         name: { type: 'string' },
                         checkInDate: { type: 'string', format: 'date' },
                         checkOutDate: { type: 'string', format: 'date' },
-                        numberOfGuests: { type: 'number' }
+                        numberOfGuests: { type: 'number' },
+                        bookingId: { type: 'string' }
                       },
-                      required: ['bookingId', 'email', 'checkInDate', 'checkOutDate', 'numberOfGuests']
+                      required: ['email', 'checkInDate', 'checkOutDate', 'numberOfGuests', 'bookingId']
                     }
                   }
                 }
@@ -218,6 +218,113 @@ module.exports = {
                         }
                       },
                       required: ['email']
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      method: 'POST',
+      path: '/email-template/accommodation-regret',
+      handler: 'email-template.sendAccommodationRegret',
+      config: {
+        policies: [],
+        description: 'Send accommodation regret email',
+        tags: ['Email Template'],
+        auth: false,
+        documentation: {
+          summary: 'Send an accommodation regret email',
+          description: 'Sends a regret email when no rooms are available',
+          requestBody: {
+            content: {
+              'application/json': {
+                schema: {
+                  properties: {
+                    data: {
+                      type: 'object',
+                      properties: {
+                        email: { type: 'string' },
+                        name: { type: 'string' }
+                      },
+                      required: ['email']
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      method: 'POST',
+      path: '/email-template/chinu-shankhhari-confirmation',
+      handler: 'email-template.sendChinuShankhariConfirmation',
+      config: {
+        policies: [],
+        description: 'Send Chinu Shankhhari guest house confirmation email',
+        tags: ['Email Template'],
+        auth: false,
+        documentation: {
+          summary: 'Send a Chinu Shankhhari guest house booking confirmation email',
+          description: 'Sends a confirmation email for Chinu Shankhhari Memorial Building guest house accommodation bookings',
+          requestBody: {
+            content: {
+              'application/json': {
+                schema: {
+                  properties: {
+                    data: {
+                      type: 'object',
+                      properties: {
+                        bookingId: { type: 'string' },
+                        email: { type: 'string' },
+                        name: { type: 'string' },
+                        checkInDate: { type: 'string', format: 'date' },
+                        checkOutDate: { type: 'string', format: 'date' },
+                        numberOfGuests: { type: 'number' }
+                      },
+                      required: ['bookingId', 'email', 'checkInDate', 'checkOutDate', 'numberOfGuests']
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      method: 'POST',
+      path: '/email-template/yatri-nivas-confirmation',
+      handler: 'email-template.sendYatriNivasConfirmation',
+      config: {
+        policies: [],
+        description: 'Send Yatri Nivas room confirmation email',
+        tags: ['Email Template'],
+        auth: false,
+        documentation: {
+          summary: 'Send a Yatri Nivas room booking confirmation email',
+          description: 'Sends a confirmation email for Yatri Nivas room accommodation bookings',
+          requestBody: {
+            content: {
+              'application/json': {
+                schema: {
+                  properties: {
+                    data: {
+                      type: 'object',
+                      properties: {
+                        bookingId: { type: 'string' },
+                        email: { type: 'string' },
+                        name: { type: 'string' },
+                        checkInDate: { type: 'string', format: 'date' },
+                        checkOutDate: { type: 'string', format: 'date' },
+                        numberOfGuests: { type: 'number' }
+                      },
+                      required: ['bookingId', 'email', 'checkInDate', 'checkOutDate', 'numberOfGuests']
                     }
                   }
                 }

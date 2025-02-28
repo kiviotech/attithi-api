@@ -380,5 +380,116 @@ module.exports = {
       console.error('Email sending failed:', error);
       throw new Error(`Failed to send no rooms availability regret email: ${error.message}`);
     }
+  },
+
+  async sendAccommodationRegret(data) {
+    try {
+      console.log('Attempting to send accommodation regret email to:', data.email);
+      
+      const emailHtml = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #FF4444; text-align: center;">Regret mail</h2>
+          <h3 style="color: #FF4444; text-align: center;">For no rooms availability</h3>
+          
+          <p><strong>Dear Devotee,</strong></p>
+          <p>Namaskar.</p>
+          
+          <p>We have received your accommodation request and appreciate your interest in staying at Holy Kamarpukur. Please don't get disheartened as it will not be possible for us to accommodate you during the period requested by you due to paucity of space. Our inability to accede to your request may kindly be excused.</p>
+          
+          <p>However, if you are flexible with your dates of pilgrimage to Holy Kamarpukur, please send a fresh request using the following link,</p>
+          
+          <p>May Sri Ramakrishna, Holy Mother Sri Sarada Devi and Swami Vivekananda bless you all !</p>
+          
+          <p>With best regards and namaskar again.</p>
+          
+          <p>Yours sincerely,</p>
+          <p><strong>Adhyaksha</strong><br>
+          <strong>RAMAKRISHNA MATH & RAMAKRISHNA MISSION, KAMARPUKUR</strong></p>
+        </div>
+      `;
+
+      // Send email using strapi's email plugin
+      await strapi.plugins['email'].services.email.send({
+        to: data.email,
+        from: process.env.SMTP_FROM,
+        subject: 'Accommodation Request - Not Available - Ramakrishna Math & Mission, Kamarpukur',
+        html: emailHtml,
+        attachDataUrls: true
+      });
+
+      console.log('Regret email sent successfully to:', data.email);
+      return { success: true };
+    } catch (error) {
+      console.error('Email sending failed:', error);
+      throw new Error(`Failed to send accommodation regret email: ${error.message}`);
+    }
+  },
+
+  async sendYatriNivasConfirmation(data) {
+    try {
+      console.log('Attempting to send Yatri Nivas confirmation email to:', data.email);
+      
+      // Format dates
+      const arrivalDate = new Date(data.checkInDate).toLocaleDateString('en-IN', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+      
+      const departureDate = new Date(data.checkOutDate).toLocaleDateString('en-IN', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+
+      // Generate QR code and get URL
+      const qrCodeUrl = await this.generateAndUploadQRCode(data.bookingId);
+      console.log('QR Code URL:', qrCodeUrl);
+
+      // Use fully qualified URL with server address
+      const fullQrCodeUrl = `${process.env.SERVER_URL || 'http://localhost:1338'}${qrCodeUrl}`;
+
+      const emailHtml = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #4CAF50; text-align: center;">Confirmation reply</h2>
+          <h3 style="color: #4CAF50; text-align: center;">Yatri Nivas Room</h3>
+          
+          <p><strong>Dear Devotee,</strong></p>
+          <p>Namaskar.</p>
+          
+          <p>We have received your accommodation request and noted the contents. You are welcome to stay at our <strong>Yatri Niwas (Room)</strong>, which is situated 5 minutes walking distance from our Ashrama premises, during the mentioned period i.e arrival <strong>${arrivalDate}</strong> and departure <strong>${departureDate}</strong> at 07.30 a.m. The accommodation will be kept reserved for <strong>${data.numberOfGuests} devotees</strong>.</p>
+          
+          <p>On the day of your arrival, please try to reach the Math Office to do the registration formalities during office hours i.e, morning 9:00 a.m to 11:00 a.m or evening 3:30 p.m to 5:00 p.m. Please show the below QR code along with your Aadhaar card.</p>
+          
+          <div style="text-align: center; margin: 20px 0;">
+            <img src="${fullQrCodeUrl}" alt="Booking QR Code" style="width: 200px; height: 200px;"/>
+          </div>
+          
+          <p>May Sri Ramakrishna, Holy Mother Sri Sarada Devi and Swami Vivekananda bless you all !</p>
+          
+          <p>With best regards and namaskar again.</p>
+          
+          <p>Yours sincerely,</p>
+          <p><strong>Swami Lokottarananda</strong><br>
+          <strong>Adhyaksha</strong><br>
+          <strong>RAMAKRISHNA MATH & RAMAKRISHNA MISSION, KAMARPUKUR</strong></p>
+        </div>
+      `;
+
+      // Send email using strapi's email plugin
+      await strapi.plugins['email'].services.email.send({
+        to: data.email,
+        from: process.env.SMTP_FROM,
+        subject: 'Booking Confirmation - Yatri Nivas Room - Ramakrishna Math & Mission, Kamarpukur',
+        html: emailHtml,
+        attachDataUrls: true
+      });
+
+      console.log('Yatri Nivas confirmation email sent successfully to:', data.email);
+      return { success: true };
+    } catch (error) {
+      console.error('Email sending failed:', error);
+      throw new Error(`Failed to send Yatri Nivas confirmation email: ${error.message}`);
+    }
   }
 }; 

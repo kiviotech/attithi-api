@@ -129,5 +129,119 @@ module.exports = {
       console.error('Direct email test failed:', error);
       return ctx.badRequest(`Direct email test failed: ${error.message}`);
     }
+  },
+
+  async sendNoRoomsRegret(ctx) {
+    try {
+      const { data } = ctx.request.body;
+
+      // Validate required fields
+      if (!data.email) {
+        return ctx.badRequest('Missing required fields');
+      }
+
+      // Send no rooms regret email
+      const result = await strapi.service('api::email-template.email-template')
+        .sendNoRoomsRegret(data);
+
+      return ctx.send(result);
+    } catch (error) {
+      return ctx.badRequest(error.message);
+    }
+  },
+
+  async sendDormitoryConfirmation(ctx) {
+    try {
+      const { data } = ctx.request.body;
+
+      // Validate required fields
+      if (!data.email || !data.checkInDate || !data.checkOutDate || !data.numberOfGuests || !data.bookingId) {
+        return ctx.badRequest('Missing required fields');
+      }
+
+      // Send dormitory confirmation email
+      const result = await strapi.service('api::email-template.email-template')
+        .sendDormitoryConfirmation(data);
+
+      return ctx.send(result);
+    } catch (error) {
+      return ctx.badRequest(error.message);
+    }
+  },
+
+  async sendPeerlessConfirmation(ctx) {
+    try {
+      const { data } = ctx.request.body;
+
+      // Validate required fields
+      if (!data.email || !data.checkInDate || !data.checkOutDate || !data.numberOfGuests || !data.bookingId) {
+        return ctx.badRequest('Missing required fields');
+      }
+
+      // Send peerless confirmation email
+      const result = await strapi.service('api::email-template.email-template')
+        .sendPeerlessConfirmation(data);
+
+      return ctx.send(result);
+    } catch (error) {
+      return ctx.badRequest(error.message);
+    }
+  },
+
+  async sendAccommodationRegret(ctx) {
+    try {
+      const { data } = ctx.request.body;
+
+      // Validate required fields
+      if (!data.email) {
+        return ctx.badRequest('Missing required fields');
+      }
+
+      // Send accommodation regret email
+      const result = await strapi.service('api::email-template.email-template')
+        .sendAccommodationRegret(data);
+
+      return ctx.send(result);
+    } catch (error) {
+      return ctx.badRequest(error.message);
+    }
+  },
+
+  async sendChinuShankhariConfirmation(ctx) {
+    try {
+      const { data } = ctx.request.body;
+
+      // Validate required fields
+      if (!data.email || !data.checkInDate || !data.checkOutDate || !data.numberOfGuests || !data.bookingId) {
+        return ctx.badRequest('Missing required fields');
+      }
+
+      // Send Chinu Shankhari confirmation email
+      const result = await strapi.service('api::email-template.email-template')
+        .sendChinuShankhariConfirmation(data);
+
+      return ctx.send(result);
+    } catch (error) {
+      return ctx.badRequest(error.message);
+    }
+  },
+
+  async sendYatriNivasConfirmation(ctx) {
+    try {
+      const { data } = ctx.request.body;
+
+      // Validate required fields
+      if (!data.email || !data.checkInDate || !data.checkOutDate || !data.numberOfGuests || !data.bookingId) {
+        return ctx.badRequest('Missing required fields');
+      }
+
+      // Send Yatri Nivas confirmation email
+      const result = await strapi.service('api::email-template.email-template')
+        .sendYatriNivasConfirmation(data);
+
+      return ctx.send(result);
+    } catch (error) {
+      return ctx.badRequest(error.message);
+    }
   }
 }; 
