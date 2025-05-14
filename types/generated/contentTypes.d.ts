@@ -770,7 +770,9 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.role'
     >;
-    user_role: Attribute.Enumeration<['superadmin', 'subadmin', 'deeksha']> &
+    user_role: Attribute.Enumeration<
+      ['super-admin', 'donation', 'deeksha', 'guest-house', 'donation-admin']
+    > &
       Attribute.DefaultTo<'deeksha'>;
     receipt_details: Attribute.Relation<
       'plugin::users-permissions.user',
@@ -1010,6 +1012,36 @@ export interface ApiCouponCoupon extends Schema.CollectionType {
   };
 }
 
+export interface ApiDataControlDataControl extends Schema.SingleType {
+  collectionName: 'data_controls';
+  info: {
+    singularName: 'data-control';
+    pluralName: 'data-controls';
+    displayName: 'Data Control';
+    description: 'API endpoints for data management operations';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    settings: Attribute.JSON;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::data-control.data-control',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::data-control.data-control',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiDeekshaDeeksha extends Schema.CollectionType {
   collectionName: 'deekshas';
   info: {
@@ -1029,7 +1061,7 @@ export interface ApiDeekshaDeeksha extends Schema.CollectionType {
     State: Attribute.String;
     Country: Attribute.String;
     Phone_no: Attribute.BigInteger;
-    Email: Attribute.Email;
+    Email: Attribute.Email & Attribute.DefaultTo<'dummy@example.com'>;
     Aadhar_no: Attribute.BigInteger;
     PAN_no: Attribute.String;
     Education: Attribute.Enumeration<
@@ -1155,6 +1187,47 @@ export interface ApiDonationDonation extends Schema.CollectionType {
   };
 }
 
+export interface ApiDonationAuditLogDonationAuditLog
+  extends Schema.CollectionType {
+  collectionName: 'donation_audit_logs';
+  info: {
+    singularName: 'donation-audit-log';
+    pluralName: 'donation-audit-logs';
+    displayName: 'Donation audit log';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    username: Attribute.String;
+    userId: Attribute.BigInteger;
+    donationId: Attribute.BigInteger;
+    metadata: Attribute.JSON;
+    timestamp: Attribute.DateTime;
+    notes: Attribute.String;
+    admin_user: Attribute.Relation<
+      'api::donation-audit-log.donation-audit-log',
+      'oneToOne',
+      'admin::user'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::donation-audit-log.donation-audit-log',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::donation-audit-log.donation-audit-log',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiDormitoryDormitory extends Schema.CollectionType {
   collectionName: 'dormitories';
   info: {
@@ -1269,7 +1342,7 @@ export interface ApiGuestDetailGuestDetail extends Schema.CollectionType {
     departure_date: Attribute.Date;
     deeksha: Attribute.String;
     identity_proof: Attribute.String;
-    identity_number: Attribute.String;
+    identity_number: Attribute.String & Attribute.Required & Attribute.Unique;
     email: Attribute.String;
     unique_no: Attribute.String;
     pan_number: Attribute.String;
@@ -1278,6 +1351,10 @@ export interface ApiGuestDetailGuestDetail extends Schema.CollectionType {
       'manyToMany',
       'api::room-allocation.room-allocation'
     >;
+    arrival_status: Attribute.Enumeration<
+      ['Not Arrived', 'Arrived', 'Cancelled', 'Rescheduled']
+    > &
+      Attribute.DefaultTo<'Not Arrived'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1381,6 +1458,51 @@ export interface ApiMessageTemplateMessageTemplate
   };
 }
 
+export interface ApiMigrationMigration extends Schema.CollectionType {
+  collectionName: 'migrations';
+  info: {
+    singularName: 'migration';
+    pluralName: 'migrations';
+    displayName: 'Migration';
+    description: 'Data migration logs and tracking';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    jobId: Attribute.String & Attribute.Required & Attribute.Unique;
+    status: Attribute.Enumeration<
+      ['processing', 'completed', 'failed', 'cancelled']
+    > &
+      Attribute.DefaultTo<'processing'>;
+    progress: Attribute.Integer &
+      Attribute.SetMinMax<
+        {
+          min: 0;
+          max: 100;
+        },
+        number
+      > &
+      Attribute.DefaultTo<0>;
+    results: Attribute.JSON;
+    logs: Attribute.JSON;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::migration.migration',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::migration.migration',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiNotificationNotification extends Schema.CollectionType {
   collectionName: 'notifications';
   info: {
@@ -1393,7 +1515,27 @@ export interface ApiNotificationNotification extends Schema.CollectionType {
   };
   attributes: {
     status: Attribute.Enumeration<['sent', 'pending']>;
-    type: Attribute.Enumeration<['Rejection', 'Approval']>;
+    type: Attribute.Enumeration<
+      [
+        'Rejection',
+        'Approval',
+        'DONATION_EDITED',
+        'DONATION_VERIFIED',
+        'RECEIPT_EDITED',
+        'info',
+        'warning',
+        'alert'
+      ]
+    >;
+    title: Attribute.String;
+    message: Attribute.Text;
+    isRead: Attribute.Boolean & Attribute.DefaultTo<false>;
+    sourceUserId: Attribute.Integer;
+    sourceUserName: Attribute.String;
+    sourceUserRole: Attribute.String;
+    targetRoles: Attribute.JSON;
+    resourceType: Attribute.String;
+    resourceId: Attribute.Integer;
     booking_request: Attribute.Relation<
       'api::notification.notification',
       'manyToOne',
@@ -1637,6 +1779,44 @@ export interface ApiRoomBlockingRoomBlocking extends Schema.CollectionType {
   };
 }
 
+export interface ApiUserActivityLogUserActivityLog
+  extends Schema.CollectionType {
+  collectionName: 'user_activity_logs';
+  info: {
+    singularName: 'user-activity-log';
+    pluralName: 'user-activity-logs';
+    displayName: 'user-activity-log';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    action: Attribute.String;
+    username: Attribute.String;
+    userRole: Attribute.String;
+    ipAddress: Attribute.String;
+    userAgent: Attribute.String;
+    details: Attribute.JSON;
+    notes: Attribute.String;
+    timestamp: Attribute.DateTime;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::user-activity-log.user-activity-log',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::user-activity-log.user-activity-log',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -1659,19 +1839,23 @@ declare module '@strapi/types' {
       'api::booking-request.booking-request': ApiBookingRequestBookingRequest;
       'api::celebration.celebration': ApiCelebrationCelebration;
       'api::coupon.coupon': ApiCouponCoupon;
+      'api::data-control.data-control': ApiDataControlDataControl;
       'api::deeksha.deeksha': ApiDeekshaDeeksha;
       'api::donation.donation': ApiDonationDonation;
+      'api::donation-audit-log.donation-audit-log': ApiDonationAuditLogDonationAuditLog;
       'api::dormitory.dormitory': ApiDormitoryDormitory;
       'api::food.food': ApiFoodFood;
       'api::guest-detail.guest-detail': ApiGuestDetailGuestDetail;
       'api::guest-room.guest-room': ApiGuestRoomGuestRoom;
       'api::message-template.message-template': ApiMessageTemplateMessageTemplate;
+      'api::migration.migration': ApiMigrationMigration;
       'api::notification.notification': ApiNotificationNotification;
       'api::otp-storage.otp-storage': ApiOtpStorageOtpStorage;
       'api::receipt-detail.receipt-detail': ApiReceiptDetailReceiptDetail;
       'api::room.room': ApiRoomRoom;
       'api::room-allocation.room-allocation': ApiRoomAllocationRoomAllocation;
       'api::room-blocking.room-blocking': ApiRoomBlockingRoomBlocking;
+      'api::user-activity-log.user-activity-log': ApiUserActivityLogUserActivityLog;
     }
   }
 }

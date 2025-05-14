@@ -22,8 +22,42 @@
       "type": "enumeration",
       "enum": [
         "Rejection",
-        "Approval"
+        "Approval",
+        "DONATION_EDITED",
+        "DONATION_VERIFIED",
+        "RECEIPT_EDITED",
+        "info",
+        "warning",
+        "alert"
       ]
+    },
+    "title": {
+      "type": "string"
+    },
+    "message": {
+      "type": "text"
+    },
+    "isRead": {
+      "type": "boolean",
+      "default": false
+    },
+    "sourceUserId": {
+      "type": "integer"
+    },
+    "sourceUserName": {
+      "type": "string"
+    },
+    "sourceUserRole": {
+      "type": "string"
+    },
+    "targetRoles": {
+      "type": "json"
+    },
+    "resourceType": {
+      "type": "string"
+    },
+    "resourceId": {
+      "type": "integer"
     },
     "booking_request": {
       "type": "relation",

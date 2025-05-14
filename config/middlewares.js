@@ -7,7 +7,7 @@ module.exports = ({ env }) => [
   {
     name: 'strapi::cors',
     config: {
-      origin: ['https://app.kamarpukurmath.org','http://localhost:8082','http://localhost:5173'],
+      origin: ['https://app.kamarpukurmath.org','http://localhost:8082','http://localhost:5173','http://localhost:5174'],
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     },
   },

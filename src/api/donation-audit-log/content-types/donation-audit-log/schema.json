@@ -1,0 +1,38 @@
+{
+  "kind": "collectionType",
+  "collectionName": "donation_audit_logs",
+  "info": {
+    "singularName": "donation-audit-log",
+    "pluralName": "donation-audit-logs",
+    "displayName": "Donation audit log"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "username": {
+      "type": "string"
+    },
+    "userId": {
+      "type": "biginteger"
+    },
+    "donationId": {
+      "type": "biginteger"
+    },
+    "metadata": {
+      "type": "json"
+    },
+    "timestamp": {
+      "type": "datetime"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "admin_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "admin::user"
+    }
+  }
+}

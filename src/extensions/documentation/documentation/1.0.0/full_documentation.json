@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-02-28T19:01:24.970Z"
+    "x-generation-date": "2025-05-13T23:52:24.779Z"
   },
   "security": [
     {
@@ -1112,8 +1112,39 @@
                                                                   "type": "string",
                                                                   "enum": [
                                                                     "Rejection",
-                                                                    "Approval"
+                                                                    "Approval",
+                                                                    "DONATION_EDITED",
+                                                                    "DONATION_VERIFIED",
+                                                                    "RECEIPT_EDITED",
+                                                                    "info",
+                                                                    "warning",
+                                                                    "alert"
                                                                   ]
+                                                                },
+                                                                "title": {
+                                                                  "type": "string"
+                                                                },
+                                                                "message": {
+                                                                  "type": "string"
+                                                                },
+                                                                "isRead": {
+                                                                  "type": "boolean"
+                                                                },
+                                                                "sourceUserId": {
+                                                                  "type": "integer"
+                                                                },
+                                                                "sourceUserName": {
+                                                                  "type": "string"
+                                                                },
+                                                                "sourceUserRole": {
+                                                                  "type": "string"
+                                                                },
+                                                                "targetRoles": {},
+                                                                "resourceType": {
+                                                                  "type": "string"
+                                                                },
+                                                                "resourceId": {
+                                                                  "type": "integer"
                                                                 },
                                                                 "booking_request": {
                                                                   "type": "object",
@@ -1697,9 +1728,11 @@
                                                                                                       "user_role": {
                                                                                                         "type": "string",
                                                                                                         "enum": [
-                                                                                                          "superadmin",
-                                                                                                          "subadmin",
-                                                                                                          "deeksha"
+                                                                                                          "super-admin",
+                                                                                                          "donation",
+                                                                                                          "deeksha",
+                                                                                                          "guest-house",
+                                                                                                          "donation-admin"
                                                                                                         ]
                                                                                                       },
                                                                                                       "receipt_details": {
@@ -2131,6 +2164,15 @@
                                                                       }
                                                                     }
                                                                   }
+                                                                },
+                                                                "arrival_status": {
+                                                                  "type": "string",
+                                                                  "enum": [
+                                                                    "Not Arrived",
+                                                                    "Arrived",
+                                                                    "Cancelled",
+                                                                    "Rescheduled"
+                                                                  ]
                                                                 },
                                                                 "createdAt": {
                                                                   "type": "string",
@@ -3629,8 +3671,39 @@
                           "type": "string",
                           "enum": [
                             "Rejection",
-                            "Approval"
+                            "Approval",
+                            "DONATION_EDITED",
+                            "DONATION_VERIFIED",
+                            "RECEIPT_EDITED",
+                            "info",
+                            "warning",
+                            "alert"
                           ]
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "isRead": {
+                          "type": "boolean"
+                        },
+                        "sourceUserId": {
+                          "type": "integer"
+                        },
+                        "sourceUserName": {
+                          "type": "string"
+                        },
+                        "sourceUserRole": {
+                          "type": "string"
+                        },
+                        "targetRoles": {},
+                        "resourceType": {
+                          "type": "string"
+                        },
+                        "resourceId": {
+                          "type": "integer"
                         },
                         "booking_request": {
                           "type": "object",
@@ -4272,9 +4345,11 @@
                                                                                         "user_role": {
                                                                                           "type": "string",
                                                                                           "enum": [
-                                                                                            "superadmin",
-                                                                                            "subadmin",
-                                                                                            "deeksha"
+                                                                                            "super-admin",
+                                                                                            "donation",
+                                                                                            "deeksha",
+                                                                                            "guest-house",
+                                                                                            "donation-admin"
                                                                                           ]
                                                                                         },
                                                                                         "receipt_details": {
@@ -5078,6 +5153,15 @@
                                                         }
                                                       }
                                                     }
+                                                  },
+                                                  "arrival_status": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "Not Arrived",
+                                                      "Arrived",
+                                                      "Cancelled",
+                                                      "Rescheduled"
+                                                    ]
                                                   },
                                                   "createdAt": {
                                                     "type": "string",
@@ -6737,6 +6821,342 @@
           }
         }
       },
+      "DataControlRequest": {
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "settings": {}
+            }
+          }
+        }
+      },
+      "DataControl": {
+        "type": "object",
+        "properties": {
+          "settings": {},
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number"
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "properties": {
+                      "firstname": {
+                        "type": "string"
+                      },
+                      "lastname": {
+                        "type": "string"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string",
+                        "format": "email"
+                      },
+                      "resetPasswordToken": {
+                        "type": "string"
+                      },
+                      "registrationToken": {
+                        "type": "string"
+                      },
+                      "isActive": {
+                        "type": "boolean"
+                      },
+                      "roles": {
+                        "type": "object",
+                        "properties": {
+                          "data": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "number"
+                                },
+                                "attributes": {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "code": {
+                                      "type": "string"
+                                    },
+                                    "description": {
+                                      "type": "string"
+                                    },
+                                    "users": {
+                                      "type": "object",
+                                      "properties": {
+                                        "data": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "object",
+                                            "properties": {
+                                              "id": {
+                                                "type": "number"
+                                              },
+                                              "attributes": {
+                                                "type": "object",
+                                                "properties": {}
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "permissions": {
+                                      "type": "object",
+                                      "properties": {
+                                        "data": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "object",
+                                            "properties": {
+                                              "id": {
+                                                "type": "number"
+                                              },
+                                              "attributes": {
+                                                "type": "object",
+                                                "properties": {
+                                                  "action": {
+                                                    "type": "string"
+                                                  },
+                                                  "actionParameters": {},
+                                                  "subject": {
+                                                    "type": "string"
+                                                  },
+                                                  "properties": {},
+                                                  "conditions": {},
+                                                  "role": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "data": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                          "id": {
+                                                            "type": "number"
+                                                          },
+                                                          "attributes": {
+                                                            "type": "object",
+                                                            "properties": {}
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "createdAt": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                  },
+                                                  "updatedAt": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                  },
+                                                  "createdBy": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "data": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                          "id": {
+                                                            "type": "number"
+                                                          },
+                                                          "attributes": {
+                                                            "type": "object",
+                                                            "properties": {}
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "updatedBy": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "data": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                          "id": {
+                                                            "type": "number"
+                                                          },
+                                                          "attributes": {
+                                                            "type": "object",
+                                                            "properties": {}
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "createdAt": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    },
+                                    "updatedAt": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    },
+                                    "createdBy": {
+                                      "type": "object",
+                                      "properties": {
+                                        "data": {
+                                          "type": "object",
+                                          "properties": {
+                                            "id": {
+                                              "type": "number"
+                                            },
+                                            "attributes": {
+                                              "type": "object",
+                                              "properties": {}
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "updatedBy": {
+                                      "type": "object",
+                                      "properties": {
+                                        "data": {
+                                          "type": "object",
+                                          "properties": {
+                                            "id": {
+                                              "type": "number"
+                                            },
+                                            "attributes": {
+                                              "type": "object",
+                                              "properties": {}
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "blocked": {
+                        "type": "boolean"
+                      },
+                      "preferedLanguage": {
+                        "type": "string"
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "createdBy": {
+                        "type": "object",
+                        "properties": {
+                          "data": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "attributes": {
+                                "type": "object",
+                                "properties": {}
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "updatedBy": {
+                        "type": "object",
+                        "properties": {
+                          "data": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "attributes": {
+                                "type": "object",
+                                "properties": {}
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "updatedBy": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number"
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "properties": {}
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "DataControlResponseDataObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/DataControl"
+          }
+        }
+      },
+      "DataControlResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/DataControlResponseDataObject"
+          },
+          "meta": {
+            "type": "object"
+          }
+        }
+      },
       "DeekshaRequest": {
         "type": "object",
         "required": [
@@ -8134,9 +8554,11 @@
                                                             "user_role": {
                                                               "type": "string",
                                                               "enum": [
-                                                                "superadmin",
-                                                                "subadmin",
-                                                                "deeksha"
+                                                                "super-admin",
+                                                                "donation",
+                                                                "deeksha",
+                                                                "guest-house",
+                                                                "donation-admin"
                                                               ]
                                                             },
                                                             "receipt_details": {
@@ -8823,8 +9245,39 @@
                                                   "type": "string",
                                                   "enum": [
                                                     "Rejection",
-                                                    "Approval"
+                                                    "Approval",
+                                                    "DONATION_EDITED",
+                                                    "DONATION_VERIFIED",
+                                                    "RECEIPT_EDITED",
+                                                    "info",
+                                                    "warning",
+                                                    "alert"
                                                   ]
+                                                },
+                                                "title": {
+                                                  "type": "string"
+                                                },
+                                                "message": {
+                                                  "type": "string"
+                                                },
+                                                "isRead": {
+                                                  "type": "boolean"
+                                                },
+                                                "sourceUserId": {
+                                                  "type": "integer"
+                                                },
+                                                "sourceUserName": {
+                                                  "type": "string"
+                                                },
+                                                "sourceUserRole": {
+                                                  "type": "string"
+                                                },
+                                                "targetRoles": {},
+                                                "resourceType": {
+                                                  "type": "string"
+                                                },
+                                                "resourceId": {
+                                                  "type": "integer"
                                                 },
                                                 "booking_request": {
                                                   "type": "object",
@@ -9960,6 +10413,15 @@
                           }
                         }
                       },
+                      "arrival_status": {
+                        "type": "string",
+                        "enum": [
+                          "Not Arrived",
+                          "Arrived",
+                          "Cancelled",
+                          "Rescheduled"
+                        ]
+                      },
                       "createdAt": {
                         "type": "string",
                         "format": "date-time"
@@ -10141,6 +10603,460 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/DonationResponseDataObject"
+          },
+          "meta": {
+            "type": "object"
+          }
+        }
+      },
+      "DonationAuditLogRequest": {
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "username": {
+                "type": "string"
+              },
+              "userId": {
+                "type": "string",
+                "pattern": "^\\d*$",
+                "example": "123456789"
+              },
+              "donationId": {
+                "type": "string",
+                "pattern": "^\\d*$",
+                "example": "123456789"
+              },
+              "metadata": {},
+              "timestamp": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "notes": {
+                "type": "string"
+              },
+              "admin_user": {
+                "oneOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ],
+                "example": "string or id"
+              }
+            }
+          }
+        }
+      },
+      "DonationAuditLogListResponseDataItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/DonationAuditLog"
+          }
+        }
+      },
+      "DonationAuditLogListResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DonationAuditLogListResponseDataItem"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "pagination": {
+                "type": "object",
+                "properties": {
+                  "page": {
+                    "type": "integer"
+                  },
+                  "pageSize": {
+                    "type": "integer",
+                    "minimum": 25
+                  },
+                  "pageCount": {
+                    "type": "integer",
+                    "maximum": 1
+                  },
+                  "total": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "DonationAuditLog": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string",
+            "pattern": "^\\d*$",
+            "example": "123456789"
+          },
+          "donationId": {
+            "type": "string",
+            "pattern": "^\\d*$",
+            "example": "123456789"
+          },
+          "metadata": {},
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "admin_user": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number"
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "properties": {
+                      "firstname": {
+                        "type": "string"
+                      },
+                      "lastname": {
+                        "type": "string"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string",
+                        "format": "email"
+                      },
+                      "resetPasswordToken": {
+                        "type": "string"
+                      },
+                      "registrationToken": {
+                        "type": "string"
+                      },
+                      "isActive": {
+                        "type": "boolean"
+                      },
+                      "roles": {
+                        "type": "object",
+                        "properties": {
+                          "data": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "number"
+                                },
+                                "attributes": {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "code": {
+                                      "type": "string"
+                                    },
+                                    "description": {
+                                      "type": "string"
+                                    },
+                                    "users": {
+                                      "type": "object",
+                                      "properties": {
+                                        "data": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "object",
+                                            "properties": {
+                                              "id": {
+                                                "type": "number"
+                                              },
+                                              "attributes": {
+                                                "type": "object",
+                                                "properties": {}
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "permissions": {
+                                      "type": "object",
+                                      "properties": {
+                                        "data": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "object",
+                                            "properties": {
+                                              "id": {
+                                                "type": "number"
+                                              },
+                                              "attributes": {
+                                                "type": "object",
+                                                "properties": {
+                                                  "action": {
+                                                    "type": "string"
+                                                  },
+                                                  "actionParameters": {},
+                                                  "subject": {
+                                                    "type": "string"
+                                                  },
+                                                  "properties": {},
+                                                  "conditions": {},
+                                                  "role": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "data": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                          "id": {
+                                                            "type": "number"
+                                                          },
+                                                          "attributes": {
+                                                            "type": "object",
+                                                            "properties": {}
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "createdAt": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                  },
+                                                  "updatedAt": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                  },
+                                                  "createdBy": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "data": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                          "id": {
+                                                            "type": "number"
+                                                          },
+                                                          "attributes": {
+                                                            "type": "object",
+                                                            "properties": {}
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "updatedBy": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "data": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                          "id": {
+                                                            "type": "number"
+                                                          },
+                                                          "attributes": {
+                                                            "type": "object",
+                                                            "properties": {}
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "createdAt": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    },
+                                    "updatedAt": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    },
+                                    "createdBy": {
+                                      "type": "object",
+                                      "properties": {
+                                        "data": {
+                                          "type": "object",
+                                          "properties": {
+                                            "id": {
+                                              "type": "number"
+                                            },
+                                            "attributes": {
+                                              "type": "object",
+                                              "properties": {}
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "updatedBy": {
+                                      "type": "object",
+                                      "properties": {
+                                        "data": {
+                                          "type": "object",
+                                          "properties": {
+                                            "id": {
+                                              "type": "number"
+                                            },
+                                            "attributes": {
+                                              "type": "object",
+                                              "properties": {}
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "blocked": {
+                        "type": "boolean"
+                      },
+                      "preferedLanguage": {
+                        "type": "string"
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "createdBy": {
+                        "type": "object",
+                        "properties": {
+                          "data": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "attributes": {
+                                "type": "object",
+                                "properties": {}
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "updatedBy": {
+                        "type": "object",
+                        "properties": {
+                          "data": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "attributes": {
+                                "type": "object",
+                                "properties": {}
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "publishedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number"
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "properties": {}
+                  }
+                }
+              }
+            }
+          },
+          "updatedBy": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number"
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "properties": {}
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "DonationAuditLogResponseDataObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/DonationAuditLog"
+          }
+        }
+      },
+      "DonationAuditLogResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/DonationAuditLogResponseDataObject"
           },
           "meta": {
             "type": "object"
@@ -11217,8 +12133,39 @@
                                                                   "type": "string",
                                                                   "enum": [
                                                                     "Rejection",
-                                                                    "Approval"
+                                                                    "Approval",
+                                                                    "DONATION_EDITED",
+                                                                    "DONATION_VERIFIED",
+                                                                    "RECEIPT_EDITED",
+                                                                    "info",
+                                                                    "warning",
+                                                                    "alert"
                                                                   ]
+                                                                },
+                                                                "title": {
+                                                                  "type": "string"
+                                                                },
+                                                                "message": {
+                                                                  "type": "string"
+                                                                },
+                                                                "isRead": {
+                                                                  "type": "boolean"
+                                                                },
+                                                                "sourceUserId": {
+                                                                  "type": "integer"
+                                                                },
+                                                                "sourceUserName": {
+                                                                  "type": "string"
+                                                                },
+                                                                "sourceUserRole": {
+                                                                  "type": "string"
+                                                                },
+                                                                "targetRoles": {},
+                                                                "resourceType": {
+                                                                  "type": "string"
+                                                                },
+                                                                "resourceId": {
+                                                                  "type": "integer"
                                                                 },
                                                                 "booking_request": {
                                                                   "type": "object",
@@ -11802,9 +12749,11 @@
                                                                                                       "user_role": {
                                                                                                         "type": "string",
                                                                                                         "enum": [
-                                                                                                          "superadmin",
-                                                                                                          "subadmin",
-                                                                                                          "deeksha"
+                                                                                                          "super-admin",
+                                                                                                          "donation",
+                                                                                                          "deeksha",
+                                                                                                          "guest-house",
+                                                                                                          "donation-admin"
                                                                                                         ]
                                                                                                       },
                                                                                                       "receipt_details": {
@@ -12236,6 +13185,15 @@
                                                                       }
                                                                     }
                                                                   }
+                                                                },
+                                                                "arrival_status": {
+                                                                  "type": "string",
+                                                                  "enum": [
+                                                                    "Not Arrived",
+                                                                    "Arrived",
+                                                                    "Cancelled",
+                                                                    "Rescheduled"
+                                                                  ]
                                                                 },
                                                                 "createdAt": {
                                                                   "type": "string",
@@ -13214,6 +14172,9 @@
         ],
         "properties": {
           "data": {
+            "required": [
+              "identity_number"
+            ],
             "type": "object",
             "properties": {
               "name": {
@@ -13326,6 +14287,15 @@
                   ],
                   "example": "string or id"
                 }
+              },
+              "arrival_status": {
+                "type": "string",
+                "enum": [
+                  "Not Arrived",
+                  "Arrived",
+                  "Cancelled",
+                  "Rescheduled"
+                ]
               }
             }
           }
@@ -13379,6 +14349,9 @@
       },
       "GuestDetail": {
         "type": "object",
+        "required": [
+          "identity_number"
+        ],
         "properties": {
           "name": {
             "type": "string"
@@ -14165,8 +15138,39 @@
                                                                 "type": "string",
                                                                 "enum": [
                                                                   "Rejection",
-                                                                  "Approval"
+                                                                  "Approval",
+                                                                  "DONATION_EDITED",
+                                                                  "DONATION_VERIFIED",
+                                                                  "RECEIPT_EDITED",
+                                                                  "info",
+                                                                  "warning",
+                                                                  "alert"
                                                                 ]
+                                                              },
+                                                              "title": {
+                                                                "type": "string"
+                                                              },
+                                                              "message": {
+                                                                "type": "string"
+                                                              },
+                                                              "isRead": {
+                                                                "type": "boolean"
+                                                              },
+                                                              "sourceUserId": {
+                                                                "type": "integer"
+                                                              },
+                                                              "sourceUserName": {
+                                                                "type": "string"
+                                                              },
+                                                              "sourceUserRole": {
+                                                                "type": "string"
+                                                              },
+                                                              "targetRoles": {},
+                                                              "resourceType": {
+                                                                "type": "string"
+                                                              },
+                                                              "resourceId": {
+                                                                "type": "integer"
                                                               },
                                                               "booking_request": {
                                                                 "type": "object",
@@ -15302,6 +16306,15 @@
                                         }
                                       }
                                     },
+                                    "arrival_status": {
+                                      "type": "string",
+                                      "enum": [
+                                        "Not Arrived",
+                                        "Arrived",
+                                        "Cancelled",
+                                        "Rescheduled"
+                                      ]
+                                    },
                                     "createdAt": {
                                       "type": "string",
                                       "format": "date-time"
@@ -15614,9 +16627,11 @@
                                                 "user_role": {
                                                   "type": "string",
                                                   "enum": [
-                                                    "superadmin",
-                                                    "subadmin",
-                                                    "deeksha"
+                                                    "super-admin",
+                                                    "donation",
+                                                    "deeksha",
+                                                    "guest-house",
+                                                    "donation-admin"
                                                   ]
                                                 },
                                                 "receipt_details": {
@@ -15936,6 +16951,15 @@
                 }
               }
             }
+          },
+          "arrival_status": {
+            "type": "string",
+            "enum": [
+              "Not Arrived",
+              "Arrived",
+              "Cancelled",
+              "Rescheduled"
+            ]
           },
           "createdAt": {
             "type": "string",
@@ -16825,8 +17849,39 @@
                                       "type": "string",
                                       "enum": [
                                         "Rejection",
-                                        "Approval"
+                                        "Approval",
+                                        "DONATION_EDITED",
+                                        "DONATION_VERIFIED",
+                                        "RECEIPT_EDITED",
+                                        "info",
+                                        "warning",
+                                        "alert"
                                       ]
+                                    },
+                                    "title": {
+                                      "type": "string"
+                                    },
+                                    "message": {
+                                      "type": "string"
+                                    },
+                                    "isRead": {
+                                      "type": "boolean"
+                                    },
+                                    "sourceUserId": {
+                                      "type": "integer"
+                                    },
+                                    "sourceUserName": {
+                                      "type": "string"
+                                    },
+                                    "sourceUserRole": {
+                                      "type": "string"
+                                    },
+                                    "targetRoles": {},
+                                    "resourceType": {
+                                      "type": "string"
+                                    },
+                                    "resourceId": {
+                                      "type": "integer"
                                     },
                                     "booking_request": {
                                       "type": "object",
@@ -17410,9 +18465,11 @@
                                                                           "user_role": {
                                                                             "type": "string",
                                                                             "enum": [
-                                                                              "superadmin",
-                                                                              "subadmin",
-                                                                              "deeksha"
+                                                                              "super-admin",
+                                                                              "donation",
+                                                                              "deeksha",
+                                                                              "guest-house",
+                                                                              "donation-admin"
                                                                             ]
                                                                           },
                                                                           "receipt_details": {
@@ -18217,6 +19274,15 @@
                                         }
                                       }
                                     },
+                                    "arrival_status": {
+                                      "type": "string",
+                                      "enum": [
+                                        "Not Arrived",
+                                        "Arrived",
+                                        "Cancelled",
+                                        "Rescheduled"
+                                      ]
+                                    },
                                     "createdAt": {
                                       "type": "string",
                                       "format": "date-time"
@@ -18762,8 +19828,39 @@
                           "type": "string",
                           "enum": [
                             "Rejection",
-                            "Approval"
+                            "Approval",
+                            "DONATION_EDITED",
+                            "DONATION_VERIFIED",
+                            "RECEIPT_EDITED",
+                            "info",
+                            "warning",
+                            "alert"
                           ]
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "isRead": {
+                          "type": "boolean"
+                        },
+                        "sourceUserId": {
+                          "type": "integer"
+                        },
+                        "sourceUserName": {
+                          "type": "string"
+                        },
+                        "sourceUserRole": {
+                          "type": "string"
+                        },
+                        "targetRoles": {},
+                        "resourceType": {
+                          "type": "string"
+                        },
+                        "resourceId": {
+                          "type": "integer"
                         },
                         "booking_request": {
                           "type": "object",
@@ -19888,9 +20985,11 @@
                                                                                         "user_role": {
                                                                                           "type": "string",
                                                                                           "enum": [
-                                                                                            "superadmin",
-                                                                                            "subadmin",
-                                                                                            "deeksha"
+                                                                                            "super-admin",
+                                                                                            "donation",
+                                                                                            "deeksha",
+                                                                                            "guest-house",
+                                                                                            "donation-admin"
                                                                                           ]
                                                                                         },
                                                                                         "receipt_details": {
@@ -20695,6 +21794,15 @@
                                                       }
                                                     }
                                                   },
+                                                  "arrival_status": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "Not Arrived",
+                                                      "Arrived",
+                                                      "Cancelled",
+                                                      "Rescheduled"
+                                                    ]
+                                                  },
                                                   "createdAt": {
                                                     "type": "string",
                                                     "format": "date-time"
@@ -21255,6 +22363,380 @@
           }
         }
       },
+      "MigrationRequest": {
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "required": [
+              "jobId"
+            ],
+            "type": "object",
+            "properties": {
+              "jobId": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "processing",
+                  "completed",
+                  "failed",
+                  "cancelled"
+                ]
+              },
+              "progress": {
+                "type": "integer"
+              },
+              "results": {},
+              "logs": {}
+            }
+          }
+        }
+      },
+      "Migration": {
+        "type": "object",
+        "required": [
+          "jobId"
+        ],
+        "properties": {
+          "jobId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "processing",
+              "completed",
+              "failed",
+              "cancelled"
+            ]
+          },
+          "progress": {
+            "type": "integer"
+          },
+          "results": {},
+          "logs": {},
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number"
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "properties": {
+                      "firstname": {
+                        "type": "string"
+                      },
+                      "lastname": {
+                        "type": "string"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string",
+                        "format": "email"
+                      },
+                      "resetPasswordToken": {
+                        "type": "string"
+                      },
+                      "registrationToken": {
+                        "type": "string"
+                      },
+                      "isActive": {
+                        "type": "boolean"
+                      },
+                      "roles": {
+                        "type": "object",
+                        "properties": {
+                          "data": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "number"
+                                },
+                                "attributes": {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "code": {
+                                      "type": "string"
+                                    },
+                                    "description": {
+                                      "type": "string"
+                                    },
+                                    "users": {
+                                      "type": "object",
+                                      "properties": {
+                                        "data": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "object",
+                                            "properties": {
+                                              "id": {
+                                                "type": "number"
+                                              },
+                                              "attributes": {
+                                                "type": "object",
+                                                "properties": {}
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "permissions": {
+                                      "type": "object",
+                                      "properties": {
+                                        "data": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "object",
+                                            "properties": {
+                                              "id": {
+                                                "type": "number"
+                                              },
+                                              "attributes": {
+                                                "type": "object",
+                                                "properties": {
+                                                  "action": {
+                                                    "type": "string"
+                                                  },
+                                                  "actionParameters": {},
+                                                  "subject": {
+                                                    "type": "string"
+                                                  },
+                                                  "properties": {},
+                                                  "conditions": {},
+                                                  "role": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "data": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                          "id": {
+                                                            "type": "number"
+                                                          },
+                                                          "attributes": {
+                                                            "type": "object",
+                                                            "properties": {}
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "createdAt": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                  },
+                                                  "updatedAt": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                  },
+                                                  "createdBy": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "data": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                          "id": {
+                                                            "type": "number"
+                                                          },
+                                                          "attributes": {
+                                                            "type": "object",
+                                                            "properties": {}
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "updatedBy": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "data": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                          "id": {
+                                                            "type": "number"
+                                                          },
+                                                          "attributes": {
+                                                            "type": "object",
+                                                            "properties": {}
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "createdAt": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    },
+                                    "updatedAt": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    },
+                                    "createdBy": {
+                                      "type": "object",
+                                      "properties": {
+                                        "data": {
+                                          "type": "object",
+                                          "properties": {
+                                            "id": {
+                                              "type": "number"
+                                            },
+                                            "attributes": {
+                                              "type": "object",
+                                              "properties": {}
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "updatedBy": {
+                                      "type": "object",
+                                      "properties": {
+                                        "data": {
+                                          "type": "object",
+                                          "properties": {
+                                            "id": {
+                                              "type": "number"
+                                            },
+                                            "attributes": {
+                                              "type": "object",
+                                              "properties": {}
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "blocked": {
+                        "type": "boolean"
+                      },
+                      "preferedLanguage": {
+                        "type": "string"
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "createdBy": {
+                        "type": "object",
+                        "properties": {
+                          "data": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "attributes": {
+                                "type": "object",
+                                "properties": {}
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "updatedBy": {
+                        "type": "object",
+                        "properties": {
+                          "data": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "attributes": {
+                                "type": "object",
+                                "properties": {}
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "updatedBy": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number"
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "properties": {}
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "MigrationResponseDataObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/Migration"
+          }
+        }
+      },
+      "MigrationResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/MigrationResponseDataObject"
+          },
+          "meta": {
+            "type": "object"
+          }
+        }
+      },
       "NotificationRequest": {
         "type": "object",
         "required": [
@@ -21275,8 +22757,39 @@
                 "type": "string",
                 "enum": [
                   "Rejection",
-                  "Approval"
+                  "Approval",
+                  "DONATION_EDITED",
+                  "DONATION_VERIFIED",
+                  "RECEIPT_EDITED",
+                  "info",
+                  "warning",
+                  "alert"
                 ]
+              },
+              "title": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "isRead": {
+                "type": "boolean"
+              },
+              "sourceUserId": {
+                "type": "integer"
+              },
+              "sourceUserName": {
+                "type": "string"
+              },
+              "sourceUserRole": {
+                "type": "string"
+              },
+              "targetRoles": {},
+              "resourceType": {
+                "type": "string"
+              },
+              "resourceId": {
+                "type": "integer"
               },
               "booking_request": {
                 "oneOf": [
@@ -21364,8 +22877,39 @@
             "type": "string",
             "enum": [
               "Rejection",
-              "Approval"
+              "Approval",
+              "DONATION_EDITED",
+              "DONATION_VERIFIED",
+              "RECEIPT_EDITED",
+              "info",
+              "warning",
+              "alert"
             ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "isRead": {
+            "type": "boolean"
+          },
+          "sourceUserId": {
+            "type": "integer"
+          },
+          "sourceUserName": {
+            "type": "string"
+          },
+          "sourceUserRole": {
+            "type": "string"
+          },
+          "targetRoles": {},
+          "resourceType": {
+            "type": "string"
+          },
+          "resourceId": {
+            "type": "integer"
           },
           "booking_request": {
             "type": "object",
@@ -22082,8 +23626,39 @@
                                       "type": "string",
                                       "enum": [
                                         "Rejection",
-                                        "Approval"
+                                        "Approval",
+                                        "DONATION_EDITED",
+                                        "DONATION_VERIFIED",
+                                        "RECEIPT_EDITED",
+                                        "info",
+                                        "warning",
+                                        "alert"
                                       ]
+                                    },
+                                    "title": {
+                                      "type": "string"
+                                    },
+                                    "message": {
+                                      "type": "string"
+                                    },
+                                    "isRead": {
+                                      "type": "boolean"
+                                    },
+                                    "sourceUserId": {
+                                      "type": "integer"
+                                    },
+                                    "sourceUserName": {
+                                      "type": "string"
+                                    },
+                                    "sourceUserRole": {
+                                      "type": "string"
+                                    },
+                                    "targetRoles": {},
+                                    "resourceType": {
+                                      "type": "string"
+                                    },
+                                    "resourceId": {
+                                      "type": "integer"
                                     },
                                     "booking_request": {
                                       "type": "object",
@@ -22667,9 +24242,11 @@
                                                                           "user_role": {
                                                                             "type": "string",
                                                                             "enum": [
-                                                                              "superadmin",
-                                                                              "subadmin",
-                                                                              "deeksha"
+                                                                              "super-admin",
+                                                                              "donation",
+                                                                              "deeksha",
+                                                                              "guest-house",
+                                                                              "donation-admin"
                                                                             ]
                                                                           },
                                                                           "receipt_details": {
@@ -23473,6 +25050,15 @@
                                           }
                                         }
                                       }
+                                    },
+                                    "arrival_status": {
+                                      "type": "string",
+                                      "enum": [
+                                        "Not Arrived",
+                                        "Arrived",
+                                        "Cancelled",
+                                        "Rescheduled"
+                                      ]
                                     },
                                     "createdAt": {
                                       "type": "string",
@@ -24874,9 +26460,11 @@
                       "user_role": {
                         "type": "string",
                         "enum": [
-                          "superadmin",
-                          "subadmin",
-                          "deeksha"
+                          "super-admin",
+                          "donation",
+                          "deeksha",
+                          "guest-house",
+                          "donation-admin"
                         ]
                       },
                       "receipt_details": {
@@ -25438,8 +27026,39 @@
                                                                                           "type": "string",
                                                                                           "enum": [
                                                                                             "Rejection",
-                                                                                            "Approval"
+                                                                                            "Approval",
+                                                                                            "DONATION_EDITED",
+                                                                                            "DONATION_VERIFIED",
+                                                                                            "RECEIPT_EDITED",
+                                                                                            "info",
+                                                                                            "warning",
+                                                                                            "alert"
                                                                                           ]
+                                                                                        },
+                                                                                        "title": {
+                                                                                          "type": "string"
+                                                                                        },
+                                                                                        "message": {
+                                                                                          "type": "string"
+                                                                                        },
+                                                                                        "isRead": {
+                                                                                          "type": "boolean"
+                                                                                        },
+                                                                                        "sourceUserId": {
+                                                                                          "type": "integer"
+                                                                                        },
+                                                                                        "sourceUserName": {
+                                                                                          "type": "string"
+                                                                                        },
+                                                                                        "sourceUserRole": {
+                                                                                          "type": "string"
+                                                                                        },
+                                                                                        "targetRoles": {},
+                                                                                        "resourceType": {
+                                                                                          "type": "string"
+                                                                                        },
+                                                                                        "resourceId": {
+                                                                                          "type": "integer"
                                                                                         },
                                                                                         "booking_request": {
                                                                                           "type": "object",
@@ -26574,6 +28193,15 @@
                                                                     }
                                                                   }
                                                                 }
+                                                              },
+                                                              "arrival_status": {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                  "Not Arrived",
+                                                                  "Arrived",
+                                                                  "Cancelled",
+                                                                  "Rescheduled"
+                                                                ]
                                                               },
                                                               "createdAt": {
                                                                 "type": "string",
@@ -27985,8 +29613,39 @@
                                                                               "type": "string",
                                                                               "enum": [
                                                                                 "Rejection",
-                                                                                "Approval"
+                                                                                "Approval",
+                                                                                "DONATION_EDITED",
+                                                                                "DONATION_VERIFIED",
+                                                                                "RECEIPT_EDITED",
+                                                                                "info",
+                                                                                "warning",
+                                                                                "alert"
                                                                               ]
+                                                                            },
+                                                                            "title": {
+                                                                              "type": "string"
+                                                                            },
+                                                                            "message": {
+                                                                              "type": "string"
+                                                                            },
+                                                                            "isRead": {
+                                                                              "type": "boolean"
+                                                                            },
+                                                                            "sourceUserId": {
+                                                                              "type": "integer"
+                                                                            },
+                                                                            "sourceUserName": {
+                                                                              "type": "string"
+                                                                            },
+                                                                            "sourceUserRole": {
+                                                                              "type": "string"
+                                                                            },
+                                                                            "targetRoles": {},
+                                                                            "resourceType": {
+                                                                              "type": "string"
+                                                                            },
+                                                                            "resourceId": {
+                                                                              "type": "integer"
                                                                             },
                                                                             "booking_request": {
                                                                               "type": "object",
@@ -28570,9 +30229,11 @@
                                                                                                                   "user_role": {
                                                                                                                     "type": "string",
                                                                                                                     "enum": [
-                                                                                                                      "superadmin",
-                                                                                                                      "subadmin",
-                                                                                                                      "deeksha"
+                                                                                                                      "super-admin",
+                                                                                                                      "donation",
+                                                                                                                      "deeksha",
+                                                                                                                      "guest-house",
+                                                                                                                      "donation-admin"
                                                                                                                     ]
                                                                                                                   },
                                                                                                                   "receipt_details": {
@@ -29004,6 +30665,15 @@
                                                                                   }
                                                                                 }
                                                                               }
+                                                                            },
+                                                                            "arrival_status": {
+                                                                              "type": "string",
+                                                                              "enum": [
+                                                                                "Not Arrived",
+                                                                                "Arrived",
+                                                                                "Cancelled",
+                                                                                "Rescheduled"
+                                                                              ]
                                                                             },
                                                                             "createdAt": {
                                                                               "type": "string",
@@ -30723,8 +32393,39 @@
                                                                 "type": "string",
                                                                 "enum": [
                                                                   "Rejection",
-                                                                  "Approval"
+                                                                  "Approval",
+                                                                  "DONATION_EDITED",
+                                                                  "DONATION_VERIFIED",
+                                                                  "RECEIPT_EDITED",
+                                                                  "info",
+                                                                  "warning",
+                                                                  "alert"
                                                                 ]
+                                                              },
+                                                              "title": {
+                                                                "type": "string"
+                                                              },
+                                                              "message": {
+                                                                "type": "string"
+                                                              },
+                                                              "isRead": {
+                                                                "type": "boolean"
+                                                              },
+                                                              "sourceUserId": {
+                                                                "type": "integer"
+                                                              },
+                                                              "sourceUserName": {
+                                                                "type": "string"
+                                                              },
+                                                              "sourceUserRole": {
+                                                                "type": "string"
+                                                              },
+                                                              "targetRoles": {},
+                                                              "resourceType": {
+                                                                "type": "string"
+                                                              },
+                                                              "resourceId": {
+                                                                "type": "integer"
                                                               },
                                                               "booking_request": {
                                                                 "type": "object",
@@ -31308,9 +33009,11 @@
                                                                                                     "user_role": {
                                                                                                       "type": "string",
                                                                                                       "enum": [
-                                                                                                        "superadmin",
-                                                                                                        "subadmin",
-                                                                                                        "deeksha"
+                                                                                                        "super-admin",
+                                                                                                        "donation",
+                                                                                                        "deeksha",
+                                                                                                        "guest-house",
+                                                                                                        "donation-admin"
                                                                                                       ]
                                                                                                     },
                                                                                                     "receipt_details": {
@@ -31742,6 +33445,15 @@
                                                                     }
                                                                   }
                                                                 }
+                                                              },
+                                                              "arrival_status": {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                  "Not Arrived",
+                                                                  "Arrived",
+                                                                  "Cancelled",
+                                                                  "Rescheduled"
+                                                                ]
                                                               },
                                                               "createdAt": {
                                                                 "type": "string",
@@ -33374,8 +35086,39 @@
                                                                 "type": "string",
                                                                 "enum": [
                                                                   "Rejection",
-                                                                  "Approval"
+                                                                  "Approval",
+                                                                  "DONATION_EDITED",
+                                                                  "DONATION_VERIFIED",
+                                                                  "RECEIPT_EDITED",
+                                                                  "info",
+                                                                  "warning",
+                                                                  "alert"
                                                                 ]
+                                                              },
+                                                              "title": {
+                                                                "type": "string"
+                                                              },
+                                                              "message": {
+                                                                "type": "string"
+                                                              },
+                                                              "isRead": {
+                                                                "type": "boolean"
+                                                              },
+                                                              "sourceUserId": {
+                                                                "type": "integer"
+                                                              },
+                                                              "sourceUserName": {
+                                                                "type": "string"
+                                                              },
+                                                              "sourceUserRole": {
+                                                                "type": "string"
+                                                              },
+                                                              "targetRoles": {},
+                                                              "resourceType": {
+                                                                "type": "string"
+                                                              },
+                                                              "resourceId": {
+                                                                "type": "integer"
                                                               },
                                                               "booking_request": {
                                                                 "type": "object",
@@ -33959,9 +35702,11 @@
                                                                                                     "user_role": {
                                                                                                       "type": "string",
                                                                                                       "enum": [
-                                                                                                        "superadmin",
-                                                                                                        "subadmin",
-                                                                                                        "deeksha"
+                                                                                                        "super-admin",
+                                                                                                        "donation",
+                                                                                                        "deeksha",
+                                                                                                        "guest-house",
+                                                                                                        "donation-admin"
                                                                                                       ]
                                                                                                     },
                                                                                                     "receipt_details": {
@@ -34393,6 +36138,15 @@
                                                                     }
                                                                   }
                                                                 }
+                                                              },
+                                                              "arrival_status": {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                  "Not Arrived",
+                                                                  "Arrived",
+                                                                  "Cancelled",
+                                                                  "Rescheduled"
+                                                                ]
                                                               },
                                                               "createdAt": {
                                                                 "type": "string",
@@ -34937,6 +36691,436 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/RoomBlockingResponseDataObject"
+          },
+          "meta": {
+            "type": "object"
+          }
+        }
+      },
+      "UserActivityLogRequest": {
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "action": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              },
+              "userRole": {
+                "type": "string"
+              },
+              "ipAddress": {
+                "type": "string"
+              },
+              "userAgent": {
+                "type": "string"
+              },
+              "details": {},
+              "notes": {
+                "type": "string"
+              },
+              "timestamp": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      },
+      "UserActivityLogListResponseDataItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/UserActivityLog"
+          }
+        }
+      },
+      "UserActivityLogListResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserActivityLogListResponseDataItem"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "pagination": {
+                "type": "object",
+                "properties": {
+                  "page": {
+                    "type": "integer"
+                  },
+                  "pageSize": {
+                    "type": "integer",
+                    "minimum": 25
+                  },
+                  "pageCount": {
+                    "type": "integer",
+                    "maximum": 1
+                  },
+                  "total": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "UserActivityLog": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "userRole": {
+            "type": "string"
+          },
+          "ipAddress": {
+            "type": "string"
+          },
+          "userAgent": {
+            "type": "string"
+          },
+          "details": {},
+          "notes": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "publishedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number"
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "properties": {
+                      "firstname": {
+                        "type": "string"
+                      },
+                      "lastname": {
+                        "type": "string"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string",
+                        "format": "email"
+                      },
+                      "resetPasswordToken": {
+                        "type": "string"
+                      },
+                      "registrationToken": {
+                        "type": "string"
+                      },
+                      "isActive": {
+                        "type": "boolean"
+                      },
+                      "roles": {
+                        "type": "object",
+                        "properties": {
+                          "data": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "number"
+                                },
+                                "attributes": {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "code": {
+                                      "type": "string"
+                                    },
+                                    "description": {
+                                      "type": "string"
+                                    },
+                                    "users": {
+                                      "type": "object",
+                                      "properties": {
+                                        "data": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "object",
+                                            "properties": {
+                                              "id": {
+                                                "type": "number"
+                                              },
+                                              "attributes": {
+                                                "type": "object",
+                                                "properties": {}
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "permissions": {
+                                      "type": "object",
+                                      "properties": {
+                                        "data": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "object",
+                                            "properties": {
+                                              "id": {
+                                                "type": "number"
+                                              },
+                                              "attributes": {
+                                                "type": "object",
+                                                "properties": {
+                                                  "action": {
+                                                    "type": "string"
+                                                  },
+                                                  "actionParameters": {},
+                                                  "subject": {
+                                                    "type": "string"
+                                                  },
+                                                  "properties": {},
+                                                  "conditions": {},
+                                                  "role": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "data": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                          "id": {
+                                                            "type": "number"
+                                                          },
+                                                          "attributes": {
+                                                            "type": "object",
+                                                            "properties": {}
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "createdAt": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                  },
+                                                  "updatedAt": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                  },
+                                                  "createdBy": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "data": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                          "id": {
+                                                            "type": "number"
+                                                          },
+                                                          "attributes": {
+                                                            "type": "object",
+                                                            "properties": {}
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "updatedBy": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "data": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                          "id": {
+                                                            "type": "number"
+                                                          },
+                                                          "attributes": {
+                                                            "type": "object",
+                                                            "properties": {}
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "createdAt": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    },
+                                    "updatedAt": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    },
+                                    "createdBy": {
+                                      "type": "object",
+                                      "properties": {
+                                        "data": {
+                                          "type": "object",
+                                          "properties": {
+                                            "id": {
+                                              "type": "number"
+                                            },
+                                            "attributes": {
+                                              "type": "object",
+                                              "properties": {}
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "updatedBy": {
+                                      "type": "object",
+                                      "properties": {
+                                        "data": {
+                                          "type": "object",
+                                          "properties": {
+                                            "id": {
+                                              "type": "number"
+                                            },
+                                            "attributes": {
+                                              "type": "object",
+                                              "properties": {}
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "blocked": {
+                        "type": "boolean"
+                      },
+                      "preferedLanguage": {
+                        "type": "string"
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "createdBy": {
+                        "type": "object",
+                        "properties": {
+                          "data": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "attributes": {
+                                "type": "object",
+                                "properties": {}
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "updatedBy": {
+                        "type": "object",
+                        "properties": {
+                          "data": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "attributes": {
+                                "type": "object",
+                                "properties": {}
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "updatedBy": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number"
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "properties": {}
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "UserActivityLogResponseDataObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/UserActivityLog"
+          }
+        }
+      },
+      "UserActivityLogResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/UserActivityLogResponseDataObject"
           },
           "meta": {
             "type": "object"
@@ -37192,6 +39376,87 @@
         "operationId": "delete/coupons/{id}"
       }
     },
+    "/data-control/create-company": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataControlResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Data-control"
+        ],
+        "parameters": [],
+        "operationId": "post/data-control/create-company",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataControlRequest"
+              }
+            }
+          }
+        }
+      }
+    },
     "/deekshas": {
       "get": {
         "responses": {
@@ -38202,6 +40467,512 @@
           }
         ],
         "operationId": "delete/donations/{id}"
+      }
+    },
+    "/donation-audit-logs": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DonationAuditLogListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Donation-audit-log"
+        ],
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort by attributes ascending (asc) or descending (desc)",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pagination[withCount]",
+            "in": "query",
+            "description": "Return page/pageSize (default: true)",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "pagination[page]",
+            "in": "query",
+            "description": "Page number (default: 0)",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pagination[pageSize]",
+            "in": "query",
+            "description": "Page size (default: 25)",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pagination[start]",
+            "in": "query",
+            "description": "Offset value (default: 0)",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pagination[limit]",
+            "in": "query",
+            "description": "Number of entities to return (default: 25)",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "description": "Fields to return (ex: title,author)",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "populate",
+            "in": "query",
+            "description": "Relations to return",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filters",
+            "in": "query",
+            "description": "Filters to apply",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "style": "deepObject"
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "description": "Locale to apply",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "operationId": "get/donation-audit-logs"
+      },
+      "post": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DonationAuditLogResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Donation-audit-log"
+        ],
+        "parameters": [],
+        "operationId": "post/donation-audit-logs",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DonationAuditLogRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/donation-audit-logs/{id}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DonationAuditLogResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Donation-audit-log"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "operationId": "get/donation-audit-logs/{id}"
+      },
+      "put": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DonationAuditLogResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Donation-audit-log"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "operationId": "put/donation-audit-logs/{id}",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DonationAuditLogRequest"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Donation-audit-log"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "operationId": "delete/donation-audit-logs/{id}"
       }
     },
     "/dormitories": {
@@ -40732,6 +43503,577 @@
           }
         ],
         "operationId": "delete/message-templates/{id}"
+      }
+    },
+    "/migration/upload": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MigrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Migration"
+        ],
+        "parameters": [],
+        "operationId": "post/migration/upload",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MigrationRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/migration/progress/{id}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MigrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Migration"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "operationId": "get/migration/progress/{id}"
+      }
+    },
+    "/migration/results/{id}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MigrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Migration"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "operationId": "get/migration/results/{id}"
+      }
+    },
+    "/migration/cancel/{id}": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MigrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Migration"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "operationId": "post/migration/cancel/{id}",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MigrationRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/migration/logs/{id}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MigrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Migration"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "operationId": "get/migration/logs/{id}"
+      }
+    },
+    "/migration/template": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MigrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Migration"
+        ],
+        "parameters": [],
+        "operationId": "get/migration/template"
+      }
+    },
+    "/migration/cleanup": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MigrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Migration"
+        ],
+        "parameters": [],
+        "operationId": "post/migration/cleanup",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MigrationRequest"
+              }
+            }
+          }
+        }
       }
     },
     "/notifications": {
@@ -43768,6 +47110,512 @@
           }
         ],
         "operationId": "delete/room-blockings/{id}"
+      }
+    },
+    "/user-activity-logs": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserActivityLogListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User-activity-log"
+        ],
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort by attributes ascending (asc) or descending (desc)",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pagination[withCount]",
+            "in": "query",
+            "description": "Return page/pageSize (default: true)",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "pagination[page]",
+            "in": "query",
+            "description": "Page number (default: 0)",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pagination[pageSize]",
+            "in": "query",
+            "description": "Page size (default: 25)",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pagination[start]",
+            "in": "query",
+            "description": "Offset value (default: 0)",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pagination[limit]",
+            "in": "query",
+            "description": "Number of entities to return (default: 25)",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "description": "Fields to return (ex: title,author)",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "populate",
+            "in": "query",
+            "description": "Relations to return",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filters",
+            "in": "query",
+            "description": "Filters to apply",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "style": "deepObject"
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "description": "Locale to apply",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "operationId": "get/user-activity-logs"
+      },
+      "post": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserActivityLogResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User-activity-log"
+        ],
+        "parameters": [],
+        "operationId": "post/user-activity-logs",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserActivityLogRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user-activity-logs/{id}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserActivityLogResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User-activity-log"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "operationId": "get/user-activity-logs/{id}"
+      },
+      "put": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserActivityLogResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User-activity-log"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "operationId": "put/user-activity-logs/{id}",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserActivityLogRequest"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User-activity-log"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "operationId": "delete/user-activity-logs/{id}"
       }
     },
     "/upload": {

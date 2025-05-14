@@ -34,7 +34,8 @@
       "type": "biginteger"
     },
     "Email": {
-      "type": "email"
+      "type": "email",
+      "default": "dummy@example.com"
     },
     "Aadhar_no": {
       "type": "biginteger"

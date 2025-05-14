@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "user_activity_logs",
+  "info": {
+    "singularName": "user-activity-log",
+    "pluralName": "user-activity-logs",
+    "displayName": "user-activity-log"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "action": {
+      "type": "string"
+    },
+    "username": {
+      "type": "string"
+    },
+    "userRole": {
+      "type": "string"
+    },
+    "ipAddress": {
+      "type": "string"
+    },
+    "userAgent": {
+      "type": "string"
+    },
+    "details": {
+      "type": "json"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "datetime"
+    }
+  }
+}

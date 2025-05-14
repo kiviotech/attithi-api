@@ -1,184 +1,179 @@
 'use strict';
 
+/**
+ * Migration controller
+ */
+
+const { factories } = require('@strapi/strapi');
 const xlsx = require('xlsx');
-const fs = require('fs');
 
-module.exports = {
-  async uploadExcel(ctx) {
+module.exports = factories.createCoreController('api::migration.migration', ({ strapi }) => ({
+  async uploadFile(ctx) {
     try {
-      const { files } = ctx.request;
+      console.log("Upload request received");
       
-      if (!files || !files.file) {
-        return ctx.badRequest('No file uploaded');
+      // Check for files existence
+      if (!ctx.request.files || !ctx.request.files.file) {
+        console.error("No file named 'file' found in request");
+        return ctx.badRequest('No file with name "file" uploaded');
       }
+      
+      const uploadedFile = ctx.request.files.file;
 
-      const file = files.file;
-
-      // Log file details for debugging
-      console.log('File details:', {
-        name: file.name,
-        size: file.size,
-        type: file.type
+      console.log("File details:", {
+        name: uploadedFile.name,
+        size: uploadedFile.size,
+        type: uploadedFile.mimetype,
+        path: uploadedFile.path
       });
-
-      // Check file size (5MB limit)
-      const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-      if (file.size > MAX_FILE_SIZE) {
-        return ctx.badRequest('File size exceeds 5MB limit');
-      }
-
-      // Check if file is empty
-      if (!file.size) {
-        return ctx.badRequest('File is empty');
-      }
-
-      let workbook;
-      try {
-        // Read as buffer if file.buffer exists, otherwise use path
-        if (file.buffer) {
-          workbook = xlsx.read(file.buffer, { type: 'buffer' });
-        } else {
-          workbook = xlsx.readFile(file.path);
-        }
-      } catch (error) {
-        console.error('Excel reading error:', error);
-        return ctx.badRequest('Invalid Excel file format');
-      }
-
-      if (!workbook.SheetNames.length) {
-        return ctx.badRequest('Excel file has no sheets');
-      }
-
-      const sheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[sheetName];
       
-      // Convert to JSON (limit to 100 records)
-      let data;
-      try {
-        data = xlsx.utils.sheet_to_json(worksheet);
-      } catch (error) {
-        console.error('JSON conversion error:', error);
-        return ctx.badRequest('Failed to parse Excel data');
-      }
+      // Pass the file path to the background processing service
+      const jobId = await strapi.service('api::migration.migration').processUpload(uploadedFile.path);
       
-      // Validate data
-      if (!Array.isArray(data) || data.length === 0) {
-        return ctx.badRequest('No valid data found in Excel file');
-      }
-
-      if (data.length > 100) {
-        data = data.slice(0, 100);
-      }
-
-      // Create a unique job ID
-      const jobId = Date.now().toString();
-      global.migrationProgress = global.migrationProgress || {};
-      global.migrationProgress[jobId] = 0;
-
-      let results;
-      try {
-        // Start the import process
-        results = await strapi.service('api::migration.migration').importDonorData(
-          data,
-          (progress) => {
-            global.migrationProgress[jobId] = progress;
-          }
-        );
-      } catch (error) {
-        console.error('Data import error:', error);
-        results = {
-          success: [],
-          failed: [{ error: error.message }],
-          invalid: [],
-          skipped: [],
-          processed: data.length
-        };
-      }
-
-      // Generate error report
-      const errorReport = await strapi.service('api::migration.error-report').generateErrorReport(results);
-
-      return {
-        success: true,
-        jobId,
-        processed: data.length,
-        successful: results?.success?.length || 0,
-        failed: results?.failed?.length || 0,
-        invalid: results?.invalid?.length || 0,
-        skipped: results?.skipped?.length || 0,
-        error_report: errorReport,
-        details: {
-          success: results?.success || [],
-          failed: results?.failed || [],
-          invalid: results?.invalid || [],
-          skipped: results?.skipped || []
-        }
-      };
-
+      console.log(`File upload processed, started background job: ${jobId}`);
+      
+      // Immediately return the job ID
+      return ctx.send({ jobId });
+      
     } catch (error) {
-      console.error('Excel upload failed:', error);
-      return ctx.badRequest(`Excel upload failed: ${error.message}`);
+      console.error('Error in file upload:', error);
+      // Check if it's a known error type, otherwise send a generic message
+      if (error.name === 'ValidationError' || error.name === 'ApplicationError') {
+        return ctx.badRequest(error.message);
+      } else {
+        return ctx.internalServerError(`Import failed: ${error.message}`);
+      }
     }
   },
-
-  async importData(ctx) {
-    try {
-      const { data } = ctx.request.body;
-      
-      if (!Array.isArray(data)) {
-        return ctx.badRequest('Data must be an array');
-      }
-
-      // Create a unique job ID for this import
-      const jobId = Date.now().toString();
-
-      // Store progress in memory (in production, use Redis or similar)
-      global.migrationProgress = global.migrationProgress || {};
-      global.migrationProgress[jobId] = 0;
-
-      // Start the import process
-      const results = await strapi.service('api::migration.migration').importDonorData(
-        data,
-        (progress) => {
-          global.migrationProgress[jobId] = progress;
-        }
-      );
-
-      return {
-        success: true,
-        jobId,
-        processed: data.length,
-        successful: results.success.length,
-        failed: results.failed.length,
-        invalid: results.invalid.length,
-        skipped: results.skipped.length,
-        details: {
-          success: results.success,
-          failed: results.failed,
-          invalid: results.invalid,
-          skipped: results.skipped
-        }
-      };
-    } catch (error) {
-      return ctx.badRequest(error.message);
-    }
-  },
-
-  // Add endpoint to check progress
+  
   async checkProgress(ctx) {
     try {
-      const { jobId } = ctx.params;
+      const { id } = ctx.params;
       
-      if (!global.migrationProgress || !global.migrationProgress[jobId]) {
-        return ctx.notFound('Job not found');
+      if (!id) {
+        return ctx.badRequest('Missing job ID');
       }
-
-      return {
-        jobId,
-        progress: global.migrationProgress[jobId]
-      };
+      
+      const progress = await strapi.service('api::migration.migration').checkJobProgress(id);
+      return ctx.send(progress);
     } catch (error) {
-      return ctx.badRequest(error.message);
+      return ctx.badRequest(`Failed to check progress: ${error.message}`);
+    }
+  },
+  
+  async getResults(ctx) {
+    try {
+      const { id } = ctx.params;
+      
+      if (!id) {
+        return ctx.badRequest('Missing job ID');
+      }
+      
+      const results = await strapi.service('api::migration.migration').getJobResults(id);
+      return ctx.send(results);
+    } catch (error) {
+      return ctx.badRequest(`Failed to get results: ${error.message}`);
+    }
+  },
+  
+  async cancelJob(ctx) {
+    try {
+      const { id } = ctx.params;
+      
+      if (!id) {
+        return ctx.badRequest('Missing job ID');
+      }
+      
+      const result = await strapi.service('api::migration.migration').cancelJob(id);
+      return ctx.send(result);
+    } catch (error) {
+      return ctx.badRequest(`Failed to cancel job: ${error.message}`);
+    }
+  },
+  
+  async getLogs(ctx) {
+    try {
+      const { id } = ctx.params;
+      
+      if (!id) {
+        return ctx.badRequest('Missing job ID');
+      }
+      
+      const logs = await strapi.service('api::migration.migration').getJobLogs(id);
+      return ctx.send(logs);
+    } catch (error) {
+      return ctx.badRequest(`Failed to get logs: ${error.message}`);
+    }
+  },
+  
+  async downloadTemplate(ctx) {
+    try {
+      // Create sample data
+      const sampleData = [
+        {
+          Name_Code: "TEST001",
+          Add_Id: "ADD001",
+          "Booking Details_Booking_Id": "BOOK20220315-0001",
+          Receipt_Booking_Id: "REC001",
+          "Receipt No": "R12345",
+          MathOrMission: "Math",
+          Actual_Name: "John Doe",
+          Address1: "123 Main St",
+          Address2: "Apt 4B",
+          PO: "PO Box 123",
+          Dist: "Kolkata",
+          State: "West Bengal",
+          Pin: "700001",
+          Amount: "1000",
+          Mode: "Cash",
+          "Receipt Date": "03/15/2022",
+          "DD/CH No": "",
+          "DD/CH Date": "",
+          Purpose: "General Donation",
+          "PAN NO": "ABCDE1234F",
+          "Bank Name": "",
+          Name_Prefix: "Mr.",
+          "Mobile No": "9876543210",
+          "Landline No": "03322221111",
+          "C/O": "",
+          Country: "India"
+        }
+      ];
+
+      // Create workbook
+      const workbook = xlsx.utils.book_new();
+      const worksheet = xlsx.utils.json_to_sheet(sampleData);
+      xlsx.utils.book_append_sheet(workbook, worksheet, "Legacy Data");
+      
+      // Generate buffer
+      const buffer = xlsx.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+      
+      // Set response headers
+      ctx.set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      ctx.set('Content-Disposition', 'attachment; filename="legacy_data_template.xlsx"');
+      ctx.set('Content-Length', buffer.length);
+      
+      // Send file
+      return ctx.body = buffer;
+    } catch (error) {
+      return ctx.badRequest(`Failed to generate template: ${error.message}`);
+    }
+  },
+  
+  async cleanupJobs(ctx) {
+    try {
+      // Only allow admin users to cleanup jobs
+      if (!ctx.state.user || !ctx.state.user.roles.some(r => r.name === 'Admin')) {
+        return ctx.unauthorized('Only administrators can clean up jobs');
+      }
+      
+      const { hours } = ctx.request.query;
+      const maxAgeHours = hours ? parseInt(hours, 10) : 24;
+      
+      const result = await strapi.service('api::migration.migration').cleanupOldJobs(maxAgeHours);
+      return ctx.send(result);
+    } catch (error) {
+      return ctx.badRequest(`Failed to cleanup jobs: ${error.message}`);
     }
   }
-}; 
+})); 

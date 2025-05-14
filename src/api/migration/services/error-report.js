@@ -46,9 +46,29 @@ module.exports = {
     // Process invalid records (validation errors)
     if (Array.isArray(results.invalid)) {
       results.invalid.forEach(record => {
+        // Extract field values from the errors if available
+        const errorDetails = Array.isArray(record.errors) 
+          ? record.errors.map(error => {
+              // Try to extract field and value if it's in the format "field: message (got: value)"
+              const match = typeof error === 'string' && error.match(/^([^:]+): ([^(]+) \(got: (.+)\)$/);
+              if (match) {
+                return {
+                  field: match[1].trim(),
+                  message: match[2].trim(),
+                  value: match[3].trim()
+                };
+              }
+              return { message: error };
+            })
+          : [{ message: 'Unknown validation error' }];
+            
+        console.log(`Adding validation error for ${record.name_code || record.add_id}:`, JSON.stringify(errorDetails, null, 2));
+        
         report.validation_errors.push({
           name_code: record.name_code,
+          add_id: record.add_id,
           errors: record.errors || ['Unknown validation error'],
+          error_details: errorDetails,
           severity: 'ERROR',
           recommendation: this.getRecommendation(record.errors || [])
         });
@@ -58,8 +78,11 @@ module.exports = {
     // Process failed records (processing errors)
     if (Array.isArray(results.failed)) {
       results.failed.forEach(record => {
+        console.log(`Adding processing error for ${record.name_code || record.add_id}:`, record.error);
+        
         report.processing_errors.push({
           name_code: record.name_code,
+          add_id: record.add_id,
           error: record.error || 'Unknown error',
           severity: 'ERROR',
           recommendation: 'Check data format and try again'
@@ -70,8 +93,11 @@ module.exports = {
     // Process skipped records (duplicates)
     if (Array.isArray(results.skipped)) {
       results.skipped.forEach(record => {
+        console.log(`Adding duplicate record for ${record.name_code || record.add_id}:`, record.reason);
+        
         report.duplicate_records.push({
           name_code: record.name_code,
+          add_id: record.add_id,
           reason: record.reason || 'Record already exists',
           severity: 'WARNING',
           recommendation: 'Record already exists in system'

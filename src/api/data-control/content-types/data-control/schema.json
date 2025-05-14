@@ -1,0 +1,19 @@
+{
+  "kind": "singleType",
+  "collectionName": "data_controls",
+  "info": {
+    "singularName": "data-control",
+    "pluralName": "data-controls",
+    "displayName": "Data Control",
+    "description": "API endpoints for data management operations"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "settings": {
+      "type": "json"
+    }
+  }
+} 

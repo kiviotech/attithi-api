@@ -83,7 +83,9 @@
       "type": "string"
     },
     "identity_number": {
-      "type": "string"
+      "type": "string",
+      "unique": true,
+      "required": true
     },
     "email": {
       "type": "string"
@@ -99,6 +101,16 @@
       "relation": "manyToMany",
       "target": "api::room-allocation.room-allocation",
       "mappedBy": "guests"
+    },
+    "arrival_status": {
+      "type": "enumeration",
+      "enum": [
+        "Not Arrived",
+        "Arrived",
+        "Cancelled",
+        "Rescheduled"
+      ],
+      "default": "Not Arrived"
     }
   }
 }
