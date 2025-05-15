@@ -119,5 +119,47 @@ module.exports = createCoreController('api::guest-detail.guest-detail', ({ strap
       console.error('Error getting guest details by phone number:', error);
       return ctx.internalServerError('An error occurred while getting the guest details');
     }
+  },
+
+  // Custom controller method to find a guest by Aadhaar (unique_no)
+  async findByAadhaar(ctx) {
+    try {
+      let { aadhaar } = ctx.params;
+      console.log('[findByAadhaar] Received param:', aadhaar);
+      // Clean the aadhaar number - remove any non-digit characters
+      aadhaar = aadhaar.replace(/\D/g, '');
+      console.log('[findByAadhaar] Cleaned Aadhaar:', aadhaar);
+      // Aadhaar must be 12 digits
+      if (!aadhaar || aadhaar.length !== 12 || !/^\d{12}$/.test(aadhaar)) {
+        console.warn('[findByAadhaar] Invalid Aadhaar format:', aadhaar);
+        return ctx.badRequest('Invalid Aadhaar number format');
+      }
+      // Query the database for a guest with the provided Aadhaar
+      const filters = { aadhar: aadhaar };
+      console.log('[findByAadhaar] Query filters:', filters);
+      const guests = await strapi.entityService.findMany('api::guest-detail.guest-detail', {
+        filters,
+        fields: ['id', 'name'], // Only return minimal fields
+      });
+      console.log('[findByAadhaar] Query result:', guests);
+      // If no guest is found, return a 404 with a structured error
+      if (!guests || guests.length === 0) {
+        console.warn('[findByAadhaar] No guest found for Aadhaar:', aadhaar);
+        return ctx.notFound({
+          error: true,
+          message: 'No guest found with this Aadhaar number'
+        });
+      }
+      // Return only a success response with minimal info
+      console.log('[findByAadhaar] Guest found:', guests[0]);
+      return ctx.send({
+        exists: true,
+        guestId: guests[0].id,
+        message: 'Guest found with this Aadhaar number'
+      });
+    } catch (error) {
+      console.error('Error finding guest by Aadhaar:', error);
+      return ctx.internalServerError('An error occurred while finding the guest');
+    }
   }
 }));
