@@ -7,18 +7,6 @@
 
 module.exports = async () => {
   try {
-    // Check if we need to create roles
-    const pluginStore = strapi.store({
-      environment: '',
-      type: 'plugin',
-      name: 'users-permissions',
-    });
-
-    // Get existing roles
-    const roles = await pluginStore.get({ key: 'roles' }) || {};
-    const roleKeys = Object.keys(roles);
-
-    // Define our custom roles if they don't exist
     const customRoles = [
       {
         name: 'Super Admin',
@@ -42,28 +30,13 @@ module.exports = async () => {
       },
     ];
 
-    // Check role existence based on type
-    const roleExists = (type) => {
-      return Object.values(roles).some(role => role.type === type);
-    };
-
-    // Get role ID by type
-    const getRoleId = (type) => {
-      const role = Object.values(roles).find(role => role.type === type);
-      return role ? role.id : null;
-    };
-
-    // Get the users-permissions service
-    const usersPermissionsService = strapi.plugin('users-permissions').service('users-permissions');
-    
-    // For each custom role that doesn't exist, create it
     for (const role of customRoles) {
-      if (!roleExists(role.type)) {
-        console.log(`Creating role: ${role.name}`);
-        
-        try {
-          // Create the role using the users-permissions role service
-          await strapi.query('plugin::users-permissions.role').create({
+      // Check if the role exists in the actual roles table
+      const existing = await strapi.db.query('plugin::users-permissions.role').findOne({
+        where: { type: role.type }
+      });
+      if (!existing) {
+        await strapi.db.query('plugin::users-permissions.role').create({
             data: {
               name: role.name,
               description: role.description,
@@ -71,73 +44,13 @@ module.exports = async () => {
               permissions: {},
             },
           });
-          
-          console.log(`Role ${role.name} created successfully`);          
-        } catch (error) {
-          console.error(`Error creating role ${role.name}:`, error);
-        }
+        strapi.log.info(`Created role: ${role.name}`);
       } else {
-        console.log(`Role ${role.name} already exists`);
+        strapi.log.info(`Role already exists: ${role.name}`);
       }
     }
-    
-    // Refetch roles to get the latest IDs
-    const updatedRoles = await pluginStore.get({ key: 'roles' }) || {};
-    
-    // Apply permission templates
-    const permissionTemplates = {
-      'super-admin': [
-        // Core permissions
-        { action: 'plugin::content-manager.*' },
-        { action: 'plugin::content-type-builder.*' },
-        { action: 'plugin::upload.*' },
-        { action: 'plugin::users-permissions.*' },
-        // API permissions
-        { action: 'api::*.*' }
-      ],
-      'admin': [
-        // Core permissions with limitations
-        { action: 'plugin::content-manager.explorer.read' },
-        { action: 'plugin::content-manager.explorer.create' },
-        { action: 'plugin::content-manager.explorer.update' },
-        { action: 'plugin::upload.read' },
-        { action: 'plugin::upload.assets.create' },
-        // API permissions with limitations
-        { action: 'api::donation.*' },
-        { action: 'api::guest-detail.*' },
-        { action: 'api::room.*' },
-        { action: 'api::booking-request.*' }
-      ],
-      'donation': [
-        // Limited to donation management
-        { action: 'plugin::content-manager.explorer.read', subject: 'api::donation.*' },
-        { action: 'plugin::content-manager.explorer.create', subject: 'api::donation.*' },
-        { action: 'plugin::content-manager.explorer.update', subject: 'api::donation.*' },
-        { action: 'api::donation.*' },
-        { action: 'api::donor.*' }
-      ],
-      'guest-house': [
-        // Limited to guest house management
-        { action: 'plugin::content-manager.explorer.read', subject: 'api::guest-detail.*' },
-        { action: 'plugin::content-manager.explorer.create', subject: 'api::guest-detail.*' },
-        { action: 'plugin::content-manager.explorer.update', subject: 'api::guest-detail.*' },
-        { action: 'plugin::content-manager.explorer.read', subject: 'api::room.*' },
-        { action: 'plugin::content-manager.explorer.read', subject: 'api::booking-request.*' },
-        { action: 'api::guest-detail.*' },
-        { action: 'api::room.find' },
-        { action: 'api::room.findOne' },
-        { action: 'api::room-allocation.*' },
-        { action: 'api::booking-request.*' }
-      ]
-    };
-    
-    // IMPORTANT: This is a simplified approach. In a production environment, you would need to:
-    // 1. Get all permissions for each controller action
-    // 2. Filter them based on your role requirements
-    // 3. Assign them properly through the permissions service
-    
-    console.log('Bootstrap finished');
+    strapi.log.info('Role bootstrap finished');
   } catch (error) {
-    console.error('Bootstrap error:', error);
+    strapi.log.error('Bootstrap error:', error);
   }
 };

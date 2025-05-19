@@ -112,5 +112,12 @@
       ],
       "default": "Not Arrived"
     }
+  },
+  "customActions": {
+    "findByAadhaar": {
+      "displayName": "Find by Aadhaar",
+      "description": "Find guest by Aadhaar number",
+      "handler": "api::guest-detail.guest-detail.findByAadhaar"
+    }
   }
 }
