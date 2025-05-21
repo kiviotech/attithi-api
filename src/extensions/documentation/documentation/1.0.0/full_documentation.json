@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-05-21T10:25:10.938Z"
+    "x-generation-date": "2025-05-21T14:29:06.857Z"
   },
   "security": [
     {
@@ -1762,6 +1762,20 @@
                                                                                                           "Counter 2",
                                                                                                           "Counter 3",
                                                                                                           "Counter 4"
+                                                                                                        ]
+                                                                                                      },
+                                                                                                      "stopCommunication": {
+                                                                                                        "type": "boolean"
+                                                                                                      },
+                                                                                                      "communicationStopReason": {
+                                                                                                        "type": "string",
+                                                                                                        "enum": [
+                                                                                                          "Unsubscribed",
+                                                                                                          "Bounced Email",
+                                                                                                          "Complaint",
+                                                                                                          "Invalid Contact",
+                                                                                                          "Requested Removal",
+                                                                                                          "Other"
                                                                                                         ]
                                                                                                       },
                                                                                                       "createdAt": {
@@ -4379,6 +4393,20 @@
                                                                                             "Counter 2",
                                                                                             "Counter 3",
                                                                                             "Counter 4"
+                                                                                          ]
+                                                                                        },
+                                                                                        "stopCommunication": {
+                                                                                          "type": "boolean"
+                                                                                        },
+                                                                                        "communicationStopReason": {
+                                                                                          "type": "string",
+                                                                                          "enum": [
+                                                                                            "Unsubscribed",
+                                                                                            "Bounced Email",
+                                                                                            "Complaint",
+                                                                                            "Invalid Contact",
+                                                                                            "Requested Removal",
+                                                                                            "Other"
                                                                                           ]
                                                                                         },
                                                                                         "createdAt": {
@@ -8590,6 +8618,20 @@
                                                                 "Counter 4"
                                                               ]
                                                             },
+                                                            "stopCommunication": {
+                                                              "type": "boolean"
+                                                            },
+                                                            "communicationStopReason": {
+                                                              "type": "string",
+                                                              "enum": [
+                                                                "Unsubscribed",
+                                                                "Bounced Email",
+                                                                "Complaint",
+                                                                "Invalid Contact",
+                                                                "Requested Removal",
+                                                                "Other"
+                                                              ]
+                                                            },
                                                             "createdAt": {
                                                               "type": "string",
                                                               "format": "date-time"
@@ -12785,6 +12827,20 @@
                                                                                                           "Counter 4"
                                                                                                         ]
                                                                                                       },
+                                                                                                      "stopCommunication": {
+                                                                                                        "type": "boolean"
+                                                                                                      },
+                                                                                                      "communicationStopReason": {
+                                                                                                        "type": "string",
+                                                                                                        "enum": [
+                                                                                                          "Unsubscribed",
+                                                                                                          "Bounced Email",
+                                                                                                          "Complaint",
+                                                                                                          "Invalid Contact",
+                                                                                                          "Requested Removal",
+                                                                                                          "Other"
+                                                                                                        ]
+                                                                                                      },
                                                                                                       "createdAt": {
                                                                                                         "type": "string",
                                                                                                         "format": "date-time"
@@ -16663,6 +16719,20 @@
                                                     "Counter 4"
                                                   ]
                                                 },
+                                                "stopCommunication": {
+                                                  "type": "boolean"
+                                                },
+                                                "communicationStopReason": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "Unsubscribed",
+                                                    "Bounced Email",
+                                                    "Complaint",
+                                                    "Invalid Contact",
+                                                    "Requested Removal",
+                                                    "Other"
+                                                  ]
+                                                },
                                                 "createdAt": {
                                                   "type": "string",
                                                   "format": "date-time"
@@ -18499,6 +18569,20 @@
                                                                               "Counter 2",
                                                                               "Counter 3",
                                                                               "Counter 4"
+                                                                            ]
+                                                                          },
+                                                                          "stopCommunication": {
+                                                                            "type": "boolean"
+                                                                          },
+                                                                          "communicationStopReason": {
+                                                                            "type": "string",
+                                                                            "enum": [
+                                                                              "Unsubscribed",
+                                                                              "Bounced Email",
+                                                                              "Complaint",
+                                                                              "Invalid Contact",
+                                                                              "Requested Removal",
+                                                                              "Other"
                                                                             ]
                                                                           },
                                                                           "createdAt": {
@@ -21019,6 +21103,20 @@
                                                                                             "Counter 2",
                                                                                             "Counter 3",
                                                                                             "Counter 4"
+                                                                                          ]
+                                                                                        },
+                                                                                        "stopCommunication": {
+                                                                                          "type": "boolean"
+                                                                                        },
+                                                                                        "communicationStopReason": {
+                                                                                          "type": "string",
+                                                                                          "enum": [
+                                                                                            "Unsubscribed",
+                                                                                            "Bounced Email",
+                                                                                            "Complaint",
+                                                                                            "Invalid Contact",
+                                                                                            "Requested Removal",
+                                                                                            "Other"
                                                                                           ]
                                                                                         },
                                                                                         "createdAt": {
@@ -24276,6 +24374,20 @@
                                                                               "Counter 2",
                                                                               "Counter 3",
                                                                               "Counter 4"
+                                                                            ]
+                                                                          },
+                                                                          "stopCommunication": {
+                                                                            "type": "boolean"
+                                                                          },
+                                                                          "communicationStopReason": {
+                                                                            "type": "string",
+                                                                            "enum": [
+                                                                              "Unsubscribed",
+                                                                              "Bounced Email",
+                                                                              "Complaint",
+                                                                              "Invalid Contact",
+                                                                              "Requested Removal",
+                                                                              "Other"
                                                                             ]
                                                                           },
                                                                           "createdAt": {
@@ -28438,6 +28550,20 @@
                           "Counter 4"
                         ]
                       },
+                      "stopCommunication": {
+                        "type": "boolean"
+                      },
+                      "communicationStopReason": {
+                        "type": "string",
+                        "enum": [
+                          "Unsubscribed",
+                          "Bounced Email",
+                          "Complaint",
+                          "Invalid Contact",
+                          "Requested Removal",
+                          "Other"
+                        ]
+                      },
                       "createdAt": {
                         "type": "string",
                         "format": "date-time"
@@ -30263,6 +30389,20 @@
                                                                                                                       "Counter 2",
                                                                                                                       "Counter 3",
                                                                                                                       "Counter 4"
+                                                                                                                    ]
+                                                                                                                  },
+                                                                                                                  "stopCommunication": {
+                                                                                                                    "type": "boolean"
+                                                                                                                  },
+                                                                                                                  "communicationStopReason": {
+                                                                                                                    "type": "string",
+                                                                                                                    "enum": [
+                                                                                                                      "Unsubscribed",
+                                                                                                                      "Bounced Email",
+                                                                                                                      "Complaint",
+                                                                                                                      "Invalid Contact",
+                                                                                                                      "Requested Removal",
+                                                                                                                      "Other"
                                                                                                                     ]
                                                                                                                   },
                                                                                                                   "createdAt": {
@@ -33045,6 +33185,20 @@
                                                                                                         "Counter 4"
                                                                                                       ]
                                                                                                     },
+                                                                                                    "stopCommunication": {
+                                                                                                      "type": "boolean"
+                                                                                                    },
+                                                                                                    "communicationStopReason": {
+                                                                                                      "type": "string",
+                                                                                                      "enum": [
+                                                                                                        "Unsubscribed",
+                                                                                                        "Bounced Email",
+                                                                                                        "Complaint",
+                                                                                                        "Invalid Contact",
+                                                                                                        "Requested Removal",
+                                                                                                        "Other"
+                                                                                                      ]
+                                                                                                    },
                                                                                                     "createdAt": {
                                                                                                       "type": "string",
                                                                                                       "format": "date-time"
@@ -35736,6 +35890,20 @@
                                                                                                         "Counter 2",
                                                                                                         "Counter 3",
                                                                                                         "Counter 4"
+                                                                                                      ]
+                                                                                                    },
+                                                                                                    "stopCommunication": {
+                                                                                                      "type": "boolean"
+                                                                                                    },
+                                                                                                    "communicationStopReason": {
+                                                                                                      "type": "string",
+                                                                                                      "enum": [
+                                                                                                        "Unsubscribed",
+                                                                                                        "Bounced Email",
+                                                                                                        "Complaint",
+                                                                                                        "Invalid Contact",
+                                                                                                        "Requested Removal",
+                                                                                                        "Other"
                                                                                                       ]
                                                                                                     },
                                                                                                     "createdAt": {

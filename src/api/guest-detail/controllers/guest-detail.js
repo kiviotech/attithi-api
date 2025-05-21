@@ -161,5 +161,31 @@ module.exports = createCoreController('api::guest-detail.guest-detail', ({ strap
       console.error('Error finding guest by Aadhaar:', error);
       return ctx.internalServerError('An error occurred while finding the guest');
     }
+  },
+
+  // Custom controller method to get next available unique_no
+  async getNextUniqueNo(ctx) {
+    try {
+      // Query to find all guest details with unique_no values
+      const guestDetails = await strapi.entityService.findMany('api::guest-detail.guest-detail', {
+        fields: ['unique_no'],
+      });
+      
+      // Extract and parse all unique_no values that start with 'C' followed by numbers
+      const uniqueNumbers = guestDetails
+        .filter(guest => guest.unique_no && guest.unique_no.match(/^C\d+$/))
+        .map(guest => parseInt(guest.unique_no.substring(1)));
+      
+      // Find the highest number and increment by 1, or start at 1 if none exist
+      const highestUniqueNo = uniqueNumbers.length > 0 ? Math.max(...uniqueNumbers) + 1 : 1;
+      
+      // Return the next unique_no value
+      return ctx.send({
+        nextUniqueNo: `C${highestUniqueNo}`
+      });
+    } catch (error) {
+      console.error('Error calculating next unique_no:', error);
+      return ctx.internalServerError('An error occurred while calculating the next unique_no');
+    }
   }
 }));

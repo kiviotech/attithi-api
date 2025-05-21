@@ -782,6 +782,17 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
     counter: Attribute.Enumeration<
       ['Counter 1', 'Counter 2', 'Counter 3', 'Counter 4']
     >;
+    stopCommunication: Attribute.Boolean & Attribute.DefaultTo<false>;
+    communicationStopReason: Attribute.Enumeration<
+      [
+        'Unsubscribed',
+        'Bounced Email',
+        'Complaint',
+        'Invalid Contact',
+        'Requested Removal',
+        'Other'
+      ]
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<

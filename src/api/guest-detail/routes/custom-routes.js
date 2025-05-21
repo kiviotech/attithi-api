@@ -8,12 +8,12 @@ module.exports = {
   routes: [
     {
       method: 'GET',
-      path: '/guest-details/findByAadhaar/:aadhaar',
+      path: '/guest-details/find-by-aadhaar/:aadhaar',
       handler: 'guest-detail.findByAadhaar',
       config: {
-        auth: {},
-        policies: [],
-        middlewares: [],
+        auth: {
+          scope: ['api::guest-detail.guest-detail.find']
+        }
       },
       info: {
         description: 'Find Guest by Aadhaar',
@@ -24,12 +24,12 @@ module.exports = {
     },
     {
       method: 'GET',
-      path: '/guest-details/by-phone/:phoneNumber',
+      path: '/guest-details/find-by-phone/:phoneNumber',
       handler: 'guest-detail.findByPhone',
       config: {
-        auth: false, // Set to true if authentication is required
-        policies: [],
-        middlewares: [],
+        auth: {
+          scope: ['api::guest-detail.guest-detail.find']
+        }
       },
     },
     {
@@ -37,10 +37,20 @@ module.exports = {
       path: '/guest-details/details-by-phone/:phoneNumber',
       handler: 'guest-detail.getDetailsByPhone',
       config: {
-        auth: false, // Consider setting this to true in production
-        policies: [],
-        middlewares: [],
+        auth: {
+          scope: ['api::guest-detail.guest-detail.find']
+        }
       },
     },
+    {
+      method: 'GET',
+      path: '/guest-details/next-unique-no',
+      handler: 'guest-detail.getNextUniqueNo',
+      config: {
+        auth: { 
+          scope: ['api::guest-detail.guest-detail.find']
+        }
+      }
+    }
   ],
 }; 

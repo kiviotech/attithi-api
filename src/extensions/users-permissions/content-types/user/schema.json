@@ -90,6 +90,23 @@
         "Counter 3",
         "Counter 4"
       ]
+    },
+    "stopCommunication": {
+      "type": "boolean",
+      "default": false,
+      "description": "Flag to indicate if communication should be stopped with this user"
+    },
+    "communicationStopReason": {
+      "type": "enumeration",
+      "enum": [
+        "Unsubscribed",
+        "Bounced Email",
+        "Complaint",
+        "Invalid Contact",
+        "Requested Removal",
+        "Other"
+      ],
+      "description": "Reason for stopping communication with this user"
     }
   }
 }
