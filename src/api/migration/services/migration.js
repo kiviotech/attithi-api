@@ -343,102 +343,118 @@ module.exports = ({ strapi }) => ({
   
   // Background processing function
   async processFileInBackground(jobId, filePath, options) {
-    try {
-      const job = JOBS[jobId];
-      if (!job) return;
-      
-      // Log job starting
-      this.logInfo(jobId, 'Starting migration job');
-      
-      // Read the Excel file
-      const workbook = new Excel.Workbook();
-      await workbook.xlsx.readFile(filePath);
-      const worksheet = workbook.worksheets[0];
-      
-      if (!worksheet) {
-        this.logError(jobId, 'No worksheet found in Excel file');
-        JOBS[jobId].status = 'failed';
-        return;
-      }
-      
-      // Get headers from first row and convert to array of strings
-      const headerRow = worksheet.getRow(1);
-      const headerValues = Array.isArray(headerRow.values) ? headerRow.values : [];
-      const headers = headerValues.slice(1).map(cell => String(cell || '')); // Convert to string and handle empty cells
-      
-      // Check for required headers (more flexible validation)
-      const missingRequiredHeaders = REQUIRED_HEADERS.filter(
-        required => !headers.some(header => header.toLowerCase() === required.toLowerCase())
-      );
-      
-      if (missingRequiredHeaders.length > 0) {
-        this.logInfo(jobId, 'Headers found in file:', headers);
-        this.logError(jobId, 'Required headers missing', { 
-          missingHeaders: missingRequiredHeaders,
-          message: 'The Excel file is missing required headers'
-        });
-        JOBS[jobId].status = 'failed';
-        return;
-      }
-      
-      // Log which additional expected headers were found
-      const foundExpectedHeaders = EXPECTED_HEADERS.filter(
-        expected => headers.some(header => header.toLowerCase() === expected.toLowerCase())
-      );
-      
-      this.logInfo(jobId, 'Found these expected headers:', foundExpectedHeaders);
-      
-      // Count rows for progress tracking
-      const rowCount = worksheet.rowCount - 1; // Minus header row
-      JOBS[jobId].total = rowCount;
-      
-      this.logInfo(jobId, `Found ${rowCount} records to process`);
-      
-      // Process data in batches
-      for (let startRow = 2; startRow <= worksheet.rowCount; startRow += BATCH_SIZE) {
-        const endRow = Math.min(startRow + BATCH_SIZE - 1, worksheet.rowCount);
+    // Execute this function in the background using setImmediate
+    // to ensure it doesn't block other I/O operations
+    setImmediate(async () => {
+      try {
+        const job = JOBS[jobId];
+        if (!job) return;
         
-        // Process this batch
-        await this.processBatch(jobId, worksheet, headers, startRow, endRow);
+        // Log job starting
+        this.logInfo(jobId, 'Starting migration job');
+        
+        // Read the Excel file
+        const workbook = new Excel.Workbook();
+        await workbook.xlsx.readFile(filePath);
+        const worksheet = workbook.worksheets[0];
+        
+        if (!worksheet) {
+          this.logError(jobId, 'No worksheet found in Excel file');
+          JOBS[jobId].status = 'failed';
+          return;
+        }
+        
+        // Get headers from first row and convert to array of strings
+        const headerRow = worksheet.getRow(1);
+        const headerValues = Array.isArray(headerRow.values) ? headerRow.values : [];
+        const headers = headerValues.slice(1).map(cell => String(cell || '')); // Convert to string and handle empty cells
+        
+        // Check for required headers (more flexible validation)
+        const missingRequiredHeaders = REQUIRED_HEADERS.filter(
+          required => !headers.some(header => header.toLowerCase() === required.toLowerCase())
+        );
+        
+        if (missingRequiredHeaders.length > 0) {
+          this.logInfo(jobId, 'Headers found in file:', headers);
+          this.logError(jobId, 'Required headers missing', { 
+            missingHeaders: missingRequiredHeaders,
+            message: 'The Excel file is missing required headers'
+          });
+          JOBS[jobId].status = 'failed';
+          return;
+        }
+        
+        // Log which additional expected headers were found
+        const foundExpectedHeaders = EXPECTED_HEADERS.filter(
+          expected => headers.some(header => header.toLowerCase() === expected.toLowerCase())
+        );
+        
+        this.logInfo(jobId, 'Found these expected headers:', foundExpectedHeaders);
+        
+        // Count rows for progress tracking
+        const rowCount = worksheet.rowCount - 1; // Minus header row
+        JOBS[jobId].total = rowCount;
+        
+        this.logInfo(jobId, `Found ${rowCount} records to process`);
+        
+        // Process data in batches, using a non-blocking approach
+        const processBatches = async (startRow) => {
+          // Check if job was cancelled before processing this batch
+          if (JOBS[jobId].status === 'cancelled') {
+            this.logInfo(jobId, 'Job was cancelled by user');
+            return;
+          }
+          
+          // Calculate end row for current batch
+          const endRow = Math.min(startRow + BATCH_SIZE - 1, worksheet.rowCount);
+          
+          // Process this batch
+          await this.processBatch(jobId, worksheet, headers, startRow, endRow);
+          
+          // Update job status
+          JOBS[jobId].updatedAt = new Date();
+          
+          // Schedule next batch with setImmediate to prevent I/O blocking
+          if (endRow < worksheet.rowCount && JOBS[jobId].status !== 'cancelled') {
+            setImmediate(() => {
+              processBatches(endRow + 1);
+            });
+          } else {
+            // All batches processed or job cancelled
+            if (JOBS[jobId].status !== 'cancelled') {
+              JOBS[jobId].status = 'completed';
+              this.logInfo(jobId, 'Migration job completed');
+            }
+            
+            // Clean up the temporary file
+            fs.unlink(filePath, (err) => {
+              if (err) this.logWarning(jobId, `Failed to delete temporary file: ${err.message}`);
+            });
+          }
+        };
+        
+        // Start processing the first batch
+        processBatches(2); // Start from row 2 (after headers)
+        
+      } catch (error) {
+        // Log the error
+        this.logError(jobId, `Job failed: ${error.message}`);
         
         // Update job status
-        JOBS[jobId].updatedAt = new Date();
+        if (JOBS[jobId]) {
+          JOBS[jobId].status = 'failed';
+          JOBS[jobId].updatedAt = new Date();
+        }
         
-        // Check if job was cancelled
-        if (JOBS[jobId].status === 'cancelled') {
-          this.logInfo(jobId, 'Job was cancelled by user');
-          break;
-        }
+        // Try to clean up the file
+        fs.unlink(filePath, () => {
+          // Ignore unlink errors, just attempt cleanup
+        });
       }
-      
-      // Finalize job
-      if (JOBS[jobId].status !== 'cancelled') {
-        JOBS[jobId].status = 'completed';
-        this.logInfo(jobId, 'Migration job completed');
-      }
-      
-      // Clean up the temporary file
-      fs.unlinkSync(filePath);
-      
-    } catch (error) {
-      // Log the error
-      this.logError(jobId, `Job failed: ${error.message}`);
-      
-      // Update job status
-      if (JOBS[jobId]) {
-        JOBS[jobId].status = 'failed';
-        JOBS[jobId].updatedAt = new Date();
-      }
-      
-      // Try to clean up the file
-      try {
-        if (fs.existsSync(filePath)) {
-          fs.unlinkSync(filePath);
-        }
-      } catch (unlinkError) {
-        // Ignore unlink errors
-      }
-    }
+    });
+    
+    // Return immediately after scheduling the background processing
+    return;
   },
   
   // Process a batch of rows
@@ -448,81 +464,99 @@ module.exports = ({ strapi }) => ({
     
     this.logInfo(jobId, `Processing batch from row ${startRow} to ${endRow}`);
     
-    for (let rowNumber = startRow; rowNumber <= endRow; rowNumber++) {
-      // Skip processing if job was cancelled
-      if (job.status === 'cancelled') break;
-      
-      const row = worksheet.getRow(rowNumber);
-      const rawData = {};
-      
-      // Extract data from the row - ensure we handle empty cells properly
-      headers.forEach((header, index) => {
-        if (!header || header.trim() === '') return; // Skip empty headers
-        
-        // Excel headers are 1-based, and we shifted earlier
-        const cell = row.getCell(index + 1);
-        let cellValue = cell.value;
-        
-        // Handle different cell types
-        if (cell.type === Excel.ValueType.Hyperlink && cellValue && cellValue.text) {
-          cellValue = cellValue.text;
-        } else if (cell.type === Excel.ValueType.RichText && cellValue && cellValue.richText) {
-          cellValue = cellValue.richText.map(rt => rt.text).join('');
-        } else if (cell.type === Excel.ValueType.Formula) {
-          cellValue = cell.result; // Use formula result
-        }
-        
-        // Assign value to rawData if it's not null/undefined
-        if (cellValue !== null && cellValue !== undefined) {
-          rawData[header] = cellValue;
-        }
-      });
-      
-      // Skip empty rows
-      if (Object.keys(rawData).length === 0) {
-        this.logInfo(jobId, `Skipping empty row ${rowNumber}`);
-        job.processed++;
-        continue;
+    // Process rows in micro-batches to avoid blocking I/O
+    const microBatchSize = 5; // Process 5 rows at a time
+    
+    // Process batch in smaller chunks to be less I/O blocking
+    const processRows = async (currentRow) => {
+      // Check for batch completion or job cancellation
+      if (currentRow > endRow || job.status === 'cancelled') {
+        return;
       }
       
-      console.log(`Raw data row ${rowNumber}:`, JSON.stringify(rawData));
+      // Calculate end of current micro-batch
+      const microBatchEnd = Math.min(currentRow + microBatchSize - 1, endRow);
       
-      // Process this record
-      try {
-        await this.processRecord(jobId, rawData, rowNumber);
-      } catch (error) {
-        this.logError(jobId, `Error processing row ${rowNumber}: ${error.message}`, { 
-          row: rowNumber, 
-          error: error.message,
-          stack: error.stack
+      // Process each row in the micro-batch
+      for (let rowNumber = currentRow; rowNumber <= microBatchEnd; rowNumber++) {
+        // Skip processing if job was cancelled
+        if (job.status === 'cancelled') break;
+        
+        const row = worksheet.getRow(rowNumber);
+        const rawData = {};
+        
+        // Extract data from the row - ensure we handle empty cells properly
+        headers.forEach((header, index) => {
+          if (!header || header.trim() === '') return; // Skip empty headers
+          
+          // Excel headers are 1-based, and we shifted earlier
+          const cell = row.getCell(index + 1);
+          let cellValue = cell.value;
+          
+          // Handle different cell types
+          if (cell.type === Excel.ValueType.Hyperlink && cellValue && cellValue.text) {
+            cellValue = cellValue.text;
+          } else if (cell.type === Excel.ValueType.RichText && cellValue && cellValue.richText) {
+            cellValue = cellValue.richText.map(rt => rt.text).join('');
+          } else if (cell.type === Excel.ValueType.Formula) {
+            cellValue = cell.result; // Use formula result
+          }
+          
+          // Assign value to rawData if it's not null/undefined
+          if (cellValue !== null && cellValue !== undefined) {
+            rawData[header] = cellValue;
+          }
         });
         
-        // Continue with next record despite errors
-        job.results.error++;
+        // Skip empty rows
+        if (Object.keys(rawData).length === 0) {
+          this.logInfo(jobId, `Skipping empty row ${rowNumber}`);
+          job.processed++;
+          continue;
+        }
+        
+        // Process this record
+        try {
+          await this.processRecord(jobId, rawData, rowNumber);
+        } catch (error) {
+          this.logError(jobId, `Error processing row ${rowNumber}: ${error.message}`, { 
+            row: rowNumber, 
+            error: error.message,
+            stack: error.stack
+          });
+          
+          // Continue with next record despite errors
+          job.results.error++;
+        }
+        
+        // Update progress
+        job.processed++;
+        job.progress = Math.floor((job.processed / job.total) * 100);
+        job.updatedAt = new Date();
       }
       
-      // Update progress
-      job.processed++;
-      job.progress = Math.floor((job.processed / job.total) * 100);
-      job.updatedAt = new Date();
-    }
+      // Schedule the next micro-batch with setImmediate to prevent I/O blocking
+      setImmediate(() => {
+        processRows(microBatchEnd + 1);
+      });
+    };
+    
+    // Start processing from the first row
+    await processRows(startRow);
   },
   
   // Process a single record
   async processRecord(jobId, rawData, rowNumber) {
     try {
+      console.log(`[PROCESS_RECORD] Starting process for row ${rowNumber}`);
       const job = JOBS[jobId];
       
-      console.log(`Processing record from row ${rowNumber}:`, JSON.stringify({
-        name_code: rawData.Name_Code,
-        add_id: rawData.Add_Id,
-        row: rowNumber
-      }));
-      
       // Apply transformations to data (trimming, etc.)
+      console.log(`[PROCESS_RECORD] Transforming data for row ${rowNumber}`);
       const processedData = this.transformData(rawData);
       
       // Validate the data
+      console.log(`[PROCESS_RECORD] Validating data for row ${rowNumber}`);
       const validationResult = this.validateData(processedData);
       
       if (!validationResult.isValid) {
@@ -531,15 +565,10 @@ module.exports = ({ strapi }) => ({
           return `${err.field}: ${err.message} (Value: ${JSON.stringify(err.value)})`;
         }).join(', ');
         
-        console.log(`Row ${rowNumber} validation failed:`, JSON.stringify({
-          name_code: rawData.Name_Code || 'unknown',
-          add_id: rawData.Add_Id || 'unknown',
-          errors: validationResult.errors
-        }, null, 2));
+        console.error(`[PROCESS_RECORD] Row ${rowNumber} validation failed: ${errorDetails}`);
         
         this.logError(jobId, `Row ${rowNumber}: Validation failed - ${errorDetails}`, {
           row: rowNumber,
-          rawData,
           errors: validationResult.errors
         });
         
@@ -577,33 +606,55 @@ module.exports = ({ strapi }) => ({
       }
       
       // Insert the data with proper error handling
-      console.log(`Inserting data for row ${rowNumber}`);
-      const insertResult = await this.insertMigrationData(processedData);
-      
-      if (!insertResult.success) {
-        this.logError(jobId, `Row ${rowNumber}: Failed to insert - ${insertResult.message}`, {
-          row: rowNumber,
-          error: insertResult.message
-        });
-        job.results.error++;
-        return;
-      }
-      
-      // Log success
-      console.log(`Row ${rowNumber} processed successfully:`, JSON.stringify({
-        name_code: rawData.Name_Code || 'unknown',
-        add_id: rawData.Add_Id || 'unknown',
-        guestId: insertResult.guestId,
-        receiptId: insertResult.receiptId,
-        donationId: insertResult.donationId
+      console.log(`[PROCESS_RECORD] Inserting data for row ${rowNumber} with processed data:`, JSON.stringify({
+        name: processedData.name,
+        add_id: processedData.add_id,
+        name_code: processedData.name_code,
+        amount: processedData.amount
       }));
       
-      this.logInfo(jobId, `Row ${rowNumber}: Successfully processed and inserted into database`);
-      job.results.success++;
+      try {
+        const insertResult = await this.insertMigrationData(processedData);
+        
+        if (!insertResult.success) {
+          console.error(`[PROCESS_RECORD] Row ${rowNumber} insertion failed: ${insertResult.message}`);
+          this.logError(jobId, `Row ${rowNumber}: Failed to insert - ${insertResult.message}`, {
+            row: rowNumber,
+            error: insertResult.message
+          });
+          job.results.error++;
+          return;
+        }
+        
+        // Log success
+        console.log(`[PROCESS_RECORD] Row ${rowNumber} processed successfully:`, JSON.stringify({
+          name_code: rawData.Name_Code || 'unknown',
+          add_id: rawData.Add_Id || 'unknown',
+          guestId: insertResult.guestId,
+          receiptId: insertResult.receiptId,
+          donationId: insertResult.donationId
+        }));
+        
+        this.logInfo(jobId, `Row ${rowNumber}: Successfully processed and inserted into database`, {
+          guestId: insertResult.guestId,
+          receiptId: insertResult.receiptId,
+          donationId: insertResult.donationId
+        });
+        
+        job.results.success++;
+      } catch (insertError) {
+        console.error(`[PROCESS_RECORD] Row ${rowNumber} insertMigrationData threw exception:`, insertError.message, insertError.stack);
+        this.logError(jobId, `Row ${rowNumber}: Insert operation threw exception - ${insertError.message}`, {
+          row: rowNumber,
+          error: insertError.message,
+          stack: insertError.stack
+        });
+        job.results.error++;
+      }
       
     } catch (error) {
       // Log processing error
-      console.error(`Row ${rowNumber} processing failed:`, error.message, error.stack);
+      console.error(`[PROCESS_RECORD] Row ${rowNumber} processing failed:`, error.message, error.stack);
       
       this.logError(jobId, `Row ${rowNumber}: Processing failed - ${error.message}`, {
         row: rowNumber,
@@ -854,104 +905,70 @@ module.exports = ({ strapi }) => ({
     return result;
   },
   
-  // Insert data into the database
+  // Insert data into the database - optimized for non-blocking behavior
   async insertMigrationData(data) {
     try {
-      console.log('Inserting migration data:', JSON.stringify(data, null, 2));
+      console.log('[DB DEBUG] Starting database insertion for data:', JSON.stringify({
+        name: data.name,
+        add_id: data.add_id,
+        name_code: data.name_code,
+        amount: data.amount
+      }));
       
       // Check if this is a valid data object
       if (!data || !data.name) {
-        console.log('Invalid data object, skipping insert');
+        console.log('[DB ERROR] Invalid data object:', JSON.stringify(data));
         return { success: false, message: 'Invalid data object' };
       }
       
       // Extract the add_id as unique identifier
       const addId = data.add_id || data.name_code;
       if (!addId) {
-        console.log('No add_id or name_code available, cannot identify user uniquely');
+        console.log('[DB ERROR] Missing unique identifier for data:', JSON.stringify(data));
         return { success: false, message: 'Missing unique identifier' };
       }
       
-      console.log(`Looking for existing guest with unique_no: ${addId}`);
+      console.log(`[DB DEBUG] Looking for existing guest with unique_no: ${addId}`);
       
-      // First, check if guest already exists with this add_id
-      const existingGuests = await strapi.entityService.findMany('api::guest-detail.guest-detail', {
-        filters: {
-          unique_no: addId,
-        },
+      // Use promise-based flow for more non-blocking operations
+      // First, find existing guest
+      const findGuestPromise = strapi.entityService.findMany('api::guest-detail.guest-detail', {
+        filters: { unique_no: addId },
       });
       
-      console.log(`Found ${existingGuests ? existingGuests.length : 0} existing guests with unique_no: ${addId}`);
-      
-      let guestId;
-      
-      // If guest doesn't exist, create a new one
-      if (!existingGuests || existingGuests.length === 0) {
-        console.log(`Creating new guest with add_id: ${addId}`);
-        
-        // Prepare guest data
+            // Prepare guest data while we're waiting for the query
         const guestData = {
           name: data.name,
           phone_number: data.mobile || '',
           email: data.email || '',
           pan_number: data.pan || '',
-          unique_no: addId, // Use add_id as the unique identifier
+          unique_no: addId,
+          identity_number: data.pan || addId, // Use PAN as identity_number with addId as fallback
           publishedAt: new Date(),
         };
-        
-        console.log(`Guest creation data:`, JSON.stringify(guestData, null, 2));
-        
-        try {
-          // Create the guest
-          const newGuest = await strapi.entityService.create('api::guest-detail.guest-detail', {
-            data: guestData,
-          });
-          
-          guestId = newGuest.id;
-          console.log(`Created new guest with ID: ${guestId}`);
-        } catch (guestError) {
-          console.error(`Failed to create guest:`, guestError.message, guestError.stack);
-          return { success: false, message: `Failed to create guest: ${guestError.message}` };
-        }
-      } else {
-        // Use existing guest
-        guestId = existingGuests[0].id;
-        console.log(`Using existing guest with ID: ${guestId}`);
-      }
       
-      // Now create the receipt
-      const receiptDate = data.date 
-        ? new Date(data.date).toISOString().split('T')[0] 
+      console.log(`[DB DEBUG] Prepared guest data:`, JSON.stringify(guestData));
+      
+      // Prepare receipt data in parallel
+      const receiptDate = data.date
+        ? new Date(data.date).toISOString().split('T')[0]
         : new Date().toISOString().split('T')[0];
-      
+        
       const receiptData = {
         donation_date: receiptDate,
         Receipt_number: data.receipt_number || `REC-${Date.now()}`,
         publishedAt: new Date(),
       };
       
-      console.log(`Receipt creation data:`, JSON.stringify(receiptData, null, 2));
+      console.log(`[DB DEBUG] Prepared receipt data:`, JSON.stringify(receiptData));
       
-      let newReceipt;
-      try {
-        newReceipt = await strapi.entityService.create('api::receipt-detail.receipt-detail', {
-          data: receiptData,
-        });
-        
-        console.log(`Created new receipt with ID: ${newReceipt.id}`);
-      } catch (receiptError) {
-        console.error(`Failed to create receipt:`, receiptError.message, receiptError.stack);
-        return { success: false, message: `Failed to create receipt: ${receiptError.message}` };
-      }
+      // Prepare donation data in parallel
+      const amount = typeof data.amount === 'number' ? data.amount :
+                   (typeof data.amount === 'string' ? parseFloat(data.amount.replace(/[^\d.-]/g, '')) : 0);
       
-      // Finally create the donation - ensure amount is properly formatted
-      const amount = typeof data.amount === 'number' ? data.amount : 
-                    (typeof data.amount === 'string' ? parseFloat(data.amount.replace(/[^\d.-]/g, '')) : 0);
-      
-      // Make sure to use proper enums based on the schema
+      // Map transaction type to enum values
       let transactionType = 'Cash'; // Default
       if (data.transaction_type) {
-        // Map to allowed enum values
         const typeMap = {
           'cash': 'Cash',
           'cheque': 'Cheque',
@@ -961,25 +978,67 @@ module.exports = ({ strapi }) => ({
           'dd': 'DD',
           'm.o': 'M.O'
         };
-        transactionType = typeMap[data.transaction_type.toLowerCase()] || 'Cash';
+        transactionType = typeMap[data.transaction_type?.toLowerCase()] || 'Cash';
       }
       
+      // Map donation type to enum values
       let donationFor = 'Math'; // Default
       if (data.donation_for) {
-        // Map to allowed enum values
         donationFor = data.donation_for.toLowerCase().includes('mission') ? 'Mission' : 'Math';
       }
       
-      // Create donation data with proper field names matching schema
+      // Resolve the guest query and decide whether to create or use existing
+      console.log(`[DB DEBUG] Awaiting guest lookup result...`);
+      const existingGuests = await findGuestPromise;
+      console.log(`[DB DEBUG] Guest lookup complete. Found: ${existingGuests ? existingGuests.length : 0} guests`);
+      
+      // Create or use guest
+      let guestId;
+      if (!existingGuests || existingGuests.length === 0) {
+        try {
+          console.log(`[DB DEBUG] Creating new guest:`, JSON.stringify(guestData));
+          // Create guest asynchronously
+          const newGuest = await strapi.entityService.create('api::guest-detail.guest-detail', {
+            data: guestData,
+          });
+          guestId = newGuest.id;
+          console.log(`[DB DEBUG] New guest created successfully with ID: ${guestId}`);
+        } catch (guestError) {
+          console.error(`[DB ERROR] Failed to create guest:`, guestError.message, guestError.stack);
+          return { success: false, message: `Failed to create guest: ${guestError.message}` };
+        }
+      } else {
+        // Use existing guest
+        guestId = existingGuests[0].id;
+        console.log(`[DB DEBUG] Using existing guest with ID: ${guestId}`);
+      }
+      
+      // Create receipt asynchronously
+      let receiptId;
+      try {
+        console.log(`[DB DEBUG] Creating receipt:`, JSON.stringify(receiptData));
+        const newReceipt = await strapi.entityService.create('api::receipt-detail.receipt-detail', {
+          data: receiptData,
+        });
+        receiptId = newReceipt.id;
+        console.log(`[DB DEBUG] Receipt created successfully with ID: ${receiptId}`);
+      } catch (receiptError) {
+        console.error(`[DB ERROR] Failed to create receipt:`, receiptError.message, receiptError.stack);
+        return { success: false, message: `Failed to create receipt: ${receiptError.message}` };
+      }
+      
+      // Create donation using the guest and receipt IDs
       const donationData = {
         donationAmount: amount,
         transactionType: transactionType,
         donationFor: donationFor,
         purpose: data.purpose || 'General',
         guest: guestId,
-        receipt_detail: newReceipt.id,
+        receipt_detail: receiptId,
         status: 'completed',
       };
+      
+      console.log(`[DB DEBUG] Prepared donation data:`, JSON.stringify(donationData));
       
       // Add optional fields if they exist
       if (data.bank_name) donationData.bankName = data.bank_name;
@@ -993,35 +1052,48 @@ module.exports = ({ strapi }) => ({
             donationData.ddch_date = parsedDate.toISOString().split('T')[0];
           }
         } catch (dateError) {
-          console.warn(`Could not parse ddch_date: ${data.ddch_date}`);
+          // Silent failure for date parsing
         }
       }
       
-      console.log('Creating donation with data:', JSON.stringify(donationData, null, 2));
-      
-      let newDonation;
+      // Create donation asynchronously
+      let donationId;
       try {
-        // Create the donation
-        newDonation = await strapi.entityService.create('api::donation.donation', {
+        console.log(`[DB DEBUG] Creating donation:`, JSON.stringify({
+          amount: donationData.donationAmount,
+          type: donationData.transactionType,
+          for: donationData.donationFor,
+          guestId: donationData.guest,
+          receiptId: donationData.receipt_detail
+        }));
+        
+        const newDonation = await strapi.entityService.create('api::donation.donation', {
           data: donationData,
         });
-        
-        console.log(`Created new donation with ID: ${newDonation.id}`);
+        donationId = newDonation.id;
+        console.log(`[DB DEBUG] Donation created successfully with ID: ${donationId}`);
       } catch (donationError) {
-        console.error(`Failed to create donation:`, donationError.message, donationError.stack);
+        console.error(`[DB ERROR] Failed to create donation:`, donationError.message, donationError.stack);
         return { success: false, message: `Failed to create donation: ${donationError.message}` };
       }
       
-      console.log(`Successfully created all records: guest=${guestId}, receipt=${newReceipt.id}, donation=${newDonation.id}`);
+      console.log(`[DB SUCCESS] Complete database operation successful:`, JSON.stringify({
+        guestId,
+        receiptId,
+        donationId,
+        name: data.name,
+        addId: addId,
+        amount: amount
+      }));
       
       return {
         success: true,
         guestId,
-        receiptId: newReceipt.id,
-        donationId: newDonation.id,
+        receiptId,
+        donationId,
       };
     } catch (error) {
-      console.error('Error inserting migration data:', error.message, error.stack);
+      console.error(`[DB ERROR] Unexpected error in insertMigrationData:`, error.message, error.stack);
       return { success: false, message: error.message };
     }
   },

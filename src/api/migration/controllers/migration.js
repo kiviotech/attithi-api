@@ -10,33 +10,40 @@ const xlsx = require('xlsx');
 module.exports = factories.createCoreController('api::migration.migration', ({ strapi }) => ({
   async uploadFile(ctx) {
     try {
-      console.log("Upload request received");
-      
-      // Check for files existence
-      if (!ctx.request.files || !ctx.request.files.file) {
-        console.error("No file named 'file' found in request");
+      // Check for files existence - using Koa's files property from the multipart middleware
+      const files = ctx.request.files ? ctx.request.files : {};
+      if (!files || !files.file) {
         return ctx.badRequest('No file with name "file" uploaded');
       }
       
-      const uploadedFile = ctx.request.files.file;
-
-      console.log("File details:", {
-        name: uploadedFile.name,
-        size: uploadedFile.size,
-        type: uploadedFile.mimetype,
-        path: uploadedFile.path
+      const uploadedFile = files.file;
+      const filePath = typeof uploadedFile.path === 'string' ? uploadedFile.path : uploadedFile.path[0];
+      
+      // Process the upload asynchronously without awaiting
+      const jobIdPromise = strapi.service('api::migration.migration').processUpload(filePath);
+      
+      // Start a timer to ensure we respond to the client quickly
+      const timeoutPromise = new Promise(resolve => {
+        // We'll wait at most 2 seconds before responding to ensure the client gets a quick response
+        setTimeout(() => resolve('timeout'), 2000);
       });
       
-      // Pass the file path to the background processing service
-      const jobId = await strapi.service('api::migration.migration').processUpload(uploadedFile.path);
+      // Race between quick job creation and timeout
+      const result = await Promise.race([jobIdPromise, timeoutPromise]);
       
-      console.log(`File upload processed, started background job: ${jobId}`);
+      // If we timed out, we'll respond with a pending job status
+      // The actual job will continue processing in the background
+      if (result === 'timeout') {
+        return ctx.send({
+          status: 'pending',
+          message: 'File upload received, processing has started'
+        });
+      }
       
-      // Immediately return the job ID
-      return ctx.send({ jobId });
+      // If we got the job ID before timeout, return it
+      return ctx.send({ jobId: result });
       
     } catch (error) {
-      console.error('Error in file upload:', error);
       // Check if it's a known error type, otherwise send a generic message
       if (error.name === 'ValidationError' || error.name === 'ApplicationError') {
         return ctx.badRequest(error.message);
