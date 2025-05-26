@@ -13,52 +13,83 @@ module.exports = {
   async getEligibleUsers(ctx) {
     try {
       const { query } = ctx;
-      const { hasDeeksha, minDonationAmount, hasCapitalInvestment, startDate, endDate } = query;
+      const { 
+        hasDeeksha, 
+        minDonationAmount, 
+        hasCapitalInvestment, 
+        startDate, 
+        endDate,
+        page = 1,
+        pageSize = 10
+      } = query;
 
-      // Start with a query for all guests (users)
-      const guestQuery = {};
-
+      // Parse pagination parameters
+      const requestedPage = parseInt(page, 10) || 1;
+      const requestedPageSize = parseInt(pageSize, 10) || 10;
+      
+      console.log(`Pagination request: page=${requestedPage}, pageSize=${requestedPageSize}`);
+      
+      // Build filters object
+      const filters = {};
+      
       // Add filtering conditions only if they have valid values
       if (hasDeeksha === 'true') {
-        guestQuery.filters = {
-          ...(guestQuery.filters || {}),
-          deeksha: { $notNull: true }
-        };
+        filters.deeksha = { $eq: true };
+      } else if (hasDeeksha === 'false') {
+        filters.deeksha = { $null: true };
       }
-
+      
       if (startDate && endDate) {
-        const dateFilter = {
-          createdAt: {
-            $gte: new Date(startDate).toISOString(),
-            $lte: new Date(endDate).toISOString(),
-          }
-        };
-        guestQuery.filters = {
-          ...(guestQuery.filters || {}),
-          ...dateFilter
+        filters.createdAt = {
+          $gte: new Date(startDate).toISOString(),
+          $lte: new Date(endDate).toISOString(),
         };
       }
-
-      // Fetch all guests that match basic criteria
-      const guests = await strapi.entityService.findMany('api::guest-detail.guest-detail', guestQuery);
-
-      // For now, we'll use a simplified approach without complex donation filtering
-      // in the initial version to ensure the API works
-      let filteredGuests = guests;
-
+      
+      // Get the total count of matching records
+      const totalResult = await strapi.entityService.count('api::guest-detail.guest-detail', { filters });
+      const total = totalResult || 0;
+      
+      // Calculate pagination values
+      const pageCount = Math.ceil(total / requestedPageSize) || 1;
+      
+      // Make sure the requested page is valid
+      const validPage = Math.min(requestedPage, pageCount);
+      const start = (validPage - 1) * requestedPageSize;
+      
+      // Fetch the guests with manual pagination
+      const guests = await strapi.entityService.findMany('api::guest-detail.guest-detail', {
+        filters,
+        sort: { id: 'desc' },
+        start,
+        limit: requestedPageSize
+      });
+      
+      console.log(`Fetched ${guests.length} records for page ${validPage} (start: ${start}, limit: ${requestedPageSize})`);
+      
       // Format response data
-      const formattedGuests = filteredGuests.map(guest => {
+      const formattedGuests = guests.map(guest => {
         return {
           id: guest.id,
           name: guest.name || '',
           phone: guest.phone_number || '',
           email: guest.email || '',
           deeksha: !!guest.deeksha,
-          address: guest.address || ''
+          address: guest.address || '',
+          createdAt: guest.createdAt
         };
       });
-
-      return formattedGuests;
+      
+      // Return data with pagination metadata using the explicitly requested page number
+      return {
+        data: formattedGuests,
+        pagination: {
+          page: validPage,
+          pageSize: requestedPageSize,
+          pageCount,
+          total
+        }
+      };
     } catch (error) {
       ctx.throw(500, error);
     }
@@ -165,15 +196,38 @@ module.exports = {
         
         return csv;
       } else {
-        // Default to xlsx
-        // For a real implementation, you would use a library like exceljs
-        // This is a placeholder
+        // Generate Excel file using exceljs
+        const Excel = require('exceljs');
+        const workbook = new Excel.Workbook();
+        const worksheet = workbook.addWorksheet('Invitation List');
+        
+        // Define columns
+        const columns = Object.keys(formattedData[0]).map(key => ({
+          header: key,
+          key: key,
+          width: 20
+        }));
+        
+        worksheet.columns = columns;
+        
+        // Add rows
+        worksheet.addRows(formattedData);
+        
+        // Apply styling
+        worksheet.getRow(1).font = { bold: true };
+        worksheet.getRow(1).fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FFE0E0E0' }
+        };
+        
+        // Generate Excel file
+        const buffer = await workbook.xlsx.writeBuffer();
+        
         ctx.type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
         ctx.attachment('invitation_list.xlsx');
         
-        // Here you would generate the Excel file
-        // For now just return JSON with a message
-        return { message: 'Excel export feature will be implemented with exceljs' };
+        return Buffer.from(buffer);
       }
     } catch (error) {
       ctx.throw(500, error);

@@ -27,4 +27,21 @@ module.exports = ({ env }) => [
   'strapi::session',
   'strapi::favicon',
   'strapi::public',
+  
+  // Add activity logger middleware
+  {
+    name: 'global::activity-logger',
+    config: {
+      // Configure which requests to log
+      logAnonymous: false, // Don't log anonymous users
+      excludeMethods: ['OPTIONS', 'HEAD'], // Don't log these methods
+      excludePaths: [
+        '/uploads', 
+        '/admin', 
+        '/documentation', 
+        '/_health', 
+        '/favicon.ico'
+      ] // Don't log these paths
+    },
+  },
 ];

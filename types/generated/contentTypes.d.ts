@@ -1353,7 +1353,7 @@ export interface ApiGuestDetailGuestDetail extends Schema.CollectionType {
     departure_date: Attribute.Date;
     deeksha: Attribute.String;
     identity_proof: Attribute.String;
-    identity_number: Attribute.String & Attribute.Required & Attribute.Unique;
+    identity_number: Attribute.String & Attribute.Required;
     email: Attribute.String;
     unique_no: Attribute.String;
     pan_number: Attribute.String;
@@ -1796,7 +1796,8 @@ export interface ApiUserActivityLogUserActivityLog
   info: {
     singularName: 'user-activity-log';
     pluralName: 'user-activity-logs';
-    displayName: 'user-activity-log';
+    displayName: 'User Activity Log';
+    description: 'Logs of user activities in the system';
   };
   options: {
     draftAndPublish: true;

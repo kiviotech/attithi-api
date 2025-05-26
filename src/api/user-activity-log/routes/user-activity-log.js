@@ -2,8 +2,12 @@
 
 /**
  * user-activity-log router
+ * 
+ * This file maintains compatibility with Strapi's default collection type routes.
+ * All custom routes are defined in index.js.
  */
 
-const { createCoreRouter } = require('@strapi/strapi').factories;
-
-module.exports = createCoreRouter('api::user-activity-log.user-activity-log');
+// This file is kept empty and all routes are defined in index.js
+module.exports = {
+  routes: []
+};

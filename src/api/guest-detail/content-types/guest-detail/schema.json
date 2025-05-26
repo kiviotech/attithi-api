@@ -84,7 +84,7 @@
     },
     "identity_number": {
       "type": "string",
-      "unique": true,
+      "unique": false,
       "required": true
     },
     "email": {
@@ -111,13 +111,6 @@
         "Rescheduled"
       ],
       "default": "Not Arrived"
-    }
-  },
-  "customActions": {
-    "findByAadhaar": {
-      "displayName": "Find by Aadhaar",
-      "description": "Find guest by Aadhaar number",
-      "handler": "api::guest-detail.guest-detail.findByAadhaar"
     }
   }
 }
